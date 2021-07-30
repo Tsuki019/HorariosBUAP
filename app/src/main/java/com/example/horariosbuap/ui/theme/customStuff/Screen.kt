@@ -11,7 +11,7 @@ sealed class Screen(
     val title: String,
     val image: ImageVector)
 {
-    object Noticias:Screen("home", "Noticias", Icons.Rounded.Info)
+    object Noticias:Screen("home", "Noticias", Icons.Rounded.Try)
     object Buscar:Screen("buscar", "Buscar", Icons.Rounded.Search)
     object Horario:Screen("horario", "Mi Horario", Icons.Rounded.CalendarToday)
     object Libre:Screen("libre", "Libre", Icons.Rounded.Star)

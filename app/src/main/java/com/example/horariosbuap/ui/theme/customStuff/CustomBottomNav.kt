@@ -7,17 +7,23 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.currentComposer
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.horariosbuap.R
+import javax.xml.transform.Source
 
 @Composable
 fun CustomBottomNav(
@@ -51,26 +57,29 @@ fun CustomBottomNavItem(item:Screen,isSelected:Boolean, onClick:()->Unit) {
     val background = if (isSelected) MaterialTheme.colors.primary.copy(alpha = 0.1f) else Color.Transparent
     val contentColer = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.onBackground
 
-    Box(
-        modifier = Modifier
-            .clip(CircleShape)
-            .background(background)
-            .clickable(onClick = onClick))
-    {
-        Row(
+
+    Surface(color = MaterialTheme.colors.background) {
+        Box(
             modifier = Modifier
-                .padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp)
-        ){
-            Icon(imageVector = item.image,
-                contentDescription = null,
-                tint = contentColer
-            )
-            
-            AnimatedVisibility(visible = isSelected) {
-                Text(text = item.title,
-                color = contentColer)
+                .clip(CircleShape)
+                .background(colorResource(id = R.color.azulOscuroInstitucional))
+                .clickable(onClick = onClick))
+        {
+            Row(
+                modifier = Modifier
+                    .padding(12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ){
+                Icon(imageVector = item.image,
+                    contentDescription = null,
+                    tint = colorResource(id = R.color.azulClaroInstitucional)
+                )
+
+                AnimatedVisibility(visible = isSelected) {
+                    Text(text = item.title, fontFamily= FontFamily(Font(R.font.source_sans_pro)),
+                    color = colorResource(id = R.color.azulClaroInstitucional))
+                }
             }
         }
     }
