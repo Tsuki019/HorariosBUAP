@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HorariosBUAP</string>
+    <string name="title_activity_opctions">OpctionsActivity</string>
 </resources>

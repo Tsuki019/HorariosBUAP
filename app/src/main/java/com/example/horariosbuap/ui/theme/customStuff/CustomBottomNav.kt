@@ -4,29 +4,30 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.currentComposer
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import com.example.horariosbuap.R
-import javax.xml.transform.Source
+import com.example.horariosbuap.ui.theme.customStuff.Screems.*
+
 
 @Composable
 fun CustomBottomNav(
+    navController: NavController,
     currentScreenId: String,
     onItemSelected: (Screen) -> Unit
 )
@@ -41,10 +42,10 @@ fun CustomBottomNav(
         horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ){
-
         items.forEach{ item->
-            CustomBottomNavItem(item = item, isSelected = item.id == currentScreenId) {
+            CustomBottomNavItem(navController = navController, item = item, isSelected = item.id == currentScreenId) {
             onItemSelected(item)
+                navController.navigate(item.id)
             }
         }
     }
@@ -52,7 +53,7 @@ fun CustomBottomNav(
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun CustomBottomNavItem(item:Screen,isSelected:Boolean, onClick:()->Unit) {
+fun CustomBottomNavItem(navController: NavController,item:Screen,isSelected:Boolean, onClick:()->Unit) {
 
     val background = if (isSelected) MaterialTheme.colors.primary.copy(alpha = 0.1f) else Color.Transparent
     val contentColer = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.onBackground
@@ -63,7 +64,7 @@ fun CustomBottomNavItem(item:Screen,isSelected:Boolean, onClick:()->Unit) {
             modifier = Modifier
                 .clip(CircleShape)
                 .background(colorResource(id = R.color.azulOscuroInstitucional))
-                .clickable(onClick = onClick))
+                .clickable(onClick = onClick ))
         {
             Row(
                 modifier = Modifier
@@ -85,14 +86,14 @@ fun CustomBottomNavItem(item:Screen,isSelected:Boolean, onClick:()->Unit) {
     }
 }
 
-@Composable
-@Preview
-fun PreV1() {
-    CustomBottomNav(currentScreenId = Screen.Noticias.id){}
-}
-
-@Composable
-@Preview
-fun PreV2() {
-    CustomBottomNavItem(item = Screen.Horario, isSelected = true){}
-}
+//@Composable
+//@Preview
+//fun PreV1() {
+//    CustomBottomNav(currentScreenId = Screen.Noticias.id){}
+//}
+//
+//@Composable
+//@Preview
+//fun PreV2() {
+//    CustomBottomNavItem(item = Screen.Horario, isSelected = true, navController = navController){}
+//}
