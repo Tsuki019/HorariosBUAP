@@ -10,6 +10,7 @@ import androidx.compose.material.icons.rounded.AssignmentReturn
 import androidx.compose.material.icons.rounded.Menu
 import com.example.horariosbuap.ui.theme.HorariosBUAPTheme
 import androidx.compose.runtime.*
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             val currentScreen = mutableStateOf<Screen>(Screen.Noticias)
             val scaffoldState: ScaffoldState = rememberScaffoldState()
@@ -30,87 +32,89 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             val titulos = remember{ mutableStateOf("Profile")}
 
-            HorariosBUAPTheme() {
-                when(currentRoute(navController)){
+                HorariosAppCont()
 
-                    "acerca","ajuste","cuenta"->{
-                        Scaffold(
-                            topBar = { CustomToolBar(icon= Icons.Rounded.ArrowBack, title = titulos.value, scaffoldState, scope){navController.navigate("noticias")} }
-                        ) {
 
-                        }
-                    }
-                    else->{
-                        Scaffold(
-
-                            scaffoldState = scaffoldState,
-                            bottomBar = { CustomBottomNav(navController = navController, currentScreenId = currentScreen.value.id)
-                            { currentScreen.value = it }
-                            },
-                            topBar = { CustomToolBar(icon= Icons.Rounded.Menu, title = titulos.value, scaffoldState, scope){scope.launch { scaffoldState.drawerState.open()} }},
-                            drawerContent = { NavDrawer(navController = navController, scope = scope, scaffoldState = scaffoldState, email = "mi_emailTest@gmail.com")
-                            }
-                        ) {
-
-                            ScreenController(navController = navController, topTitleBar = titulos)
-                        }
-                    }
-                }
-            }
+//                when(currentRoute(navController)){
+//
+//                    "acerca","ajuste","cuenta"->{
+//                        Scaffold(
+//                            topBar = { CustomToolBar(icon= Icons.Rounded.ArrowBack, title = titulos.value, scaffoldState, scope){navController.navigate("noticias")} }
+//                        ) {
+//
+//                        }
+//                    }
+//                    else->{
+//                        Scaffold(
+//
+//                            scaffoldState = scaffoldState,
+//                            bottomBar = { CustomBottomNav(navController = navController, currentScreenId = currentScreen.value.id)
+//                            { currentScreen.value = it }
+//                            },
+//                            topBar = { CustomToolBar(icon= Icons.Rounded.Menu, title = titulos.value, scaffoldState, scope){scope.launch { scaffoldState.drawerState.open()} }},
+//                            drawerContent = { NavDrawer(navController = navController, scope = scope, scaffoldState = scaffoldState, email = "mi_emailTest@gmail.com")
+//                            }
+//                        ) {
+//
+//                            ScreenController(navController = navController, topTitleBar = titulos)
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 }
 
-@Composable
-fun currentRoute(navController: NavHostController): String? {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    println("==========${navBackStackEntry?.destination?.route}")
-    return navBackStackEntry?.destination?.route
-}
-
-@Composable
-fun ScreenController(navController: NavHostController, topTitleBar: MutableState<String>) {
-
-
-    NavHost(navController = navController,
-            startDestination = "noticias")
-    {
-        composable("noticias"){
-            NoticiasScreen()
-            topTitleBar.value = "Noticias"
-        }
-        composable("buscar"){
-            BuscarScreen()
-            topTitleBar.value = "Buscar"
-        }
-        composable("horario"){
-            HorarioScreen()
-            topTitleBar.value = "Mis Horarios"
-        }
-        composable("libre"){
-            LibreScreen()
-            topTitleBar.value = "Libre"
-        }
-        composable("cuenta"){
-            MiCuentaOption()
-            topTitleBar.value = "Mi cuenta"
-        }
-        composable("ajuste"){
-            AjustesOption()
-            topTitleBar.value = "Ajustes"
-        }
-        composable("acerca"){
-            AcercaDeOption()
-            topTitleBar.value = "Acerca de la Aplicacion"
-        }
-        composable("compartir"){
-            CompartirOption()
-        }
-        composable("salir"){
-            SalirOption()
-        }
-    }
-}
+//@Composable
+//fun currentRoute(navController: NavHostController): String? {
+//    val navBackStackEntry by navController.currentBackStackEntryAsState()
+//    println("==========${navBackStackEntry?.destination?.route}")
+//    return navBackStackEntry?.destination?.route
+//}
+//
+//@Composable
+//fun ScreenController(navController: NavHostController, topTitleBar: MutableState<String>) {
+//
+//
+//    NavHost(navController = navController,
+//            startDestination = "noticias")
+//    {
+//        composable("noticias"){
+//            NoticiasScreen()
+//            topTitleBar.value = "Noticias"
+//        }
+//        composable("buscar"){
+//            BuscarScreen()
+//            topTitleBar.value = "Buscar"
+//        }
+//        composable("horario"){
+//            HorarioScreen()
+//            topTitleBar.value = "Mis Horarios"
+//        }
+//        composable("libre"){
+//            LibreScreen()
+//            topTitleBar.value = "Libre"
+//        }
+//        composable("cuenta"){
+//            MiCuentaOption()
+//            topTitleBar.value = "Mi cuenta"
+//        }
+//        composable("ajuste"){
+//            AjustesOption()
+//            topTitleBar.value = "Ajustes"
+//        }
+//        composable("acerca"){
+//            AcercaDeOption()
+//            topTitleBar.value = "Acerca de la Aplicacion"
+//        }
+//        composable("compartir"){
+//            CompartirOption()
+//        }
+//        composable("salir"){
+//            SalirOption()
+//        }
+//    }
+//}
 
 
 //val currentScreen = mutableStateOf<Screen>(Screen.Noticias)

@@ -16,7 +16,7 @@ sealed class Screen(
 {
     object Noticias:Screen("noticias", "Noticias", Icons.Rounded.Try)
     object Buscar:Screen("buscar", "Buscar", Icons.Rounded.Search)
-    object Horario:Screen("horario", "Mi Horario", Icons.Rounded.CalendarToday)
+    object Horario:Screen("horarios", "Mi Horario", Icons.Rounded.CalendarToday)
     object Libre:Screen("libre", "Libre", Icons.Rounded.Star)
 
     object Items{

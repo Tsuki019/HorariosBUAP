@@ -43,7 +43,7 @@ fun CustomBottomNav(
         verticalAlignment = Alignment.CenterVertically
     ){
         items.forEach{ item->
-            CustomBottomNavItem(navController = navController, item = item, isSelected = item.id == currentScreenId) {
+            CustomBottomNavItem(item = item, isSelected = item.id == currentScreenId) {
             onItemSelected(item)
                 navController.navigate(item.id)
             }
@@ -53,7 +53,7 @@ fun CustomBottomNav(
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun CustomBottomNavItem(navController: NavController,item:Screen,isSelected:Boolean, onClick:()->Unit) {
+fun CustomBottomNavItem(item:Screen,isSelected:Boolean, onClick:()->Unit) {
 
     val background = if (isSelected) MaterialTheme.colors.primary.copy(alpha = 0.1f) else Color.Transparent
     val contentColer = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.onBackground

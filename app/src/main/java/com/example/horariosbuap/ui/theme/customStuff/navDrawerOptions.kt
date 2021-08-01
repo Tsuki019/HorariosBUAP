@@ -11,7 +11,7 @@ sealed class navDrawerOptions(
 ){
 
     object Cuenta:navDrawerOptions(id = "cuenta", opcion = "Mi cuenta", icon = Icons.Rounded.Person)
-    object Ajuste:navDrawerOptions(id = "ajuste", opcion = "Ajustes", icon = Icons.Rounded.Settings)
+    object Ajuste:navDrawerOptions(id = "ajustes", opcion = "Ajustes", icon = Icons.Rounded.Settings)
     object Acerca:navDrawerOptions(id = "acerca", opcion = "Acerca de la aplicacion", icon = Icons.Rounded.Info)
     object Compartir:navDrawerOptions(id = "compartir", opcion = "Compartir", icon = Icons.Rounded.Share)
     object Salir:navDrawerOptions(id = "salir", opcion = "Salir de la aplicacion", icon = Icons.Rounded.DoorBack)

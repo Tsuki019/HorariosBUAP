@@ -10,9 +10,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.HorariosBUAPTheme
 import com.example.horariosbuap.ui.theme.customStuff.CustomToolBar
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun MiCuentaOption() {
@@ -23,8 +26,7 @@ fun MiCuentaOption() {
 
     HorariosBUAPTheme() {
         Scaffold(modifier= Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.azulClaroInstitucional)),
+            .fillMaxSize(),
         ) {
             Text(text = "Ventana de Mi cuenta")
         }
