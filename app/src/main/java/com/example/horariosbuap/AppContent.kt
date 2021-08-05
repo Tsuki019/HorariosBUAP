@@ -1,16 +1,14 @@
 package com.example.horariosbuap
 
+import android.content.Context
 import android.icu.text.LocaleDisplayNames
 import android.telephony.UiccCardInfo
 import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowManager
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -31,11 +29,12 @@ import kotlinx.coroutines.launch
 fun HorariosAppCont (){
 
     HorariosBUAPTheme {
-        ProvideWindowInsets() {
+        ProvideWindowInsets {
 
             val systemUiController = rememberSystemUiController()
+            val navBarColor = colorResource(id = R.color.azulOscuroInstitucional)
             SideEffect {
-//                systemUiController.setSystemBarsColor(Color.Transparent, darkIcons = false)
+                systemUiController.setNavigationBarColor(navBarColor, darkIcons = false)
             }
 
             val navController = rememberNavController()
@@ -43,8 +42,7 @@ fun HorariosAppCont (){
             val scaffoldState = rememberScaffoldState()
 
             val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentScreen = remember{ mutableStateOf<Screen>(Screen.Noticias) }
-            val titulos = remember{ mutableStateOf("Profile")}
+            val titulos = remember{ mutableStateOf("Empty")}
             val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
             val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.NEWS_ROUTE
 
@@ -57,11 +55,11 @@ fun HorariosAppCont (){
                 })},
                 drawerContent = {
                     NavDrawer(
+                        closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } },
+                        currentRoute = currentRoute,
                         navController = navController,
-                        scope = coroutineScope,
-                        scaffoldState = scaffoldState,
                         avatar = painterResource(id = R.drawable.hatsune_test),
-                        email = "mi_emailTest@test.com"
+                        email = "mi_emailTest@testmail.com"
                     )
                 },
             bottomBar = {
@@ -70,8 +68,7 @@ fun HorariosAppCont (){
                     else->{
                         CustomBottomNav(
                             navController = navController,
-                            currentScreenId = currentScreen.value.id,
-                            onItemSelected = {currentScreen.value = it}
+                            currentRoute = currentRoute
                         )
                     }
                 }

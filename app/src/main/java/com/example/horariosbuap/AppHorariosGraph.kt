@@ -22,6 +22,7 @@ object MainDestinations{
     const val ABOUT_ROUTE = "acerca"
     const val SHARE_ROUTE = "compartir"
     const val EXIT_ROUTE = "salir"
+    const val HOME_ROUTE = "inicio"
 }
 
 @Composable
@@ -40,6 +41,10 @@ fun HorariosBuapGraph(
             startDestination = startDestination,
     ){
 
+        composable(MainDestinations.HOME_ROUTE){
+            NoticiasScreen(navController = navController,scaffoldState = scaffoldState, openDrawer = openDrawer)
+            titulos.value = "Noticias"
+        }
         composable(MainDestinations.NEWS_ROUTE){
             NoticiasScreen(navController = navController,scaffoldState = scaffoldState, openDrawer = openDrawer)
             titulos.value = "Noticias"
