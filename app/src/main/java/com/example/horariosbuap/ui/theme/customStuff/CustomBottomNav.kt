@@ -40,7 +40,7 @@ fun CustomBottomNav(
 
     Row (
         modifier = Modifier
-            .background(MaterialTheme.colors.background)
+            .background(Color.Transparent)
             .padding(8.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceAround,
@@ -61,12 +61,12 @@ fun CustomBottomNavItem(item:Screen,isSelected:Boolean, onClick:()->Unit) {
     val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
 
     val background = if (isSelected) azulOscuro
-    else Color.Transparent
+    else colorResource(id = R.color.azulClaroInstitucional)
     val contentColor = if (isSelected) azulClaro
     else azulOscuro
 
 
-    Surface(color = MaterialTheme.colors.background) {
+    Surface(color = Color.Transparent) {
         Box(
             modifier = Modifier
                 .clip(CircleShape)

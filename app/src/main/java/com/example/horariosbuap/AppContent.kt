@@ -64,7 +64,7 @@ fun HorariosAppCont (){
                 },
             bottomBar = {
                 when(titulos.value){
-                    "Mi cuenta", "Ajustes", "Acerca de la Aplicacion"->{}
+                    "Mi cuenta", "Ajustes", "Acerca de la Aplicacion", "Noticias"->{}
                     else->{
                         CustomBottomNav(
                             navController = navController,

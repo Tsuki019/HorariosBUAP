@@ -7,7 +7,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.horariosbuap.MainDestinations.SINGLE_NEW_KEY
 import com.example.horariosbuap.ui.theme.customStuff.Screems.*
+import com.example.horariosbuap.ui.theme.customStuff.Screems.ui.theme.VistaNoticia
 import kotlinx.coroutines.launch
 
 
@@ -23,6 +25,8 @@ object MainDestinations{
     const val SHARE_ROUTE = "compartir"
     const val EXIT_ROUTE = "salir"
     const val HOME_ROUTE = "inicio"
+    const val SINGLE_NEW = "noticia_individual"
+    const val SINGLE_NEW_KEY = "noticiaId"
 }
 
 @Composable
@@ -33,6 +37,7 @@ fun HorariosBuapGraph(
     titulos: MutableState<String>
 ) {
 
+    val actions  = MainActions(navController = navController)
     val coroutineScope = rememberCoroutineScope()
     val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
 
@@ -42,12 +47,18 @@ fun HorariosBuapGraph(
     ){
 
         composable(MainDestinations.HOME_ROUTE){
-            NoticiasScreen(navController = navController,scaffoldState = scaffoldState, openDrawer = openDrawer)
+            NoticiasScreen(navController = navController,
+                           scaffoldState = scaffoldState,
+                           navigateToArticle = actions.navigateToArticle,
+                           openDrawer = openDrawer)
             titulos.value = "Noticias"
         }
         composable(MainDestinations.NEWS_ROUTE){
-            NoticiasScreen(navController = navController,scaffoldState = scaffoldState, openDrawer = openDrawer)
-            titulos.value = "Noticias"
+            NoticiasScreen(navController = navController,
+                           scaffoldState = scaffoldState,
+                           navigateToArticle = actions.navigateToArticle,
+                           openDrawer = openDrawer)
+            titulos.value = "Noticias y calendarios"
         }
         composable(MainDestinations.SEARCH_ROUTE){
             BuscarScreen(navController = navController,scaffoldState = scaffoldState, openDrawer = openDrawer)
@@ -79,5 +90,17 @@ fun HorariosBuapGraph(
         composable(MainDestinations.EXIT_ROUTE){
             SalirOption()
         }
+        composable("${MainDestinations.SINGLE_NEW}/{$SINGLE_NEW_KEY}"){
+                backStackEntry ->
+            VistaNoticia(noticiaId = backStackEntry.arguments?.getString(SINGLE_NEW_KEY))
+//            titulos.value = "Noticias"
+        }
+
+    }
+}
+
+class MainActions(navController: NavHostController){
+    val navigateToArticle:(String) ->Unit = {postId: String ->
+        navController.navigate("${MainDestinations.SINGLE_NEW}/${postId}")
     }
 }
