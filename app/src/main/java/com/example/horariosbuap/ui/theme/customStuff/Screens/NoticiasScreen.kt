@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.customStuff.Screems
+package com.example.horariosbuap.ui.theme.customStuff.Screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -7,37 +7,27 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.horariosbuap.MainDestinations
 import com.example.horariosbuap.R
-import com.example.horariosbuap.ui.theme.customStuff.CustomBottomNav
-import com.example.horariosbuap.ui.theme.customStuff.CustomToolBar
 import com.example.horariosbuap.ui.theme.customStuff.Screen
 import com.example.horariosbuap.ui.theme.dataBase.LoadNews
 import com.example.horariosbuap.ui.theme.dataBase.News
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 @Composable
 fun NoticiasScreen(

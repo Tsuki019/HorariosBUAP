@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.customStuff.Screems
+package com.example.horariosbuap.ui.theme.customStuff.Screens
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

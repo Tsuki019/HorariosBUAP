@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.customStuff.Screems
+package com.example.horariosbuap.ui.theme.customStuff.Screens
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold

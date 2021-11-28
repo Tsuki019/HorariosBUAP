@@ -8,8 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.MainDestinations.SINGLE_NEW_KEY
-import com.example.horariosbuap.ui.theme.customStuff.Screems.*
-import com.example.horariosbuap.ui.theme.customStuff.Screems.ui.theme.VistaNoticia
+import com.example.horariosbuap.ui.theme.customStuff.Screens.*
+import com.example.horariosbuap.ui.theme.customStuff.Screens.ui.theme.VistaNoticia
 import kotlinx.coroutines.launch
 
 
@@ -27,6 +27,9 @@ object MainDestinations{
     const val HOME_ROUTE = "inicio"
     const val SINGLE_NEW = "noticia_individual"
     const val SINGLE_NEW_KEY = "noticiaId"
+    const val LOGIN_ROUTE = "ingresar"
+    const val REGISTRATION_ROUTE = "registrarse"
+    const val NOLOGIN_ROUTE = "no_ingresado"
 }
 
 @Composable
@@ -73,7 +76,7 @@ fun HorariosBuapGraph(
             titulos.value = "Espacio Libre"
         }
         composable(MainDestinations.ACCOUNT_ROUTE){
-            MiCuentaOption()
+            MiCuentaOption(navController = navController)
             titulos.value = "Mi cuenta"
         }
         composable(MainDestinations.SETTINGS_ROUTE){
@@ -95,7 +98,15 @@ fun HorariosBuapGraph(
             VistaNoticia(noticiaId = backStackEntry.arguments?.getString(SINGLE_NEW_KEY))
 //            titulos.value = "Noticias"
         }
-
+        composable(MainDestinations.LOGIN_ROUTE){
+            LoginScreen(navController = navController)
+        }
+        composable(MainDestinations.REGISTRATION_ROUTE){
+            RegistrationScreen(navController = navController)
+        }
+        composable(MainDestinations.NOLOGIN_ROUTE){
+            RegistrationScreen(navController = navController)
+        }
     }
 }
 

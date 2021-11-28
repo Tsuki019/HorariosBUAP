@@ -3,6 +3,8 @@
     <color name="purple_200">#FFBB86FC</color>
     <color name="azulClaroInstitucional">#FF00B6E7</color>
     <color name="azulOscuroInstitucional">#FF0B375D</color>
+    <color name="BlancoTransparente">#BAFFFFFF</color>
+    <color name="RojoGoogle">#FFDB4437</color>
     <color name="BlueTest">#FF0B375D</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>

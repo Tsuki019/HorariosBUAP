@@ -6,7 +6,28 @@ task clean(type: Delete) {
 
 buildscript {
     ext {
+        kotlin_version = '1.5.10'
         compose_version = '1.0.0'
         accompanist_version = '0.15.0'
     }
+
+    repositories {
+        google()
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath 'com.google.gms:google-services:4.3.10'
+        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10'
+    }
 }
+
+//allprojects {
+//    repositories {
+////        mavenLocal()
+//        google()
+//        mavenCentral()
+//    }
+//}

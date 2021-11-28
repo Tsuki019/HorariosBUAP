@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "730691748527",
+    "project_id": "horariosbuap",
+    "storage_bucket": "horariosbuap.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:730691748527:android:177eded4594814ee538a5a",
+        "android_client_info": {
+          "package_name": "com.example.horariosbuap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "730691748527-l1n4pqa9hbjn919i3tnsjol0empv7q60.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.horariosbuap",
+            "certificate_hash": "5a080ef5056e6e76882733cf4c80a36096b52c30"
+          }
+        },
+        {
+          "client_id": "730691748527-4160a7njne9bc0dp8c81nt57vp5i3522.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDX_jGZpkiEfTqKTI4OReLXqdWKl1QHL54"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "730691748527-4160a7njne9bc0dp8c81nt57vp5i3522.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

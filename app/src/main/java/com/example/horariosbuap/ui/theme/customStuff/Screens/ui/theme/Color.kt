@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.customStuff.Screems.ui.theme
+package com.example.horariosbuap.ui.theme.customStuff.Screens.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
