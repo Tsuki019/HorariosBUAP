@@ -40,34 +40,25 @@ fun NavDrawer(
 
     val items = navDrawerOptions.Items.list
 
-//    Surface(
-//        modifier = Modifier
-//            .fillMaxSize(),
-//        color = colorResource(id = R.color.azulOscuroInstitucional),
-//        shape = MaterialTheme.shapes.small,
-//
-//        ) {
-
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.azulOscuroInstitucional))) {
-            Spacer(modifier = Modifier.height(20.dp))
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .background(colorResource(id = R.color.azulOscuroInstitucional))) {
+        Spacer(modifier = Modifier.height(20.dp))
 //Configuracion de la parte principal que contiene la imagen y el correo del usuario
-            DrawerHead(email = email, avatar = avatar)
-            Divider(modifier = Modifier.height(2.dp), color = Color.White)
+        DrawerHead(email = email, avatar = avatar)
+        Divider(modifier = Modifier.height(2.dp), color = Color.White)
 //Configuracion de las opciones que aparecen en el DrawerContent
-            items.forEach {
-                DrawerButton(icon = it.icon,
-                             label = it.opcion,
-                             isSelected = currentRoute == it.destination,
-                             action = {
-                                 closeDrawer()
-                                 navController.navigate(route = it.destination)
-                             })
-                Divider(color= Color.Transparent)
-            }
+        items.forEach {
+            DrawerButton(icon = it.icon,
+                         label = it.opcion,
+                         isSelected = currentRoute == it.destination,
+                         action = {
+                             closeDrawer()
+                             navController.navigate(route = it.destination)
+                         })
+            Divider(color= Color.Transparent)
         }
-//    }
+    }
 }
 
 @Composable

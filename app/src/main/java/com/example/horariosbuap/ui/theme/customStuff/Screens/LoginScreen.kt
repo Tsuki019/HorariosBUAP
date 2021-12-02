@@ -1,5 +1,6 @@
 package com.example.horariosbuap.ui.theme.customStuff.Screens
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,18 +30,28 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.MainDestinations
 import com.example.horariosbuap.R
+import com.example.horariosbuap.ui.theme.customStuff.components.EventDialog
 import com.example.horariosbuap.ui.theme.customStuff.components.OutlinedMediaButton
 import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
+import com.example.horariosbuap.ui.theme.dataBase.LoginState
+import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
 
 
 @Composable
 fun LoginScreen(
-    navController: NavController
+    state: LoginState,
+    onLogin: (String, String) -> Unit,
+    onLoginWithGoogle: (Activity) -> Unit,
+    activity: Activity,
+    onNavigateToRegister: () -> Unit,
+    onDissmisDialog: () -> Unit
 ) {
 
     val emailValue = rememberSaveable{ mutableStateOf("")}
@@ -119,7 +130,7 @@ fun LoginScreen(
                                     onNext = {
                                         focusManager.clearFocus()
 
-                                        //TODO ("LOGIN")
+                                        onLogin(emailValue.value, passwordValue.value)
                                     }
                                 ),
                                 imeAction = ImeAction.Done,
@@ -155,9 +166,9 @@ fun LoginScreen(
                         ) {
                             RoundedButton(
                                 text = "Ingresar",
-                                displayProgressBar = false,
+                                displayProgressBar = state.displayProgressBar,
                                 onClick = {
-                                    //TODO (LOGIN con Correo)
+                                    onLogin(emailValue.value, passwordValue.value)
                                 })
                         }
 
@@ -195,7 +206,9 @@ fun LoginScreen(
                                    horizontalAlignment = Alignment.CenterHorizontally)
                             {
                                 OutlinedMediaButton(text = "Ingresar con Google",
-                                                    onClick = { /*TODO("Realizar registro con color")*/ },
+                                                    onClick = {
+                                                            onLoginWithGoogle(activity)
+                                                    },
                                                     buttonColor = colorResource(id = R.color.RojoGoogle))
 
                                 ClickableText(
@@ -210,7 +223,7 @@ fun LoginScreen(
                                         }}
                                 )
                                 {
-                                    navController.navigate(route = MainDestinations.REGISTRATION_ROUTE)
+                                    onNavigateToRegister()
                                 }
                             }
 
@@ -219,14 +232,27 @@ fun LoginScreen(
                 }
             }
         }
+
+        if (state.errorMessage != null){
+            EventDialog(
+                errorMessage = state.errorMessage,
+                onDismiss = onDissmisDialog
+            )
+        }
     }
 }
 
 
-@Preview
-@Composable
-fun TextLoginScreen() {
-
-    val navController = rememberNavController()
-    LoginScreen(navController = navController)
-}
+//@Preview
+//@Composable
+//fun TextLoginScreen() {
+//
+//    val viewModel: LoginViewModel = hiltViewModel()
+//
+//    val navController = rememberNavController()
+//    LoginScreen(state = viewModel.state.value,
+//                onLogin = viewModel::login,
+//                onDissmisDialog = viewModel::hideErrorDialog,
+//                onNavigateToRegister = {navController.navigate(route = MainDestinations.REGISTRATION_ROUTE)}
+//    )
+//}

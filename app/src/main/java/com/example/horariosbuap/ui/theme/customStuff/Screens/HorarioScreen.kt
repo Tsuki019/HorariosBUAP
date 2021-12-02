@@ -5,23 +5,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.horariosbuap.MainDestinations
 import com.example.horariosbuap.ui.theme.customStuff.Screen
+import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
 
 @Composable
 fun HorarioScreen(
-    navController: NavController,
-    scaffoldState: ScaffoldState,
-    openDrawer: ()->Unit
+    navController: NavController
+//    scaffoldState: ScaffoldState,
+//    openDrawer: ()->Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val currentScreen = remember{ mutableStateOf<Screen>(Screen.Noticias) }
 
-    Scaffold(scaffoldState = scaffoldState)
-    {
-        LoginScreen(navController = navController)
-    }
-
+        Text(text = "Para acceder a las funciones de esta ventana, por favor ingrese a su cuenta")
 }
 
 //@Composable

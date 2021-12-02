@@ -32,9 +32,7 @@ import com.google.accompanist.insets.rememberInsetsPaddingValues
 @Composable
 fun NoticiasScreen(
     navController: NavController,
-    scaffoldState: ScaffoldState,
     navigateToArticle: (String) -> Unit,
-    openDrawer: ()->Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val currentScreen = remember{ mutableStateOf<Screen>(Screen.Noticias)}
@@ -183,8 +181,5 @@ fun NotiView() {
     val scaffoldState = rememberScaffoldState()
 
     NoticiasScreen(navController = navController,
-                   scaffoldState = scaffoldState,
-                   navigateToArticle = { /*TODO*/ }) {
-
-    }
+                   navigateToArticle = { /*TODO*/ })
 }

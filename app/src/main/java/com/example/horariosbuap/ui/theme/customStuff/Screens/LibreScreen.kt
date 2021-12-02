@@ -12,14 +12,16 @@ import com.example.horariosbuap.ui.theme.customStuff.Screen
 
 @Composable
 fun LibreScreen(
-    navController: NavController,
-    scaffoldState: ScaffoldState,
-    openDrawer: ()->Unit
+    navController: NavController
+//    scaffoldState: ScaffoldState,
+//    openDrawer: ()->Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val currentScreen = remember{ mutableStateOf<Screen>(Screen.Noticias) }
 
-    Scaffold(scaffoldState = scaffoldState)
+    Scaffold(
+//        scaffoldState = scaffoldState
+    )
     {
         Text(text = "Espacio libre (no tiene nada asignado por el momento)")
     }

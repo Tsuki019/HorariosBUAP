@@ -11,14 +11,16 @@ import com.example.horariosbuap.ui.theme.customStuff.Screen
 
 @Composable
 fun BuscarScreen(
-    navController: NavController,
-    scaffoldState: ScaffoldState,
-    openDrawer: ()->Unit
+    navController: NavController
+//    scaffoldState: ScaffoldState,
+//    openDrawer: ()->Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val currentScreen = remember{ mutableStateOf<Screen>(Screen.Noticias) }
 
-    Scaffold(scaffoldState = scaffoldState)
+    Scaffold(
+//        scaffoldState = scaffoldState
+    )
     {
         Text(text = "Espacio para buscar informacion acerca de los profesores, materias y mostrar la info de los edificios")
     }

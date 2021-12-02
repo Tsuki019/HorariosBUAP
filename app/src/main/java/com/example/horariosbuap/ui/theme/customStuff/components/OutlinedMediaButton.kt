@@ -25,7 +25,7 @@ fun OutlinedMediaButton(
     OutlinedButton(modifier = Modifier
         .width(280.dp)
         .height(50.dp),
-                   onClick = {  },
+                   onClick = { onClick() },
                    shape = RoundedCornerShape(50),
                    colors = ButtonDefaults.outlinedButtonColors(
                        backgroundColor = Color.Transparent,

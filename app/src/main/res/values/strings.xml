@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">HorariosBUAP</string>
     <string name="title_activity_opctions">OpctionsActivity</string>
+
+<!--    ERRORES-->
+    <string name="error_input_empty">Ningun campo debe estar vacio</string>
+    <string name="error_email">Email invalido</string>
+    <string name="error_password">La contraseña contiene caracteres invalidos</string>
+    <string name="error_incorrect_values">El email y/o la contraseña no son correctos</string>
+    <string name="error_incorrectly_repeated_password">Las contraseñas ingresadas no coinciden, asegurese de que ambas sean identicas</string>
+    <string name="error_login_google">Ha ocurrido un error inesperado</string>
+
 </resources>

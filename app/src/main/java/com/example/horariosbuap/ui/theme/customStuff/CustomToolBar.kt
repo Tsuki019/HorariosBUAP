@@ -1,6 +1,7 @@
 package com.example.horariosbuap.ui.theme.customStuff
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,7 +27,8 @@ fun CustomToolBar(backgroundColor: Color = MaterialTheme.colors.background,
 
     Surface(color = backgroundColor,
             elevation = elevation,
-            modifier = modifier) {
+            modifier = modifier,
+    ) {
         TopAppBar(
             title = {
                 Row(modifier= Modifier

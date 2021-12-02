@@ -24,7 +24,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.MainDestinations
 import com.example.horariosbuap.R
 
-
 @Composable
 fun CustomBottomNav(
     navController: NavController,
@@ -43,7 +42,9 @@ fun CustomBottomNav(
     ){
         items.forEach{ item->
             CustomBottomNavItem(item = item, isSelected = item.destination ==  currentRoute) {
-                navController.navigate(item.id)
+                navController.navigate(item.id){
+                    popUpTo(0)
+                }
             }
         }
     }

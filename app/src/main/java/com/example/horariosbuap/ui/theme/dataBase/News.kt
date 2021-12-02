@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import com.example.horariosbuap.HorariosAppCont
 import com.example.horariosbuap.R
 import org.w3c.dom.Text
 

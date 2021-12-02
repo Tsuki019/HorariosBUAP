@@ -32,17 +32,26 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.MainDestinations
 import com.example.horariosbuap.R
+import com.example.horariosbuap.ui.theme.customStuff.components.EventDialog
 import com.example.horariosbuap.ui.theme.customStuff.components.OutlinedMediaButton
 import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
+import com.example.horariosbuap.ui.theme.dataBase.RegisterState
+import com.example.horariosbuap.ui.theme.dataBase.RegisterViewModel
 
 
 @Composable
-fun RegistrationScreen(navController: NavController) {
+fun RegistrationScreen(
+    state: RegisterState,
+    onRegister: (String, String, String, String) -> Unit,
+    onBack: () -> Unit,
+    onDismissDialog: () -> Unit
+) {
 
     val nameValue = remember { mutableStateOf("")}
     val emailValue = remember { mutableStateOf("")}
@@ -77,7 +86,7 @@ fun RegistrationScreen(navController: NavController) {
                 {
                     Row(verticalAlignment = Alignment.CenterVertically, )
                     {
-                        IconButton(onClick = { navController.navigate(route = MainDestinations.LOGIN_ROUTE) })
+                        IconButton(onClick = { onBack() })
                         {
                             Icon(imageVector = Icons.Rounded.ArrowBack,
                                  contentDescription = "back icon",
@@ -160,7 +169,11 @@ fun RegistrationScreen(navController: NavController) {
                             keyboardActions = KeyboardActions(
                                 onDone = {
                                     focusManager.clearFocus()
-                                    //TODO (realizar registro)
+                                    onRegister(nameValue.value,
+                                               emailValue.value,
+                                               passwordValue.value,
+                                               confirmPasswordValue.value
+                                    )
                                 }
                             ),
                             imeAction = ImeAction.Done,
@@ -181,8 +194,14 @@ fun RegistrationScreen(navController: NavController) {
                         Spacer(modifier = Modifier.height(16.dp))
 
                         RoundedButton(text = "Registrarse",
-                                      displayProgressBar = false,
-                                      onClick = {/*TODO (Realizar registro)*/})
+                                      displayProgressBar = state.displayProcessbar,
+                                      onClick = {
+                                          onRegister(nameValue.value,
+                                                     emailValue.value,
+                                                     passwordValue.value,
+                                                     confirmPasswordValue.value
+                                          )
+                                      })
 
                         ClickableText(text = buildAnnotatedString {append("¿Ya tienes una cuenta?")
                             withStyle(style = SpanStyle(color= colorResource(id = R.color.azulClaroInstitucional),
@@ -191,7 +210,7 @@ fun RegistrationScreen(navController: NavController) {
                                 append("Inicia Sesion")
                             } },
                                       onClick = {
-                                          navController.navigate(route = MainDestinations.LOGIN_ROUTE)
+                                          onBack()
                                       }
                         )
                     }
@@ -242,6 +261,10 @@ fun RegistrationScreen(navController: NavController) {
             }
         }
 
+        if(state.errorMessage != null){
+            EventDialog(errorMessage = state.errorMessage, onDismiss = onDismissDialog )
+        }
+
     }
 
 }
@@ -251,6 +274,11 @@ fun RegistrationScreen(navController: NavController) {
 @Composable
 fun TestRegistrationScreen() {
 
-    val navController = rememberNavController()
-    RegistrationScreen(navController = navController)
+    val viewModel: RegisterViewModel = hiltViewModel()
+    RegistrationScreen(
+        state = viewModel.state.value,
+        onRegister = viewModel::register,
+        onBack = { },
+        onDismissDialog = viewModel::hideErrorDialog
+    )
 }
