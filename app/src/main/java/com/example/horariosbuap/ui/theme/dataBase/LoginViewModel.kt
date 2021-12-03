@@ -1,22 +1,20 @@
 package com.example.horariosbuap.ui.theme.dataBase
 
+//import com.example.horariosbuap.R
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.horariosbuap.R
-//import com.example.horariosbuap.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthCredential
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -52,7 +50,7 @@ class LoginViewModel : ViewModel() {
     fun loginWithGoogle(activity : Activity){
         println("ENTRA A LOGIN CON GOOGLE")
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("730691748527-4160a7njne9bc0dp8c81nt57vp5i3522.apps.googleusercontent.com")
+            .requestIdToken(activity.getString(R.string.my_default_web_client_id))
             .requestEmail()
             .build()
 
@@ -72,6 +70,7 @@ class LoginViewModel : ViewModel() {
         println("ENTRA A finishLogin")
         try {
             val account: GoogleSignInAccount? = accountTask.getResult(ApiException::class.java)
+
             state.value = state.value.copy(displayProgressBar = true)
 
             account?.idToken?.let { token ->
@@ -82,10 +81,11 @@ class LoginViewModel : ViewModel() {
                     .addOnCompleteListener{task ->
                         state.value = state.value.copy(displayProgressBar = false)
                         if (task.isSuccessful){
-                            val user =  auth.currentUser
-                            val email = auth.currentUser!!.email
-                            println("================>> $user <<===================")
-                            println("================>> $email <<===================")
+
+                            state.value = state.value.copy(
+                                name = auth.currentUser!!.displayName!!,
+                                email = auth.currentUser!!.email!!,
+                                image = auth.currentUser!!.photoUrl.toString())
 
                             state.value = state.value.copy(successLogin = true)
                         }else{

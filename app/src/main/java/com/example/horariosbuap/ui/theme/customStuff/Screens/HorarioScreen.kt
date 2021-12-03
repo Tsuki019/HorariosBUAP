@@ -1,24 +1,27 @@
 package com.example.horariosbuap.ui.theme.customStuff.Screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.example.horariosbuap.MainDestinations
-import com.example.horariosbuap.ui.theme.customStuff.Screen
 import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
 
 @Composable
 fun HorarioScreen(
-    navController: NavController
-//    scaffoldState: ScaffoldState,
-//    openDrawer: ()->Unit
+    navController: NavController,
+    viewModel: LoginViewModel
 ) {
-
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Text(text = "Para acceder a las funciones de esta ventana, por favor ingrese a su cuenta")
+        Text(text = "Nombre: ${viewModel.state.value.name}")
+        Text(text = "Email: ${viewModel.state.value.email}")
+    }
+
 }
 
 //@Composable

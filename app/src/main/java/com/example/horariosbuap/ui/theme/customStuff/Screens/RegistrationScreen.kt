@@ -1,5 +1,6 @@
 package com.example.horariosbuap.ui.theme.customStuff.Screens
 
+import android.app.Activity
 import android.graphics.Paint
 import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.background
@@ -48,8 +49,10 @@ import com.example.horariosbuap.ui.theme.dataBase.RegisterViewModel
 @Composable
 fun RegistrationScreen(
     state: RegisterState,
-    onRegister: (String, String, String, String) -> Unit,
+    onRegister: (String, String, String, String, Activity) -> Unit,
     onBack: () -> Unit,
+    activity: Activity,
+    onLoginWithGoogle : (Activity) -> Unit,
     onDismissDialog: () -> Unit
 ) {
 
@@ -172,7 +175,8 @@ fun RegistrationScreen(
                                     onRegister(nameValue.value,
                                                emailValue.value,
                                                passwordValue.value,
-                                               confirmPasswordValue.value
+                                               confirmPasswordValue.value,
+                                               activity
                                     )
                                 }
                             ),
@@ -199,7 +203,8 @@ fun RegistrationScreen(
                                           onRegister(nameValue.value,
                                                      emailValue.value,
                                                      passwordValue.value,
-                                                     confirmPasswordValue.value
+                                                     confirmPasswordValue.value,
+                                                     activity
                                           )
                                       })
 
@@ -252,7 +257,9 @@ fun RegistrationScreen(
                     horizontalAlignment = Alignment.CenterHorizontally)
                     {
                         OutlinedMediaButton(text = "Ingresar con Google",
-                                            onClick = { /*TODO("Realizar registro con color")*/ },
+                                            onClick = {
+                                                onLoginWithGoogle(activity)
+                                            },
                                             buttonColor = colorResource(id = R.color.RojoGoogle))
                     }
                 }
@@ -270,15 +277,15 @@ fun RegistrationScreen(
 }
 
 
-@Preview
-@Composable
-fun TestRegistrationScreen() {
-
-    val viewModel: RegisterViewModel = hiltViewModel()
-    RegistrationScreen(
-        state = viewModel.state.value,
-        onRegister = viewModel::register,
-        onBack = { },
-        onDismissDialog = viewModel::hideErrorDialog
-    )
-}
+//@Preview
+//@Composable
+//fun TestRegistrationScreen() {
+//
+//    val viewModel: RegisterViewModel = hiltViewModel()
+//    RegistrationScreen(
+//        state = viewModel.state.value,
+//        onRegister = viewModel::register,
+//        onBack = { },
+//        onDismissDialog = viewModel::hideErrorDialog
+//    )
+//}

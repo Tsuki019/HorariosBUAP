@@ -3,16 +3,14 @@ package com.example.horariosbuap
 import android.app.Activity
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
-import androidx.compose.runtime.*
-import androidx.fragment.app.FragmentManager
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.plusAssign
 import com.example.horariosbuap.MainDestinations.SINGLE_NEW_KEY
@@ -22,8 +20,7 @@ import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
 import com.example.horariosbuap.ui.theme.dataBase.RegisterViewModel
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.composable
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 
 object MainDestinations{
@@ -78,8 +75,9 @@ fun NavGraphBuilder.addNews(
 
         val actions  = MainActions(navController = navController)
 
-        NoticiasScreen(navController = navController,
-                       navigateToArticle = actions.navigateToArticle,
+        NoticiasScreen(
+            navController = navController,
+            navigateToArticle = actions.navigateToArticle,
         )
         titulos.value = "Noticias y Calendarios"
     }
@@ -160,6 +158,7 @@ fun NavGraphBuilder.addSearch(
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addSchedule(
     navController: NavHostController,
+    viewModel: LoginViewModel,
     titulos: MutableState<String>
 ){
     composable(route = MainDestinations.SCHEDULE_ROUTE,
@@ -188,7 +187,9 @@ fun NavGraphBuilder.addSchedule(
                    )
                }
     ){
-        HorarioScreen(navController = navController)
+        HorarioScreen(
+            navController = navController,
+            viewModel = viewModel)
         titulos.value = "Mi horario"
     }
 }
@@ -442,10 +443,6 @@ fun NavGraphBuilder.addLogin(
                }
     ){
 
-        println("VALOR DE LOGIN: ${viewModel.state.value.successLogin}")
-        println("VALOR DE EMAIL: ${viewModel.state.value.email}")
-        println("VALOR DE PASSWORD: ${viewModel.state.value.password}")
-
         if (viewModel.state.value.successLogin){
             LaunchedEffect(key1 = Unit){
                 navController.navigate(route = MainDestinations.ACCOUNT_ROUTE){
@@ -469,6 +466,9 @@ fun NavGraphBuilder.addLogin(
 
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addRegister(
+    activity: Activity,
+    viewModelLogin : LoginViewModel,
+    viewModel : RegisterViewModel,
     navController: NavHostController,
     titulos: MutableState<String>
 ){
@@ -498,14 +498,26 @@ fun NavGraphBuilder.addRegister(
                    )
                }
     ){
-        val viewModel: RegisterViewModel = hiltViewModel()
+
         RegistrationScreen(
             state = viewModel.state.value,
             onRegister = viewModel::register,
             onBack = { navController.navigate(route = MainDestinations.LOGIN_ROUTE) },
+            onLoginWithGoogle = viewModelLogin::loginWithGoogle,
+            activity = activity,
             onDismissDialog = viewModel::hideErrorDialog
         )
         titulos.value = "Horarios Buap"
+
+        if (viewModelLogin.state.value.successLogin){
+            LaunchedEffect(key1 = Unit){
+                navController.navigate(route = MainDestinations.ACCOUNT_ROUTE){
+                    popUpTo(MainDestinations.LOGIN_ROUTE){
+                        inclusive = true
+                    }
+                }
+            }
+        }
     }
 }
 

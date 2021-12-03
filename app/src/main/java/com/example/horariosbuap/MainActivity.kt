@@ -17,11 +17,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.currentBackStackEntryAsState
+import coil.compose.rememberImagePainter
 import com.example.horariosbuap.ui.theme.HorariosBUAPTheme
 import com.example.horariosbuap.ui.theme.customStuff.CustomBottomNav
 import com.example.horariosbuap.ui.theme.customStuff.CustomToolBar
 import com.example.horariosbuap.ui.theme.customStuff.Screens.*
 import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
+import com.example.horariosbuap.ui.theme.dataBase.RegisterViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -40,6 +42,7 @@ class MainActivity : ComponentActivity() {
             HorariosBUAPTheme {
 
                 val viewModel : LoginViewModel by viewModels()
+                val viewModelRegister : RegisterViewModel by viewModels()
 
                 val systemUiController = rememberSystemUiController()
                 val navBarColor = colorResource(id = R.color.azulOscuroInstitucional)
@@ -54,6 +57,17 @@ class MainActivity : ComponentActivity() {
                 val coroutineScope = rememberCoroutineScope()
                 val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
                 val titulos = remember{ mutableStateOf("Empty") }
+
+//                //Revisa si ya ha entrado con una cuenta Google
+//                val account = GoogleSignIn.getLastSignedInAccount(this)
+//
+//                if (account != null){
+//                    viewModel.state.value = viewModel.state.value.copy(
+//                        email = account.email!!,
+//                        name = account.displayName!!,
+//                        image = account.photoUrl!!.toString(),
+//                        successLogin = true)
+//                }
 
                 BoxWithConstraints {
 
@@ -75,8 +89,16 @@ class MainActivity : ComponentActivity() {
                                 closeDrawer = { coroutineScope.launch { scaffoldState.drawerState.close() } },
                                 currentRoute = currentRoute,
                                 navController = navController,
-                                avatar = painterResource(id = R.drawable.hatsune_test),
-                                email = "mi_emailTest@testmail.com"
+                                avatar = if (viewModel.state.value.image == ""){
+                                            painterResource(id = R.drawable.hatsune_test)
+                                        }else{
+                                            rememberImagePainter(data= viewModel.state.value.image)
+                                         },
+                                email = if (viewModel.state.value.name == ""){
+                                            "Usuario invitado"
+                                        }else{
+                                            viewModel.state.value.name
+                                        }
                             )
                         },
                         bottomBar = {
@@ -102,6 +124,7 @@ class MainActivity : ComponentActivity() {
                             addSearch(navController = navController,
                                       titulos = titulos)
                             addSchedule(navController = navController,
+                                        viewModel = viewModel,
                                         titulos = titulos)
                             addFree(navController = navController,
                                     titulos = titulos)
@@ -122,6 +145,9 @@ class MainActivity : ComponentActivity() {
                                 titulos = titulos
                             )
                             addRegister(navController = navController,
+                                        activity = this@MainActivity,
+                                        viewModelLogin= viewModel,
+                                        viewModel = viewModelRegister,
                                      titulos = titulos)
                         }
                     }
@@ -132,9 +158,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-        println("ENTRA A MAINACTIVITY onActivityResult")
-
         val viewModel : LoginViewModel by viewModels()
+
         super.onActivityResult(requestCode, resultCode, data)
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);

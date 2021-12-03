@@ -54,7 +54,9 @@ fun NavDrawer(
                          isSelected = currentRoute == it.destination,
                          action = {
                              closeDrawer()
-                             navController.navigate(route = it.destination)
+                             navController.navigate(route = it.destination){
+                                 popUpTo(MainDestinations.NEWS_ROUTE)
+                             }
                          })
             Divider(color= Color.Transparent)
         }

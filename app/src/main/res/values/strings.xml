@@ -1,13 +1,19 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">HorariosBUAP</string>
     <string name="title_activity_opctions">OpctionsActivity</string>
 
 <!--    ERRORES-->
-    <string name="error_input_empty">Ningun campo debe estar vacio</string>
-    <string name="error_email">Email invalido</string>
-    <string name="error_password">La contraseña contiene caracteres invalidos</string>
-    <string name="error_incorrect_values">El email y/o la contraseña no son correctos</string>
-    <string name="error_incorrectly_repeated_password">Las contraseñas ingresadas no coinciden, asegurese de que ambas sean identicas</string>
-    <string name="error_login_google">Ha ocurrido un error inesperado</string>
+    <string name="error_input_empty">Ningun campo debe estar vacio.</string>
+    <string name="error_email">Email invalido.</string>
+    <string name="error_password">La contraseña contiene caracteres invalidos.</string>
+    <string name="error_length_password">La contraseña debe tener al menos 6 caracteres.</string>
+    <string name="error_incorrect_values">El email y/o la contraseña no son correctos.</string>
+    <string name="error_incorrectly_repeated_password">Las contraseñas ingresadas no coinciden, asegurese de que ambas sean identicas.</string>
+    <string name="error_login_google">Ha ocurrido un error inesperado.</string>
+    <string name="error_register_process">Ha ocurrido un error al hacer el registro.</string>
+    <string name="error_already_in_use_email">El correo ya esta registrado con otra cuenta.</string>
 
+
+<!--    Google default values-->
+    <string name="my_default_web_client_id">730691748527-4160a7njne9bc0dp8c81nt57vp5i3522.apps.googleusercontent.com</string>
 </resources>
