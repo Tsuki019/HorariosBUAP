@@ -42,6 +42,7 @@ import com.example.horariosbuap.ui.theme.customStuff.components.EventDialog
 import com.example.horariosbuap.ui.theme.customStuff.components.OutlinedMediaButton
 import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
+import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
 import com.example.horariosbuap.ui.theme.dataBase.RegisterState
 import com.example.horariosbuap.ui.theme.dataBase.RegisterViewModel
 
@@ -49,7 +50,8 @@ import com.example.horariosbuap.ui.theme.dataBase.RegisterViewModel
 @Composable
 fun RegistrationScreen(
     state: RegisterState,
-    onRegister: (String, String, String, String, Activity) -> Unit,
+    loginViewModel: LoginViewModel,
+    onRegister: (String, String, String, String, Activity, LoginViewModel) -> Unit,
     onBack: () -> Unit,
     activity: Activity,
     onLoginWithGoogle : (Activity) -> Unit,
@@ -176,7 +178,8 @@ fun RegistrationScreen(
                                                emailValue.value,
                                                passwordValue.value,
                                                confirmPasswordValue.value,
-                                               activity
+                                               activity,
+                                               loginViewModel
                                     )
                                 }
                             ),
@@ -204,7 +207,8 @@ fun RegistrationScreen(
                                                      emailValue.value,
                                                      passwordValue.value,
                                                      confirmPasswordValue.value,
-                                                     activity
+                                                     activity,
+                                                     loginViewModel
                                           )
                                       })
 

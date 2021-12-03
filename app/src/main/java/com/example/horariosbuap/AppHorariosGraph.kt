@@ -470,7 +470,7 @@ fun NavGraphBuilder.addRegister(
     viewModelLogin : LoginViewModel,
     viewModel : RegisterViewModel,
     navController: NavHostController,
-    titulos: MutableState<String>
+    titulos: MutableState<String>,
 ){
     composable(route = MainDestinations.REGISTRATION_ROUTE,
                enterTransition = {_, _ ->
@@ -505,7 +505,8 @@ fun NavGraphBuilder.addRegister(
             onBack = { navController.navigate(route = MainDestinations.LOGIN_ROUTE) },
             onLoginWithGoogle = viewModelLogin::loginWithGoogle,
             activity = activity,
-            onDismissDialog = viewModel::hideErrorDialog
+            onDismissDialog = viewModel::hideErrorDialog,
+            loginViewModel = viewModelLogin
         )
         titulos.value = "Horarios Buap"
 
