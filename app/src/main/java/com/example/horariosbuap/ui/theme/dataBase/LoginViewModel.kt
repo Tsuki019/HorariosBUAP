@@ -16,6 +16,8 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -23,13 +25,11 @@ import kotlinx.coroutines.launch
 class LoginViewModel : ViewModel() {
     val state: MutableState<LoginState> = mutableStateOf(LoginState())
 
-    fun login(email: String, password: String){
+    fun login(email: String, password: String, activity: Activity){
         val errorMessage = if (email.isBlank() || password.isBlank()){
             R.string.error_input_empty
         }else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             R.string.error_email
-        }else if(email != "a@gmail.com" || password != "a"){
-            R.string.error_incorrect_values
         }else null
 
         errorMessage?.let {
@@ -40,23 +40,60 @@ class LoginViewModel : ViewModel() {
         viewModelScope.launch {
             //SIMULACION DE LOGIN
             state.value = state.value.copy(displayProgressBar = true)
-            delay(2000)
-            state.value = state.value.copy(email = email, password = password)
+
+            loginWithEmail(
+                email = email,
+                password = password,
+                activity = activity)
+
+//            state.value = state.value.copy(email = email, password = password)
             state.value = state.value.copy(displayProgressBar = false)
-            state.value = state.value.copy(successLogin = true)
+//            state.value = state.value.copy(successLogin = true)
         }
     }
 
+    fun loginWithEmail(email: String, password: String, activity: Activity){
+        val auth = Firebase.auth
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(activity) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+//                    Log.d(TAG, "signInWithEmail:success")
+                    val user = auth.currentUser
+
+                    println("xxxxxxxxxxxxxxxxx${user!!.isEmailVerified}xxxxxxxxxxxxxxxxxx")
+                    if(!user!!.isEmailVerified){
+                        state.value = state.value.copy(errorMessage = R.string.error_email_verify)
+                        Firebase.auth.signOut()
+                    }else{
+                        state.value = state.value.copy(name = user.email!!, email = user.email!!, successLogin = true)
+                    }
+//                    updateUI(user)
+                } else {
+                    // If sign in fails, display a message to the user.
+//                    Log.w(TAG, "signInWithEmail:failure", task.exception)
+//                    updateUI(null)
+                    if (task.exception!!.message == "There is no user record corresponding to this identifier. The user may have been deleted."){
+                        state.value = state.value.copy(errorMessage = R.string.error_email_no_registrado)
+                    }else{
+                        state.value = state.value.copy(errorMessage = R.string.error_login_email)
+                    }
+                    println("xxxxxxxxxxxxxxxxx${task.exception!!.message}xxxxxxxxxxxxxxxxxx")
+                }
+            }
+    }
+
     fun loginWithGoogle(activity : Activity){
-        println("ENTRA A LOGIN CON GOOGLE")
+
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(activity.getString(R.string.my_default_web_client_id))
             .requestEmail()
             .build()
 
-        val mGoogleSignInClient = GoogleSignIn.getClient(activity, gso)
+        val googleSignInClient = GoogleSignIn.getClient(activity, gso)
 
-        val signInIntent : Intent = mGoogleSignInClient.signInIntent
+        val signInIntent = googleSignInClient.signInIntent
 
         activity.startActivityForResult(signInIntent, 1)
 
@@ -67,7 +104,6 @@ class LoginViewModel : ViewModel() {
     }
 
     fun finishLogin(accountTask: Task<GoogleSignInAccount>) {
-        println("ENTRA A finishLogin")
         try {
             val account: GoogleSignInAccount? = accountTask.getResult(ApiException::class.java)
 

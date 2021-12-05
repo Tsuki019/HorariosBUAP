@@ -233,6 +233,7 @@ fun NavGraphBuilder.addFree(
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addAccountOpt(
     navController: NavHostController,
+    viewModel: LoginViewModel,
     titulos: MutableState<String>
 ){
     composable(route = MainDestinations.ACCOUNT_ROUTE,
@@ -261,7 +262,8 @@ fun NavGraphBuilder.addAccountOpt(
                    )
                }
     ){
-        MiCuentaOption(onNavigateToLogin = {navController.navigate(route = MainDestinations.ACCOUNT_ROUTE)})
+        MiCuentaOption(
+            viewModel = viewModel)
         titulos.value = "Mi cuenta"
 
     }
@@ -413,6 +415,7 @@ fun NavGraphBuilder.addExitOpt(
 fun NavGraphBuilder.addLogin(
     navController: NavHostController,
     viewModel : LoginViewModel,
+    registerViewModel: RegisterViewModel,
     activity: Activity,
     titulos: MutableState<String>
 ){
@@ -453,6 +456,7 @@ fun NavGraphBuilder.addLogin(
             }
         }else{
             LoginScreen(state = viewModel.state.value,
+                        registerViewModel = registerViewModel,
                         onLogin = viewModel::login,
                         onLoginWithGoogle = viewModel::loginWithGoogle,
                         activity = activity,
@@ -499,26 +503,40 @@ fun NavGraphBuilder.addRegister(
                }
     ){
 
-        RegistrationScreen(
-            state = viewModel.state.value,
-            onRegister = viewModel::register,
-            onBack = { navController.navigate(route = MainDestinations.LOGIN_ROUTE) },
-            onLoginWithGoogle = viewModelLogin::loginWithGoogle,
-            activity = activity,
-            onDismissDialog = viewModel::hideErrorDialog,
-            loginViewModel = viewModelLogin
-        )
-        titulos.value = "Horarios Buap"
-
-        if (viewModelLogin.state.value.successLogin){
-            LaunchedEffect(key1 = Unit){
-                navController.navigate(route = MainDestinations.ACCOUNT_ROUTE){
-                    popUpTo(MainDestinations.LOGIN_ROUTE){
-                        inclusive = true
-                    }
-                }
-            }
+        if(!viewModel.state.value.successRegister){
+            RegistrationScreen(
+                state = viewModel.state.value,
+                onRegister = viewModel::register,
+                onBack = { navController.navigate(route = MainDestinations.LOGIN_ROUTE) },
+                onLoginWithGoogle = viewModelLogin::loginWithGoogle,
+                activity = activity,
+                onDismissDialog = viewModel::hideErrorDialog,
+                loginViewModel = viewModelLogin
+            )
+            titulos.value = "Horarios Buap"
+        }else{
+            LoginScreen(state = viewModelLogin.state.value,
+                        registerViewModel = viewModel,
+                        onLogin = viewModelLogin::login,
+                        onLoginWithGoogle = viewModelLogin::loginWithGoogle,
+                        activity = activity,
+                        onDissmisDialog = viewModelLogin::hideErrorDialog,
+                        onNavigateToRegister = {navController.navigate(route = MainDestinations.REGISTRATION_ROUTE)}
+            )
+            titulos.value = "Horarios Buap"
         }
+
+
+
+//        if (viewModelLogin.state.value.successLogin){
+//            LaunchedEffect(key1 = Unit){
+//                navController.navigate(route = MainDestinations.ACCOUNT_ROUTE){
+//                    popUpTo(MainDestinations.LOGIN_ROUTE){
+//                        inclusive = true
+//                    }
+//                }
+//            }
+//        }
     }
 }
 

@@ -42,12 +42,14 @@ import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
 import com.example.horariosbuap.ui.theme.dataBase.LoginState
 import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
+import com.example.horariosbuap.ui.theme.dataBase.RegisterViewModel
 
 
 @Composable
 fun LoginScreen(
     state: LoginState,
-    onLogin: (String, String) -> Unit,
+    registerViewModel: RegisterViewModel,
+    onLogin: (String, String, Activity) -> Unit,
     onLoginWithGoogle: (Activity) -> Unit,
     activity: Activity,
     onNavigateToRegister: () -> Unit,
@@ -58,6 +60,7 @@ fun LoginScreen(
     val passwordValue = rememberSaveable{ mutableStateOf("")}
     var passwordVisibility by remember {mutableStateOf(false)}
     val focusManager = LocalFocusManager.current
+    registerViewModel.state.value = registerViewModel.state.value.copy(successRegister = false)
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -130,7 +133,7 @@ fun LoginScreen(
                                     onNext = {
                                         focusManager.clearFocus()
 
-                                        onLogin(emailValue.value, passwordValue.value)
+                                        onLogin(emailValue.value, passwordValue.value, activity)
                                     }
                                 ),
                                 imeAction = ImeAction.Done,
@@ -168,7 +171,7 @@ fun LoginScreen(
                                 text = "Ingresar",
                                 displayProgressBar = state.displayProgressBar,
                                 onClick = {
-                                    onLogin(emailValue.value, passwordValue.value)
+                                    onLogin(emailValue.value, passwordValue.value, activity)
                                 })
                         }
 

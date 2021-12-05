@@ -57,7 +57,7 @@ fun CustomBottomNavItem(item:Screen,isSelected:Boolean, onClick:()->Unit) {
     val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
 
     val background = if (isSelected) azulOscuro
-    else colorResource(id = R.color.azulClaroInstitucional)
+    else azulClaro
     val contentColor = if (isSelected) azulClaro
     else azulOscuro
 

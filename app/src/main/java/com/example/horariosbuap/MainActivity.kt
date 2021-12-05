@@ -27,6 +27,9 @@ import com.example.horariosbuap.ui.theme.dataBase.RegisterViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -42,7 +45,7 @@ class MainActivity : ComponentActivity() {
             HorariosBUAPTheme {
 
                 val viewModel : LoginViewModel by viewModels()
-                val viewModelRegister : RegisterViewModel by viewModels()
+                val registerViewModel : RegisterViewModel by viewModels()
 
                 val systemUiController = rememberSystemUiController()
                 val navBarColor = colorResource(id = R.color.azulOscuroInstitucional)
@@ -68,6 +71,21 @@ class MainActivity : ComponentActivity() {
 //                        image = account.photoUrl!!.toString(),
 //                        successLogin = true)
 //                }
+
+                //Revisa si ya ha entrado con un correo
+//                val auth = Firebase.auth
+//                val currentUser = auth.currentUser
+//                if(currentUser != null){
+//                    viewModel.state.value = viewModel.state.value.copy(
+//                        email = currentUser.email!!,
+//                        name = if(currentUser.displayName!! == ""){
+//                            currentUser.email!!
+//                        }else{
+//                            currentUser.displayName!! },
+//                        image = currentUser.photoUrl!!.toString(),
+//                        successLogin = true)
+//                }
+
 
                 BoxWithConstraints {
 
@@ -129,6 +147,7 @@ class MainActivity : ComponentActivity() {
                             addFree(navController = navController,
                                     titulos = titulos)
                             addAccountOpt(navController = navController,
+                                          viewModel = viewModel,
                                           titulos = titulos)
                             addSettingsOpt(navController = navController,
                                            titulos = titulos)
@@ -141,13 +160,14 @@ class MainActivity : ComponentActivity() {
                             addLogin(
                                 navController = navController,
                                 viewModel = viewModel,
+                                registerViewModel = registerViewModel,
                                 activity = this@MainActivity,
                                 titulos = titulos
                             )
                             addRegister(navController = navController,
                                         activity = this@MainActivity,
                                         viewModelLogin= viewModel,
-                                        viewModel = viewModelRegister,
+                                        viewModel = registerViewModel,
                                      titulos = titulos)
                         }
                     }
@@ -164,10 +184,15 @@ class MainActivity : ComponentActivity() {
 
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == 1) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            viewModel.finishLogin(task)
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                viewModel.finishLogin(task)
+            } catch (e: ApiException) {
+                // Google Sign In failed, update UI appropriately
+            }
+
+//            viewModel.finishLogin(task)
         }else{
             viewModel.state.value = viewModel.state.value.copy(errorMessage = R.string.error_login_google)
         }

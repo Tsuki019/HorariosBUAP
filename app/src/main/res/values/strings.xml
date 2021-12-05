@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">HorariosBUAP</string>
     <string name="title_activity_opctions">OpctionsActivity</string>
+    <string name="mail_enviado">Por favor verifique su dirección de correo electronico en el correo que le enviamos.</string>
 
 <!--    ERRORES-->
     <string name="error_input_empty">Ningun campo debe estar vacio.</string>
@@ -12,6 +13,9 @@
     <string name="error_login_google">Ha ocurrido un error inesperado.</string>
     <string name="error_register_process">Ha ocurrido un error al hacer el registro.</string>
     <string name="error_already_in_use_email">El correo ya esta registrado con otra cuenta.</string>
+    <string name="error_login_email">Error al tratar de ingresar</string>
+    <string name="error_email_no_registrado">No existe ningún usuario con el correo ingresado.</string>
+    <string name="error_email_verify">El email no está verificado, por favor verifiquelo con el link que le mandamos a su correo.</string>
 
 
 <!--    Google default values-->
