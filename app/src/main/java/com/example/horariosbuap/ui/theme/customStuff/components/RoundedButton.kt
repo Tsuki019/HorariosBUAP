@@ -19,7 +19,6 @@ import org.w3c.dom.Text
 import java.time.format.TextStyle
 import kotlin.text.Typography
 
-
 @Composable
 fun RoundedButton(
     color: ButtonColors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.azulOscuroInstitucional)),
@@ -29,6 +28,7 @@ fun RoundedButton(
     height : Dp = 50.dp,
     fontSize : TextUnit = 20.sp,
     displayProgressBar : Boolean = false,
+    progressIndicatorColor : Color = colorResource(id = R.color.azulOscuroInstitucional),
     onClick: () -> Unit
 ) {
 
@@ -48,7 +48,7 @@ fun RoundedButton(
     } else {
         CircularProgressIndicator(
             modifier = Modifier.size(50.dp),
-            color = colorResource(id = R.color.azulOscuroInstitucional),
+            color = progressIndicatorColor,
             strokeWidth = 6.dp
         )
     }

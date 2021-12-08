@@ -3,11 +3,14 @@ package com.example.horariosbuap.ui.theme.dataBase
 //import com.example.horariosbuap.R
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.util.Patterns
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import coil.compose.rememberImagePainter
 import com.example.horariosbuap.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -15,15 +18,19 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
 class LoginViewModel : ViewModel() {
     val state: MutableState<LoginState> = mutableStateOf(LoginState())
+    val tempImage : MutableState<Uri> = mutableStateOf(Uri.EMPTY)
 
     fun login(email: String, password: String, activity: Activity){
         val errorMessage = if (email.isBlank() || password.isBlank()){
@@ -38,7 +45,7 @@ class LoginViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            //SIMULACION DE LOGIN
+
             state.value = state.value.copy(displayProgressBar = true)
 
             loginWithEmail(
@@ -62,12 +69,13 @@ class LoginViewModel : ViewModel() {
 //                    Log.d(TAG, "signInWithEmail:success")
                     val user = auth.currentUser
 
-                    println("xxxxxxxxxxxxxxxxx${user!!.isEmailVerified}xxxxxxxxxxxxxxxxxx")
                     if(!user!!.isEmailVerified){
                         state.value = state.value.copy(errorMessage = R.string.error_email_verify)
                         Firebase.auth.signOut()
                     }else{
-                        state.value = state.value.copy(name = user.email!!, email = user.email!!, successLogin = true)
+                        LlenarDatosUsuario(
+                            user = user,
+                            state = state)
                     }
 //                    updateUI(user)
                 } else {
@@ -138,5 +146,12 @@ class LoginViewModel : ViewModel() {
             return
         }
 
+    }
+
+    fun  LlenarDatosUsuario(user : FirebaseUser, state: MutableState<LoginState>){
+        state.value = state.value.copy(name = user.displayName!!,
+                                       email = user.email!!,
+                                       image = user.photoUrl.toString(),
+                                       successLogin = true)
     }
 }

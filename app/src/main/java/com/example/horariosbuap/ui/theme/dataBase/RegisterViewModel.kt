@@ -2,6 +2,7 @@ package com.example.horariosbuap.ui.theme.dataBase
 
 import android.app.Activity
 import android.content.ContentValues.TAG
+import android.net.Uri
 import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
@@ -12,8 +13,10 @@ import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.horariosbuap.R
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.actionCodeSettings
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -57,16 +60,19 @@ class RegisterViewModel : ViewModel () {
 
                                     Toast.makeText(activity, R.string.mail_enviado,
                                                    Toast.LENGTH_LONG).show()
+                                    actualizarUsuario(
+                                        user = user,
+                                        name = name,
+                                        activity = activity,
+                                        state = loginViewModel.state
+                                    )
+                                    state.value = state.value.copy(displayProcessbar = false)
 
                                 }else{
                                     state.value = state.value.copy(errorMessage = R.string.error_register_process)
                                 }
                             }
                         // Sign in success, update UI with the signed-in user's information
-                        //TODO ("Guardar nombre del usuario")
-                        state.value = state.value.copy(
-                            displayProcessbar = false,
-                            successRegister = true)
                     } else {
                         state.value = state.value.copy(displayProcessbar = false)
 
@@ -84,5 +90,24 @@ class RegisterViewModel : ViewModel () {
 
     fun hideErrorDialog(){
         state.value = state.value.copy(errorMessage = null)
+    }
+
+    fun actualizarUsuario(user : FirebaseUser, name : String, activity: Activity, state: MutableState<LoginState>){
+
+        val profileUpdates = userProfileChangeRequest {
+            displayName = name
+            photoUri = Uri.parse(activity.getString(R.string.default_image))
+        }
+
+        user.updateProfile(profileUpdates)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    state.value = state.value.copy(
+                        name = user.displayName!!,
+                        email = user.email!!,
+                        image = user.photoUrl.toString()
+                    )
+                }
+            }
     }
 }

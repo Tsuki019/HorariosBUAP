@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun EventDialog(
     modifier: Modifier = Modifier,
+    title : String = "Error",
     @StringRes errorMessage: Int,
     onDismiss:(() -> Unit)? = null
 ) {
@@ -31,11 +32,12 @@ fun EventDialog(
         .padding((16.dp)),
     onDismissRequest = {onDismiss?.invoke()},
     title = {
-        Text(text = "Error",
-            style = TextStyle(color = MaterialTheme.colors.onSurface
-            ,fontSize = 20.sp
-            ,fontWeight = FontWeight.Bold)
-            )
+        Text(text = title,
+            style = TextStyle(
+                color = MaterialTheme.colors.onSurface,
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold)
+        )
             },
     text =  {
         Text(text = LocalContext.current.getString(errorMessage),

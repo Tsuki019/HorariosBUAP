@@ -11,6 +11,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.activity
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.plusAssign
 import com.example.horariosbuap.MainDestinations.SINGLE_NEW_KEY
@@ -18,6 +19,7 @@ import com.example.horariosbuap.ui.theme.customStuff.Screens.*
 import com.example.horariosbuap.ui.theme.customStuff.Screens.ui.theme.VistaNoticia
 import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
 import com.example.horariosbuap.ui.theme.dataBase.RegisterViewModel
+import com.example.horariosbuap.ui.theme.dataBase.SelectImage
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.composable
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -234,36 +236,43 @@ fun NavGraphBuilder.addFree(
 fun NavGraphBuilder.addAccountOpt(
     navController: NavHostController,
     viewModel: LoginViewModel,
-    titulos: MutableState<String>
+    titulos: MutableState<String>,
+    activity: Activity
 ){
     composable(route = MainDestinations.ACCOUNT_ROUTE,
                enterTransition = {_, _ ->
-                   slideInHorizontally(
-                       initialOffsetX = {1000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                exitTransition = {_, _ ->
-                   slideOutHorizontally(
-                       targetOffsetX = {-1000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popEnterTransition = {_, _ ->
-                   slideInHorizontally(
-                       initialOffsetX = {-1000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popExitTransition = {_, _ ->
-                   slideOutHorizontally(
-                       targetOffsetX = {1000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                }
     ){
         MiCuentaOption(
-            viewModel = viewModel)
+            viewModel = viewModel,
+            activity = activity,
+            onSignOut = {navController.navigate(route= MainDestinations.LOGIN_ROUTE) {
+                popUpTo(MainDestinations.ACCOUNT_ROUTE){
+                    inclusive = true } } }
+        )
+
         titulos.value = "Mi cuenta"
 
     }
@@ -276,26 +285,26 @@ fun NavGraphBuilder.addSettingsOpt(
 ){
     composable(route = MainDestinations.SETTINGS_ROUTE,
                enterTransition = {_, _ ->
-                   slideInHorizontally(
-                       initialOffsetX = {1000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                exitTransition = {_, _ ->
-                   slideOutHorizontally(
-                       targetOffsetX = {-1000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popEnterTransition = {_, _ ->
-                   slideInHorizontally(
-                       initialOffsetX = {-1000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popExitTransition = {_, _ ->
-                   slideOutHorizontally(
-                       targetOffsetX = {1000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                }
@@ -312,26 +321,26 @@ fun NavGraphBuilder.addAboutOpt(
 ){
     composable(route = MainDestinations.ABOUT_ROUTE,
                enterTransition = {_, _ ->
-                   slideInHorizontally(
-                       initialOffsetX = {1000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                exitTransition = {_, _ ->
-                   slideOutHorizontally(
-                       targetOffsetX = {-1000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popEnterTransition = {_, _ ->
-                   slideInHorizontally(
-                       initialOffsetX = {-1000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popExitTransition = {_, _ ->
-                   slideOutHorizontally(
-                       targetOffsetX = {1000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                }
@@ -348,26 +357,26 @@ fun NavGraphBuilder.addShareOpt(
 ){
     composable(route = MainDestinations.SHARE_ROUTE,
                enterTransition = {_, _ ->
-                   slideInHorizontally(
-                       initialOffsetX = {1000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                exitTransition = {_, _ ->
-                   slideOutHorizontally(
-                       targetOffsetX = {-1000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popEnterTransition = {_, _ ->
-                   slideInHorizontally(
-                       initialOffsetX = {-1000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popExitTransition = {_, _ ->
-                   slideOutHorizontally(
-                       targetOffsetX = {1000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                }
@@ -383,26 +392,26 @@ fun NavGraphBuilder.addExitOpt(
 ){
     composable(route = MainDestinations.EXIT_ROUTE,
                enterTransition = {_, _ ->
-                   slideInHorizontally(
-                       initialOffsetX = {1000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                exitTransition = {_, _ ->
-                   slideOutHorizontally(
-                       targetOffsetX = {-1000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popEnterTransition = {_, _ ->
-                   slideInHorizontally(
-                       initialOffsetX = {-1000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popExitTransition = {_, _ ->
-                   slideOutHorizontally(
-                       targetOffsetX = {1000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                }
@@ -421,26 +430,26 @@ fun NavGraphBuilder.addLogin(
 ){
     composable(route = MainDestinations.LOGIN_ROUTE,
                enterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {2000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                exitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {-2000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popEnterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {-2000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popExitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {2000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                }
@@ -478,26 +487,26 @@ fun NavGraphBuilder.addRegister(
 ){
     composable(route = MainDestinations.REGISTRATION_ROUTE,
                enterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {2000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                exitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {-2000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popEnterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {-2000},
+                   fadeIn(
+                       initialAlpha = 0F,
                        animationSpec = tween(500)
                    )
                },
                popExitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {2000},
+                   fadeOut(
+                       targetAlpha = 0F,
                        animationSpec = tween(500)
                    )
                }

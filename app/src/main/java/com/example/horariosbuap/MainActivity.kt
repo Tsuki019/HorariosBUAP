@@ -1,18 +1,17 @@
 package com.example.horariosbuap
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.*
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -61,30 +60,15 @@ class MainActivity : ComponentActivity() {
                 val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
                 val titulos = remember{ mutableStateOf("Empty") }
 
-//                //Revisa si ya ha entrado con una cuenta Google
-//                val account = GoogleSignIn.getLastSignedInAccount(this)
-//
-//                if (account != null){
-//                    viewModel.state.value = viewModel.state.value.copy(
-//                        email = account.email!!,
-//                        name = account.displayName!!,
-//                        image = account.photoUrl!!.toString(),
-//                        successLogin = true)
-//                }
-
                 //Revisa si ya ha entrado con un correo
-//                val auth = Firebase.auth
-//                val currentUser = auth.currentUser
-//                if(currentUser != null){
-//                    viewModel.state.value = viewModel.state.value.copy(
-//                        email = currentUser.email!!,
-//                        name = if(currentUser.displayName!! == ""){
-//                            currentUser.email!!
-//                        }else{
-//                            currentUser.displayName!! },
-//                        image = currentUser.photoUrl!!.toString(),
-//                        successLogin = true)
-//                }
+                val auth = Firebase.auth
+                val currentUser = auth.currentUser
+
+                if(currentUser != null && currentUser.isEmailVerified){
+
+                    viewModel.LlenarDatosUsuario(currentUser, viewModel.state)
+                }
+
 
 
                 BoxWithConstraints {
@@ -108,7 +92,7 @@ class MainActivity : ComponentActivity() {
                                 currentRoute = currentRoute,
                                 navController = navController,
                                 avatar = if (viewModel.state.value.image == ""){
-                                            painterResource(id = R.drawable.hatsune_test)
+                                            painterResource(id = R.drawable.default_image)
                                         }else{
                                             rememberImagePainter(data= viewModel.state.value.image)
                                          },
@@ -146,9 +130,11 @@ class MainActivity : ComponentActivity() {
                                         titulos = titulos)
                             addFree(navController = navController,
                                     titulos = titulos)
-                            addAccountOpt(navController = navController,
-                                          viewModel = viewModel,
-                                          titulos = titulos)
+                            addAccountOpt(
+                                navController = navController,
+                                viewModel = viewModel,
+                                titulos = titulos,
+                                activity = this@MainActivity)
                             addSettingsOpt(navController = navController,
                                            titulos = titulos)
                             addAboutOpt(navController = navController,
@@ -193,8 +179,22 @@ class MainActivity : ComponentActivity() {
             }
 
 //            viewModel.finishLogin(task)
+        }else if (requestCode == 100 && resultCode == RESULT_OK){
+            val fileDescriptor =
+                    applicationContext.contentResolver.openAssetFileDescriptor(data?.data!!, "r")
+            val fileSize = fileDescriptor!!.length
+
+            if (fileSize <= 100000){
+                viewModel.tempImage.value = data?.data!!
+            }else{
+                Toast.makeText(this, R.string.error_size_image, Toast.LENGTH_LONG).show()
+                viewModel.tempImage.value = Uri.EMPTY
+            }
+
         }else{
             viewModel.state.value = viewModel.state.value.copy(errorMessage = R.string.error_login_google)
         }
     }
+
+//    override fun onActivityResult(data: Intent?){}
 }

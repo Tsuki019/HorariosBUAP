@@ -1,12 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">HorariosBUAP</string>
     <string name="title_activity_opctions">OpctionsActivity</string>
-    <string name="mail_enviado">Por favor verifique su dirección de correo electronico en el correo que le enviamos.</string>
+    <string name="mail_enviado">Para terminar el registro verifique su dirección de correo electronico en el correo que le enviamos.</string>
+    <string name="warning_">Para terminar el registro verifique su dirección de correo electronico en el correo que le enviamos.</string>
 
 <!--    ERRORES-->
     <string name="error_input_empty">Ningun campo debe estar vacio.</string>
     <string name="error_email">Email invalido.</string>
     <string name="error_password">La contraseña contiene caracteres invalidos.</string>
+    <string name="error_current_password">Contraseña actual incorrecta</string>
     <string name="error_length_password">La contraseña debe tener al menos 6 caracteres.</string>
     <string name="error_incorrect_values">El email y/o la contraseña no son correctos.</string>
     <string name="error_incorrectly_repeated_password">Las contraseñas ingresadas no coinciden, asegurese de que ambas sean identicas.</string>
@@ -16,8 +18,13 @@
     <string name="error_login_email">Error al tratar de ingresar</string>
     <string name="error_email_no_registrado">No existe ningún usuario con el correo ingresado.</string>
     <string name="error_email_verify">El email no está verificado, por favor verifiquelo con el link que le mandamos a su correo.</string>
+    <string name="error_upload_image">Error al guardar la imagen, por favor inténtelo de nuevo</string>
+    <string name="error_download_image">Error al recuperar la imagen, por favor inténtelo de nuevo</string>
+    <string name="error_size_image">La imagen debe pesar menos de 1MB</string>
+    <string name="error_update_user_data">A ocurrido un error al actualizar los datos, por favor intentelo de nuevo</string>
 
 
 <!--    Google default values-->
     <string name="my_default_web_client_id">730691748527-4160a7njne9bc0dp8c81nt57vp5i3522.apps.googleusercontent.com</string>
+    <string name="default_image">https://firebasestorage.googleapis.com/v0/b/horariosbuap.appspot.com/o/Default_Values%2FDefault_Image.jpg?alt=media&amp;token=3051add0-be3a-4cfd-99a9-035e27bbb9c7</string>
 </resources>
