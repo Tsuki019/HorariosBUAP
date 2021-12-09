@@ -78,7 +78,7 @@ fun DrawerHead(email: String, avatar: Painter) {
             .clip(shape = CircleShape),
               painter = avatar,
               contentDescription = "",
-              contentScale = ContentScale.Crop
+              contentScale = ContentScale.FillBounds
         )
         Spacer(modifier = Modifier.width(20.dp))
         Text(

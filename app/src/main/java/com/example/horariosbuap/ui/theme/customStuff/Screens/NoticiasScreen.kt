@@ -1,11 +1,14 @@
 package com.example.horariosbuap.ui.theme.customStuff.Screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -16,7 +19,12 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,15 +49,16 @@ fun NoticiasScreen(
         .wrapContentWidth(align = Alignment.CenterHorizontally)
         .widthIn(max = 840.dp)
 
-//    Scaffold(scaffoldState = scaffoldState
-//    ) {
-//        Text(text = "Espacio para ver las noticias de la facultad y los calendarios escolares")
-//    }
 
-    NewsContent(modifier = modifier,
-                navController = navController,
-                navigateToArticle = navigateToArticle)
-
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.blanco_fondo))
+    ) {
+        NewsContent(modifier = modifier,
+                    navController = navController,
+                    navigateToArticle = navigateToArticle)
+    }
 }
 
 @Composable
@@ -64,6 +73,11 @@ private fun NewsContent(modifier: Modifier,
         )
     ) {
         item { ImageDrawer(navController, navigateToArticle) }
+        item { Text(
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
+            text = "Calendarios",
+            style = MaterialTheme.typography.h6.copy(color= colorResource(id = R.color.azulOscuroInstitucional), fontWeight = FontWeight.Bold),
+            ) }
         item { Calendars(image = painterResource(id = R.drawable.semestre_2021), description = "Calendario para Semestre 2020-2021") }
         item { Calendars(image = painterResource(id = R.drawable.cuatrimestre_2021), description = "Calendario para Cuatrimestre 2020-2021") }
         item { Calendars(image = painterResource(id = R.drawable.posgrado_2021), description = "Calendario para Posgrado 2020-2021") }
@@ -74,7 +88,8 @@ private fun NewsContent(modifier: Modifier,
 private fun PostListDivider() {
     Divider(
         modifier = Modifier.padding(horizontal = 14.dp),
-        color = MaterialTheme.colors.onSurface.copy(alpha = 0.08f)
+        color = colorResource(id = R.color.azulOscuroInstitucional),
+        thickness = 1.dp
     )
 }
 
@@ -85,11 +100,17 @@ fun PostCardPopular(
     modifier: Modifier = Modifier
 ) {
     Card(
-        shape = MaterialTheme.shapes.medium,
-        modifier = modifier.size(280.dp, 240.dp)
+        shape =  RoundedCornerShape(
+            bottomEndPercent = 8,
+            bottomStartPercent = 8,
+            topEndPercent = 8,
+            topStartPercent = 8
+        ),
+        modifier = modifier.size(280.dp, 240.dp),
+        border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional))
     ) {
 //        Column(modifier = Modifier.clickable(onClick = { navigateToArticle(post.id) })) {
-            Column() {
+        Column() {
 
             Image(
                 painter = news.Image,
@@ -131,15 +152,21 @@ private fun ImageDrawer(navController: NavController,
     val newsItems = LoadNews()
 
     Column() {
-        Text(modifier = Modifier.padding(16.dp),
-             text = "Últimas Noticias")
+        Text(
+            modifier = Modifier.padding(16.dp),
+            text = "Últimas Noticias",
+            style = MaterialTheme.typography.h5.copy(
+                color = colorResource(id = R.color.azulOscuroInstitucional),
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(Font(R.font.source_sans_pro))))
         
         LazyRow(modifier = Modifier.padding(end = 16.dp)) {
             items(newsItems){ newsItem ->
                 PostCardPopular(
                     newsItem,
                     navigateToArticle,
-                    Modifier.padding(start = 16.dp, bottom = 16.dp)
+                    Modifier
+                        .padding(start = 16.dp, bottom = 16.dp)
                         .clickable { navigateToArticle(newsItem.id) }
                 )
             }
@@ -151,22 +178,40 @@ private fun ImageDrawer(navController: NavController,
 @Composable
 private fun Calendars(image : Painter, description : String) {
     
-    Column(Modifier.fillMaxSize()) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = CenterHorizontally
+    ) {
         Card(
-            shape = MaterialTheme.shapes.medium,
             modifier = Modifier
-                .padding(start = 16.dp, top = 10.dp, bottom = 6.dp)
-                .size(350.dp, 250.dp)
+                .padding(top = 10.dp, bottom = 6.dp)
+                .padding(horizontal = 15.dp)
+                .height(250.dp)
                 .align(alignment = CenterHorizontally)
+                .fillMaxWidth(),
+            shape =  RoundedCornerShape(
+                bottomEndPercent = 8,
+                bottomStartPercent = 8,
+                topEndPercent = 8,
+                topStartPercent = 8
+            ),
+            border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+            elevation = 6.dp
         ){
-            Text(modifier = Modifier.padding(top = 5.dp, start = 10.dp)
-                .fillMaxSize(),
-                 text = description)
-//            Divider(modifier = Modifier.padding(vertical = 16.dp))
-            Image(
-                modifier = Modifier.padding(top = 30.dp),
-                painter = image,
-                contentDescription = null)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = CenterHorizontally
+            ) {
+                Text(
+                    modifier = Modifier.padding(vertical = 3.dp),
+                    text = description,
+                    style = MaterialTheme.typography.subtitle1.copy(colorResource(id = R.color.azulOscuroInstitucional))
+                )
+                Image(
+                    modifier = Modifier.padding(vertical = 3.dp),
+                    painter = image,
+                    contentDescription = null)
+            }
         }
 
     }

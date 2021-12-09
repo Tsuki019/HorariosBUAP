@@ -16,10 +16,7 @@ class News (
     var title : String,
     var date : String
     )
-{
-    var i = 0
-    var list : MutableList<News> = mutableListOf()
-}
+{}
 
 @Composable
 fun LoadNews() : MutableList<News> {
