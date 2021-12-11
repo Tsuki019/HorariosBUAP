@@ -19,8 +19,8 @@ class News (
 {}
 
 @Composable
-fun LoadNews() : MutableList<News> {
-    var list : MutableList<News> = mutableListOf()
+fun loadNews() : MutableList<News> {
+    val list : MutableList<News> = mutableListOf()
 
     for (i in 0 .. 5){
         list.add(News(id = i.toString(), Image = painterResource(id = R.drawable.escudo_facultad), title = "Noticia $i", date = "${i*2}/${i*4}/2021"))

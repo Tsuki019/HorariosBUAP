@@ -40,9 +40,9 @@ import com.google.accompanist.insets.rememberInsetsPaddingValues
 
 @Composable
 fun BuscarScreen(
-    navController: NavController
-//    scaffoldState: ScaffoldState,
-//    openDrawer: ()->Unit
+    onSearchProfesor : () -> Unit,
+    onSearchSalon : () -> Unit,
+    onSearchMateria : () -> Unit,
 ) {
     val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
     val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
@@ -97,9 +97,21 @@ fun BuscarScreen(
             ){
                 item { Divider(modifier = Modifier.padding(top = 10.dp), color = Color.Transparent) }
                 if (busqueda.value == ""){
-                    item { SeccionBusqueda(painter = painterResource(id = R.drawable.hatsune_test), campo = "Profesores", onClick = {}) }
-                    item { SeccionBusqueda(painter = painterResource(id = R.drawable.default_image), campo = "Edificios", onClick = {}) }
-                    item { SeccionBusqueda(painter = painterResource(id = R.drawable.image_login), campo = "Clases", onClick = {}) }
+                    item { SeccionBusqueda(
+                        painter = painterResource(id = R.drawable.hatsune_test),
+                        campo = "Profesores",
+                        onClick = { onSearchProfesor() }
+                    )}
+                    item { SeccionBusqueda(
+                        painter = painterResource(id = R.drawable.default_image),
+                        campo = "Salones",
+                        onClick = { onSearchSalon() }
+                    ) }
+                    item { SeccionBusqueda(
+                        painter = painterResource(id = R.drawable.image_login),
+                        campo = "Clases",
+                        onClick = { onSearchMateria() }
+                    ) }
                 }else{
                     item { PostCardData(datos = profesores) }
                     item { PostCardData(datos = profesores) }
@@ -226,7 +238,9 @@ fun PostCardData(
 @Preview
 @Composable
 fun testBuscar() {
-    val navController = rememberNavController()
+    val onSearchProfesor = {}
+    val onSearchSalon = {}
+    val onSearchMateria = {}
 
-    BuscarScreen(navController = navController)
+    BuscarScreen(onSearchMateria = onSearchMateria, onSearchProfesor = onSearchProfesor, onSearchSalon = onSearchSalon)
 }

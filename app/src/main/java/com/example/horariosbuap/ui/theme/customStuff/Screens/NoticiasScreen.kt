@@ -20,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -32,7 +31,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.Screen
-import com.example.horariosbuap.ui.theme.dataBase.LoadNews
+import com.example.horariosbuap.ui.theme.dataBase.loadNews
 import com.example.horariosbuap.ui.theme.dataBase.News
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
@@ -149,7 +148,7 @@ fun PostCardPopular(
 private fun ImageDrawer(navController: NavController,
                         navigateToArticle: (String) -> Unit){
 
-    val newsItems = LoadNews()
+    val newsItems = loadNews()
 
     Column() {
         Text(

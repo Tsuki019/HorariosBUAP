@@ -21,8 +21,6 @@ import com.example.horariosbuap.ui.theme.HorariosBUAPTheme
 import com.example.horariosbuap.ui.theme.customStuff.CustomBottomNav
 import com.example.horariosbuap.ui.theme.customStuff.CustomToolBar
 import com.example.horariosbuap.ui.theme.customStuff.Screens.*
-import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
-import com.example.horariosbuap.ui.theme.dataBase.RegisterViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -31,6 +29,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import androidx.lifecycle.Observer
+import com.example.horariosbuap.ui.theme.dataBase.*
 
 
 @ExperimentalAnimationApi
@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
 
                 val viewModel : LoginViewModel by viewModels()
                 val registerViewModel : RegisterViewModel by viewModels()
+                val datosViewModel : DatosViewModel by viewModels()
 
                 val systemUiController = rememberSystemUiController()
                 val navBarColor = colorResource(id = R.color.azulOscuroInstitucional)
@@ -68,6 +69,15 @@ class MainActivity : ComponentActivity() {
 
                     viewModel.LlenarDatosUsuario(currentUser, viewModel.state)
                 }
+
+                var listaMaterias = emptyList<MateriaTabla>()
+                val database = AppDataBase.getDatabase(this)
+
+                database.materias().getAll().observe(this, Observer {
+                    listaMaterias = it
+
+                    datosViewModel.state = listaMaterias
+                })
 
 
 
@@ -127,7 +137,8 @@ class MainActivity : ComponentActivity() {
                                       titulos = titulos)
                             addSchedule(navController = navController,
                                         viewModel = viewModel,
-                                        titulos = titulos)
+                                        titulos = titulos,
+                                        datosViewModel = datosViewModel)
                             addFree(navController = navController,
                                     titulos = titulos)
                             addAccountOpt(
@@ -155,6 +166,8 @@ class MainActivity : ComponentActivity() {
                                         viewModelLogin= viewModel,
                                         viewModel = registerViewModel,
                                      titulos = titulos)
+                            addAddSubject(navController = navController)
+                            addSearchResultScreen(datosViewModel = datosViewModel)
                         }
                     }
                 }

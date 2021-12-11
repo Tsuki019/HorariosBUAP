@@ -3,26 +3,17 @@ package com.example.horariosbuap
 import android.app.Activity
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.remember
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import androidx.navigation.activity
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+
+import androidx.navigation.*
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.plusAssign
 import com.example.horariosbuap.MainDestinations.SINGLE_NEW_KEY
 import com.example.horariosbuap.ui.theme.customStuff.Screens.*
 import com.example.horariosbuap.ui.theme.customStuff.Screens.ui.theme.VistaNoticia
-import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
-import com.example.horariosbuap.ui.theme.dataBase.RegisterViewModel
-import com.example.horariosbuap.ui.theme.dataBase.SelectImage
+import com.example.horariosbuap.ui.theme.dataBase.*
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.composable
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 
 
 object MainDestinations{
@@ -40,7 +31,8 @@ object MainDestinations{
     const val SINGLE_NEW_KEY = "noticiaId"
     const val LOGIN_ROUTE = "ingresar"
     const val REGISTRATION_ROUTE = "registrarse"
-    const val NOLOGIN_ROUTE = "no_ingresado"
+    const val SEARCH_RESULT_ROUTE = "resultados_busqueda"
+    const val ADD_SUBJECT_ROUTE = "agregar_materia"
 }
 
 @ExperimentalAnimationApi
@@ -152,7 +144,17 @@ fun NavGraphBuilder.addSearch(
                    )
                }
     ){
-        BuscarScreen(navController = navController)
+        val profeOpc = 1
+        BuscarScreen(
+            onSearchProfesor = {
+//                navController.navigate(route = MainDestinations.SEARCH_RESULT_ROUTE+"/$profeOpc"){
+                navController.navigate(route = MainDestinations.SEARCH_RESULT_ROUTE){
+                    popUpTo(MainDestinations.SEARCH_ROUTE){inclusive =true}
+                }
+            },
+            onSearchSalon = {},
+            onSearchMateria = {},
+        )
         titulos.value = "Buscar"
     }
 }
@@ -161,7 +163,8 @@ fun NavGraphBuilder.addSearch(
 fun NavGraphBuilder.addSchedule(
     navController: NavHostController,
     viewModel: LoginViewModel,
-    titulos: MutableState<String>
+    titulos: MutableState<String>,
+    datosViewModel: DatosViewModel
 ){
     composable(route = MainDestinations.SCHEDULE_ROUTE,
                enterTransition = {_, _ ->
@@ -191,7 +194,11 @@ fun NavGraphBuilder.addSchedule(
     ){
         HorarioScreen(
             navController = navController,
-            viewModel = viewModel)
+            viewModel = viewModel,
+            datosViewModel = datosViewModel,
+            onAddSubject = {
+                navController.navigate(route = MainDestinations.ADD_SUBJECT_ROUTE)
+            })
         titulos.value = "Mi horario"
     }
 }
@@ -547,6 +554,71 @@ fun NavGraphBuilder.addRegister(
 //            }
 //        }
     }
+}
+
+@ExperimentalAnimationApi
+fun NavGraphBuilder.addAddSubject(
+    navController: NavHostController,
+) {
+    composable(route = MainDestinations.ADD_SUBJECT_ROUTE, enterTransition = { _, _ ->
+        fadeIn(
+            initialAlpha = 0F, animationSpec = tween(500)
+        )
+    }, exitTransition = { _, _ ->
+        fadeOut(
+            targetAlpha = 0F, animationSpec = tween(500)
+        )
+    }, popEnterTransition = { _, _ ->
+        fadeIn(
+            initialAlpha = 0F, animationSpec = tween(500)
+        )
+    }, popExitTransition = { _, _ ->
+        fadeOut(
+            targetAlpha = 0F, animationSpec = tween(500)
+        )
+    }) {
+        val modifier =  Modifier
+        AgregarMateriaScreen(modifier = modifier)
+    }
+}
+
+@ExperimentalAnimationApi
+fun NavGraphBuilder.addSearchResultScreen(
+    datosViewModel: DatosViewModel
+) {
+
+    composable(
+//        route = MainDestinations.SEARCH_RESULT_ROUTE + "/{tipo}",
+        route = MainDestinations.SEARCH_RESULT_ROUTE,
+
+//        arguments = listOf(
+//            navArgument("tipo"){type = NavType.IntType}
+//        ),
+        enterTransition = { _, _ ->
+            fadeIn(
+                initialAlpha = 0F, animationSpec = tween(500)
+            )
+        }, exitTransition = { _, _ ->
+            fadeOut(
+                targetAlpha = 0F, animationSpec = tween(500)
+            )
+        }, popEnterTransition = { _, _ ->
+            fadeIn(
+                initialAlpha = 0F, animationSpec = tween(500)
+            )
+        }, popExitTransition = { _, _ ->
+            fadeOut(
+                targetAlpha = 0F, animationSpec = tween(500)
+            )
+        }
+    )
+    {
+
+        println(">>>>>>>>>addSearchResultScreen = tipo = ")
+        ResultadosBusqueda(tipo = 1, datosViewModel = datosViewModel)
+
+    }
+    println(">>>>>>>>>dESPUES de composable")
 }
 
 @ExperimentalAnimationApi

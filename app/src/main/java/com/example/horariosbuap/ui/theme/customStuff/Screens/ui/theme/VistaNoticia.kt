@@ -7,13 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.example.horariosbuap.R
-import com.example.horariosbuap.ui.theme.dataBase.LoadNews
+import com.example.horariosbuap.ui.theme.dataBase.loadNews
 import com.example.horariosbuap.ui.theme.dataBase.News
 
 @Composable
 fun VistaNoticia(noticiaId : String?) {
 
-    val newsList = LoadNews()
+    val newsList = loadNews()
     var noticia  = News(id = "-1",
                         Image = painterResource(id = R.drawable.escudo_facultad),
                         title = "No se encontro la noticia",
