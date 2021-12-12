@@ -23,12 +23,18 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.R
@@ -44,10 +50,7 @@ fun BuscarScreen(
     onSearchSalon : () -> Unit,
     onSearchMateria : () -> Unit,
 ) {
-    val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
-    val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
-    val focusManager = LocalFocusManager.current
-    val busqueda = rememberSaveable { mutableStateOf("") }
+
     val profesores = Profesores(nombre = "Nombre Apellido Apellido", puesto = "Profesor", cubiculo = "Edi.2 cub.A2", correo = "profe1@buap.com", correo2 = "profe1correo2@buap.com", data = "profe1 Profesor")
 
     Box (
@@ -61,61 +64,45 @@ fun BuscarScreen(
                 .padding(horizontal = 5.dp)
                 .padding(top = 10.dp),
         ) {
-            TransparentTextField(
-                textFieldValue = busqueda,
-                textLabel = "Buscar",
-                keyboardType = KeyboardType.Text,
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        focusManager.clearFocus()
-                    }
+
+            Text(
+                modifier = Modifier.padding(vertical = 20.dp).fillMaxWidth(),
+                style = TextStyle(
+                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                    fontSize = 30.sp
                 ),
-                imeAction = ImeAction.Next,
-                focusColor = azulClaro,
-                unFocusedColor = azulOscuro,
-                trailingIcon = {
-                    IconButton(onClick = {
-                        //TODO (Proceso de busqueda)
-                    })
-                    {
-                        Icon(
-                            imageVector = Icons.Rounded.Search,
-                            contentDescription = "",
-                            tint = azulOscuro
-                        )
-                    }
-                },
-                textColor = azulOscuro
-            )
+                textAlign = TextAlign.Center,
+                text = "¿Qué buscamos hoy?")
             
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 20.dp),
                 contentPadding = rememberInsetsPaddingValues(
                     insets = LocalWindowInsets.current.systemBars,
                     applyTop = false
                 )
             ){
-                item { Divider(modifier = Modifier.padding(top = 10.dp), color = Color.Transparent) }
-                if (busqueda.value == ""){
-                    item { SeccionBusqueda(
-                        painter = painterResource(id = R.drawable.hatsune_test),
-                        campo = "Profesores",
-                        onClick = { onSearchProfesor() }
-                    )}
-                    item { SeccionBusqueda(
-                        painter = painterResource(id = R.drawable.default_image),
-                        campo = "Salones",
-                        onClick = { onSearchSalon() }
-                    ) }
-                    item { SeccionBusqueda(
-                        painter = painterResource(id = R.drawable.image_login),
-                        campo = "Clases",
-                        onClick = { onSearchMateria() }
-                    ) }
-                }else{
-                    item { PostCardData(datos = profesores) }
-                    item { PostCardData(datos = profesores) }
-                }
+
+                item { SeccionBusqueda(
+                    painter = painterResource(id = R.drawable.ic_profesores),
+                    campo = "Profesores",
+                    onClick = {
+                        onSearchProfesor()
+                    }
+                )}
+                item { SeccionBusqueda(
+                    painter = painterResource(id = R.drawable.ic_edificios),
+                    campo = "Edificios",
+                    onClick = { onSearchSalon() }
+                ) }
+                item { SeccionBusqueda(
+                    painter = painterResource(id = R.drawable.ic_materias),
+                    campo = "Materias",
+                    onClick = { onSearchMateria() }
+                ) }
             }
         }
     }

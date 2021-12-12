@@ -116,6 +116,7 @@ fun NavGraphBuilder.addSinglePostView(
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addSearch(
     navController: NavHostController,
+    datosViewModel: DatosViewModel,
     titulos: MutableState<String>
 ){
     composable(route = MainDestinations.SEARCH_ROUTE,
@@ -144,16 +145,20 @@ fun NavGraphBuilder.addSearch(
                    )
                }
     ){
-        val profeOpc = 1
+
         BuscarScreen(
             onSearchProfesor = {
-//                navController.navigate(route = MainDestinations.SEARCH_RESULT_ROUTE+"/$profeOpc"){
-                navController.navigate(route = MainDestinations.SEARCH_RESULT_ROUTE){
-                    popUpTo(MainDestinations.SEARCH_ROUTE){inclusive =true}
-                }
+                datosViewModel.tipoBusqueda.value = 1
+                navController.navigate(route = MainDestinations.SEARCH_RESULT_ROUTE)
             },
-            onSearchSalon = {},
-            onSearchMateria = {},
+            onSearchSalon = {
+                datosViewModel.tipoBusqueda.value = 2
+                navController.navigate(route = MainDestinations.SEARCH_RESULT_ROUTE)
+            },
+            onSearchMateria = {
+                datosViewModel.tipoBusqueda.value = 3
+                navController.navigate(route = MainDestinations.SEARCH_RESULT_ROUTE)
+            },
         )
         titulos.value = "Buscar"
     }
@@ -584,41 +589,38 @@ fun NavGraphBuilder.addAddSubject(
 
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addSearchResultScreen(
-    datosViewModel: DatosViewModel
+    datosViewModel: DatosViewModel,
+    titulos: MutableState<String>
 ) {
-
-    composable(
+     composable(
 //        route = MainDestinations.SEARCH_RESULT_ROUTE + "/{tipo}",
         route = MainDestinations.SEARCH_RESULT_ROUTE,
-
 //        arguments = listOf(
 //            navArgument("tipo"){type = NavType.IntType}
-//        ),
+//        )
         enterTransition = { _, _ ->
-            fadeIn(
-                initialAlpha = 0F, animationSpec = tween(500)
-            )
-        }, exitTransition = { _, _ ->
-            fadeOut(
-                targetAlpha = 0F, animationSpec = tween(500)
-            )
-        }, popEnterTransition = { _, _ ->
-            fadeIn(
-                initialAlpha = 0F, animationSpec = tween(500)
-            )
-        }, popExitTransition = { _, _ ->
-            fadeOut(
-                targetAlpha = 0F, animationSpec = tween(500)
-            )
-        }
+             fadeIn(
+                 initialAlpha = 0F, animationSpec = tween(500)
+             )
+         }, exitTransition = { _, _ ->
+             fadeOut(
+                 targetAlpha = 0F, animationSpec = tween(500)
+             )
+         }, popEnterTransition = { _, _ ->
+             fadeIn(
+                 initialAlpha = 0F, animationSpec = tween(500)
+             )
+         }, popExitTransition = { _, _ ->
+             fadeOut(
+                 targetAlpha = 0F, animationSpec = tween(500)
+             )
+         }
     )
     {
-
-        println(">>>>>>>>>addSearchResultScreen = tipo = ")
-        ResultadosBusqueda(tipo = 1, datosViewModel = datosViewModel)
-
+        ResultadosBusqueda(datosViewModel = datosViewModel, titulos = titulos)
     }
-    println(">>>>>>>>>dESPUES de composable")
+
+
 }
 
 @ExperimentalAnimationApi

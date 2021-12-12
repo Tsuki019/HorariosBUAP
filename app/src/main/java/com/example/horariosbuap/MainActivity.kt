@@ -13,6 +13,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -59,7 +60,7 @@ class MainActivity : ComponentActivity() {
                 val scaffoldState = rememberScaffoldState()
                 val coroutineScope = rememberCoroutineScope()
                 val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
-                val titulos = remember{ mutableStateOf("Empty") }
+                val titulos = rememberSaveable{ mutableStateOf("Empty") }
 
                 //Revisa si ya ha entrado con un correo
                 val auth = Firebase.auth
@@ -115,7 +116,7 @@ class MainActivity : ComponentActivity() {
                         },
                         bottomBar = {
                             when(titulos.value){
-                                "Mi cuenta", "Ajustes", "Acerca de la Aplicacion", "Noticias", "Horarios Buap"->{}
+                                "Mi cuenta", "Ajustes", "Acerca de la Aplicacion", "Noticias", "Horarios Buap", "Buscar Salón", "Buscar Profesor", "Buscar Materia"->{}
                                 else->{
                                     CustomBottomNav(
                                         navController = navController,
@@ -134,6 +135,7 @@ class MainActivity : ComponentActivity() {
                             addSinglePostView(navController = navController,
                                               titulos = titulos)
                             addSearch(navController = navController,
+                                      datosViewModel = datosViewModel,
                                       titulos = titulos)
                             addSchedule(navController = navController,
                                         viewModel = viewModel,
@@ -167,7 +169,9 @@ class MainActivity : ComponentActivity() {
                                         viewModel = registerViewModel,
                                      titulos = titulos)
                             addAddSubject(navController = navController)
-                            addSearchResultScreen(datosViewModel = datosViewModel)
+                            addSearchResultScreen(
+                                datosViewModel = datosViewModel,
+                                titulos = titulos)
                         }
                     }
                 }
@@ -191,7 +195,6 @@ class MainActivity : ComponentActivity() {
                 // Google Sign In failed, update UI appropriately
             }
 
-//            viewModel.finishLogin(task)
         }else if (requestCode == 100 && resultCode == RESULT_OK){
             val fileDescriptor =
                     applicationContext.contentResolver.openAssetFileDescriptor(data?.data!!, "r")
@@ -208,6 +211,4 @@ class MainActivity : ComponentActivity() {
             viewModel.state.value = viewModel.state.value.copy(errorMessage = R.string.error_login_google)
         }
     }
-
-//    override fun onActivityResult(data: Intent?){}
 }
