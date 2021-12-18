@@ -82,10 +82,18 @@ class LoginViewModel : ViewModel() {
                     // If sign in fails, display a message to the user.
 //                    Log.w(TAG, "signInWithEmail:failure", task.exception)
 //                    updateUI(null)
-                    if (task.exception!!.message == "There is no user record corresponding to this identifier. The user may have been deleted."){
-                        state.value = state.value.copy(errorMessage = R.string.error_email_no_registrado)
-                    }else{
-                        state.value = state.value.copy(errorMessage = R.string.error_login_email)
+                    when (task.exception!!.message){
+
+                        "There is no user record corresponding to this identifier. The user may have been deleted." -> {
+                            state.value = state.value.copy(errorMessage = R.string.error_email_no_registrado)
+                        }
+                        "The password is invalid or the user does not have a password." -> {
+                            state.value = state.value.copy(errorMessage = R.string.error_incorrect_values)
+                        }
+                        else -> {
+                            state.value = state.value.copy(errorMessage = R.string.error_login_email)
+                        }
+
                     }
                     println("xxxxxxxxxxxxxxxxx${task.exception!!.message}xxxxxxxxxxxxxxxxxx")
                 }

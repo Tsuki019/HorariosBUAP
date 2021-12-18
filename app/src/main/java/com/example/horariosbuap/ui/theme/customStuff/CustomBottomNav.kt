@@ -30,7 +30,7 @@ fun CustomBottomNav(
     currentRoute: String
 )
 {
-    val items = Screen.Items.list
+    val items = BottomNavScreens.Items.list
 
     Row (
         modifier = Modifier
@@ -42,8 +42,12 @@ fun CustomBottomNav(
     ){
         items.forEach{ item->
             CustomBottomNavItem(item = item, isSelected = item.destination ==  currentRoute) {
-                navController.navigate(item.id){
-                    popUpTo(0)
+                navController.navigate(item.destination){
+                    if (item.destination == MainDestinations.NEWS_ROUTE){
+                        popUpTo(0)
+                    }else{
+                        popUpTo(MainDestinations.NEWS_ROUTE)
+                    }
                 }
             }
         }
@@ -52,7 +56,7 @@ fun CustomBottomNav(
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun CustomBottomNavItem(item:Screen,isSelected:Boolean, onClick:()->Unit) {
+fun CustomBottomNavItem(item:BottomNavScreens, isSelected:Boolean, onClick:()->Unit) {
     val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
     val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
 
@@ -102,12 +106,12 @@ fun PreV1() {
 @Preview
 fun PreV3() {
     val onClick ={}
-    CustomBottomNavItem(item = Screen.Horario, isSelected = true, onClick = onClick)
+    CustomBottomNavItem(item = BottomNavScreens.Horario, isSelected = true, onClick = onClick)
 }
 
 @Composable
 @Preview
 fun PreV2() {
     val onClick = {}
-    CustomBottomNavItem(item = Screen.Horario, isSelected = false, onClick = onClick)
+    CustomBottomNavItem(item = BottomNavScreens.Horario, isSelected = false, onClick = onClick)
 }

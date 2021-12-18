@@ -1,8 +1,6 @@
-package com.example.horariosbuap.ui.theme.customStuff.Screens
+package com.example.horariosbuap.ui.theme.customStuff.screens
 
 import android.app.Activity
-import android.graphics.Paint
-import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -31,12 +29,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.horariosbuap.MainDestinations
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.components.EventDialog
 import com.example.horariosbuap.ui.theme.customStuff.components.OutlinedMediaButton
@@ -44,7 +37,6 @@ import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
 import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
 import com.example.horariosbuap.ui.theme.dataBase.RegisterState
-import com.example.horariosbuap.ui.theme.dataBase.RegisterViewModel
 
 
 @Composable

@@ -39,7 +39,7 @@ fun ExpandibleCard(
         backgroundColor = backgroundColor,
         shape = RoundedCornerShape(CornerSize(10.dp))
     ) {
-        var expanded = remember{ mutableStateOf(false)}
+        val expanded = remember{ mutableStateOf(false)}
         
         Column(modifier = modifier
             .fillMaxWidth()

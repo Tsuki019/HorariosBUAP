@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.customStuff.Screens
+package com.example.horariosbuap.ui.theme.customStuff.screens
 
 import android.app.Activity
 import android.net.Uri
@@ -27,19 +27,14 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.material.Icon
-import androidx.compose.ui.focus.focusModifier
-import androidx.compose.ui.input.key.Key.Companion.Break
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.example.horariosbuap.R
-import com.example.horariosbuap.ui.theme.customStuff.components.EventDialog
 import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
 import com.example.horariosbuap.ui.theme.dataBase.*
@@ -58,8 +53,8 @@ fun MiCuentaOption(
     onSignOut: () -> Unit
 ) {
 
-    var cambiarImagenState = remember { mutableStateOf(false)}
-    var progressBarState = remember {mutableStateOf(false)}
+    val cambiarImagenState = remember { mutableStateOf(false)}
+    val progressBarState = remember {mutableStateOf(false)}
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -87,7 +82,7 @@ fun MiCuentaOption(
          item { Divisor() }
          item { NombrePublico(viewModel = viewModel, activity = activity) }
          item { Divisor()}
-         item { correo(viewModel = viewModel) }
+         item { Correo(viewModel = viewModel) }
          item { Divisor() }
          item { Contrasena(viewModel = viewModel, activity = activity) }
          item { SalirDeCuenta(viewModel = viewModel, onSignOut = onSignOut) }
@@ -132,7 +127,7 @@ fun FotoPerfil(
             .height(130.dp)
             .clip(shape = CircleShape),
               painter = if (viewModel.state.value.image == ""){
-                  painterResource(id = R.drawable.hatsune_test)
+                  painterResource(id = R.drawable.default_image)
               }else{
                   rememberImagePainter(data = viewModel.state.value.image)
                    },
@@ -233,7 +228,7 @@ fun NombrePublico(
 }
 
 @Composable
-fun correo(viewModel: LoginViewModel) {
+fun Correo(viewModel: LoginViewModel) {
 
 //    val focusManager = LocalFocusManager.current
 //    val email = rememberSaveable{ mutableStateOf("")}
@@ -437,7 +432,7 @@ fun Contrasena(
                                             }else null
 
                                     if (error == null){
-                                        val isUpdated = UpdateUserPassword(
+                                        UpdateUserPassword(
                                             newPassword = newPassword.value,
                                             viewModel = viewModel,
                                             activity = activity,

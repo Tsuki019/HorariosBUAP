@@ -66,6 +66,7 @@ class RegisterViewModel : ViewModel () {
                                         activity = activity,
                                         state = loginViewModel.state
                                     )
+                                    state.value = state.value.copy(successRegister = true)
                                     state.value = state.value.copy(displayProcessbar = false)
 
                                 }else{

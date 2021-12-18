@@ -1,20 +1,36 @@
-package com.example.horariosbuap.ui.theme.customStuff.Screens
+package com.example.horariosbuap.ui.theme.customStuff.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -22,10 +38,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.horariosbuap.MainDestinations
 import com.example.horariosbuap.R
+import com.example.horariosbuap.ui.theme.customStuff.components.ButtonToggleGroup
 import com.example.horariosbuap.ui.theme.customStuff.components.ExpandibleCard
 import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
 import com.example.horariosbuap.ui.theme.dataBase.DatosViewModel
+import com.example.horariosbuap.ui.theme.dataBase.Materias
+import com.example.horariosbuap.ui.theme.dataBase.getMaterias
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.firebase.auth.ktx.auth
@@ -53,7 +72,7 @@ fun HorarioScreen(
         }else{
             NoLoginScreen(
                 modifier = modifier,
-                onLogin = {navController.navigate(route = MainDestinations.LOGIN_ROUTE)},
+                onLogin = {navController.navigate(route = MainDestinations.LOGIN_ROUTE) },
                 onRegister = {navController.navigate(route = MainDestinations.REGISTRATION_ROUTE)})
         }
         
@@ -152,19 +171,3 @@ fun NoLoginScreen(
         )
     }
 }
-
-//@Preview
-//@Composable
-//fun TestVerHorarios() {
-//    val modifier = Modifier
-//
-//    VerHorariosScreen(modifier = modifier)
-//}
-
-//@Preview
-//@Composable
-//fun TextNoLoginScreen() {
-//    val modifier = Modifier
-//
-//    NoLoginScreen(modifier = modifier, onLogin = {}, onRegister = {})
-//}

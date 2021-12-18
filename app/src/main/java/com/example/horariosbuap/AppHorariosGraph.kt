@@ -9,8 +9,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.*
 import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.MainDestinations.SINGLE_NEW_KEY
-import com.example.horariosbuap.ui.theme.customStuff.Screens.*
-import com.example.horariosbuap.ui.theme.customStuff.Screens.ui.theme.VistaNoticia
+import com.example.horariosbuap.ui.theme.customStuff.screens.*
+import com.example.horariosbuap.ui.theme.customStuff.screens.ui.theme.VistaNoticia
 import com.example.horariosbuap.ui.theme.dataBase.*
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.composable
@@ -281,8 +281,7 @@ fun NavGraphBuilder.addAccountOpt(
             viewModel = viewModel,
             activity = activity,
             onSignOut = {navController.navigate(route= MainDestinations.LOGIN_ROUTE) {
-                popUpTo(MainDestinations.ACCOUNT_ROUTE){
-                    inclusive = true } } }
+                popUpTo(MainDestinations.NEWS_ROUTE) } }
         )
 
         titulos.value = "Mi cuenta"
@@ -470,9 +469,7 @@ fun NavGraphBuilder.addLogin(
         if (viewModel.state.value.successLogin){
             LaunchedEffect(key1 = Unit){
                 navController.navigate(route = MainDestinations.ACCOUNT_ROUTE){
-                    popUpTo(MainDestinations.LOGIN_ROUTE){
-                        inclusive = true
-                    }
+                    popUpTo(MainDestinations.NEWS_ROUTE)
                 }
             }
         }else{
@@ -484,6 +481,7 @@ fun NavGraphBuilder.addLogin(
                         onDissmisDialog = viewModel::hideErrorDialog,
                         onNavigateToRegister = {navController.navigate(route = MainDestinations.REGISTRATION_ROUTE)}
             )
+            registerViewModel.state.value = registerViewModel.state.value.copy(successRegister = false)
             titulos.value = "Horarios Buap"
         }
     }
@@ -528,7 +526,8 @@ fun NavGraphBuilder.addRegister(
             RegistrationScreen(
                 state = viewModel.state.value,
                 onRegister = viewModel::register,
-                onBack = { navController.navigate(route = MainDestinations.LOGIN_ROUTE) },
+                onBack = { navController.navigate(route = MainDestinations.LOGIN_ROUTE){
+                    popUpTo(MainDestinations.LOGIN_ROUTE){inclusive = true}} },
                 onLoginWithGoogle = viewModelLogin::loginWithGoogle,
                 activity = activity,
                 onDismissDialog = viewModel::hideErrorDialog,
@@ -536,34 +535,24 @@ fun NavGraphBuilder.addRegister(
             )
             titulos.value = "Horarios Buap"
         }else{
-            LoginScreen(state = viewModelLogin.state.value,
-                        registerViewModel = viewModel,
-                        onLogin = viewModelLogin::login,
-                        onLoginWithGoogle = viewModelLogin::loginWithGoogle,
-                        activity = activity,
-                        onDissmisDialog = viewModelLogin::hideErrorDialog,
-                        onNavigateToRegister = {navController.navigate(route = MainDestinations.REGISTRATION_ROUTE)}
-            )
+//            LoginScreen(state = viewModelLogin.state.value,
+//                        registerViewModel = viewModel,
+//                        onLogin = viewModelLogin::login,
+//                        onLoginWithGoogle = viewModelLogin::loginWithGoogle,
+//                        activity = activity,
+//                        onDissmisDialog = viewModelLogin::hideErrorDialog,
+//                        onNavigateToRegister = {navController.navigate(route = MainDestinations.REGISTRATION_ROUTE)}
+//            )
+
+            navController.navigate(route = MainDestinations.LOGIN_ROUTE){popUpTo(MainDestinations.LOGIN_ROUTE){inclusive = true} }
             titulos.value = "Horarios Buap"
         }
-
-
-
-//        if (viewModelLogin.state.value.successLogin){
-//            LaunchedEffect(key1 = Unit){
-//                navController.navigate(route = MainDestinations.ACCOUNT_ROUTE){
-//                    popUpTo(MainDestinations.LOGIN_ROUTE){
-//                        inclusive = true
-//                    }
-//                }
-//            }
-//        }
     }
 }
 
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addAddSubject(
-    navController: NavHostController,
+    datosViewModel: DatosViewModel,
 ) {
     composable(route = MainDestinations.ADD_SUBJECT_ROUTE, enterTransition = { _, _ ->
         fadeIn(
@@ -582,8 +571,8 @@ fun NavGraphBuilder.addAddSubject(
             targetAlpha = 0F, animationSpec = tween(500)
         )
     }) {
-        val modifier =  Modifier
-        AgregarMateriaScreen(modifier = modifier)
+
+        AgregarMateriasScreen(datosViewModel = datosViewModel)
     }
 }
 

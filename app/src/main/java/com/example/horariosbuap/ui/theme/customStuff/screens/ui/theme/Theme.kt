@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.customStuff.Screens.ui.theme
+package com.example.horariosbuap.ui.theme.customStuff.screens.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

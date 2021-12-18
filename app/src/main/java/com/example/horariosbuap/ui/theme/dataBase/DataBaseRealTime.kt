@@ -1,5 +1,6 @@
 package com.example.horariosbuap.ui.theme.dataBase
 
+import androidx.compose.runtime.MutableState
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -51,24 +52,24 @@ fun getEdificios(datosViewModel: DatosViewModel){
     })
 }
 
-fun getClases(){}
+fun getMaterias(datosViewModel: DatosViewModel){
+    val realTimeRef = FirebaseDatabase.getInstance().reference.child("Materias").child("materias_unicas").orderByChild("nombre")
+    val materias = ArrayList<Materias?>()
 
-fun buscarPorKey(){
-    val realTimeRef = FirebaseDatabase.getInstance().reference.child("Profesores")
-    val profesores : ArrayList<Profesores?> = arrayListOf()
 
-    realTimeRef.addValueEventListener(object  : ValueEventListener{
+    realTimeRef.addValueEventListener(object  : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             // Get Post object and use the values to update the UI
             for (snapshot in dataSnapshot.children){
-                profesores.add(snapshot.getValue(Profesores::class.java))
+
+                materias.add(snapshot.getValue(Materias::class.java))
             }
-            // ...
+            datosViewModel.llenarMaterias(materias)
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
             // Getting Post failed, log a message
-//            Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+            // Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
         }
 
     })

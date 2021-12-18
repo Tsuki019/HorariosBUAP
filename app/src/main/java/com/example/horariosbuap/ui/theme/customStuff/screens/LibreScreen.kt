@@ -1,14 +1,13 @@
-package com.example.horariosbuap.ui.theme.customStuff.Screens
+package com.example.horariosbuap.ui.theme.customStuff.screens
 
 import androidx.compose.material.Scaffold
-import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavController
-import com.example.horariosbuap.ui.theme.customStuff.Screen
+import com.example.horariosbuap.ui.theme.customStuff.BottomNavScreens
 
 @Composable
 fun LibreScreen(
@@ -17,7 +16,7 @@ fun LibreScreen(
 //    openDrawer: ()->Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val currentScreen = remember{ mutableStateOf<Screen>(Screen.Noticias) }
+    val currentScreen = remember{ mutableStateOf<BottomNavScreens>(BottomNavScreens.Noticias) }
 
     Scaffold(
 //        scaffoldState = scaffoldState

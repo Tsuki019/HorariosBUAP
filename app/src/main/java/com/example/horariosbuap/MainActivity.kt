@@ -21,7 +21,7 @@ import coil.compose.rememberImagePainter
 import com.example.horariosbuap.ui.theme.HorariosBUAPTheme
 import com.example.horariosbuap.ui.theme.customStuff.CustomBottomNav
 import com.example.horariosbuap.ui.theme.customStuff.CustomToolBar
-import com.example.horariosbuap.ui.theme.customStuff.Screens.*
+import com.example.horariosbuap.ui.theme.customStuff.screens.*
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -116,7 +116,7 @@ class MainActivity : ComponentActivity() {
                         },
                         bottomBar = {
                             when(titulos.value){
-                                "Mi cuenta", "Ajustes", "Acerca de la Aplicacion", "Noticias", "Horarios Buap", "Buscar Salón", "Buscar Profesor", "Buscar Materia"->{}
+                                "Mi cuenta", "Ajustes", "Acerca de la Aplicacion", "Noticias", "Horarios Buap", "Buscar Profesor", "Buscar Materias", "Buscar Salones"->{}
                                 else->{
                                     CustomBottomNav(
                                         navController = navController,
@@ -168,7 +168,7 @@ class MainActivity : ComponentActivity() {
                                         viewModelLogin= viewModel,
                                         viewModel = registerViewModel,
                                      titulos = titulos)
-                            addAddSubject(navController = navController)
+                            addAddSubject(datosViewModel = datosViewModel)
                             addSearchResultScreen(
                                 datosViewModel = datosViewModel,
                                 titulos = titulos)
