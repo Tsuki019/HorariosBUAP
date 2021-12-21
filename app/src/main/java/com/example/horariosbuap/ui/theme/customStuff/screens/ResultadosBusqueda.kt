@@ -8,10 +8,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -20,10 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,11 +38,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import coil.compose.rememberImagePainter
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.components.ButtonToggleGroup
-import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
+import com.example.horariosbuap.ui.theme.customStuff.components.pageNavigator
 import com.example.horariosbuap.ui.theme.dataBase.*
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
@@ -55,7 +50,8 @@ import com.google.accompanist.insets.rememberInsetsPaddingValues
 @Composable
 fun ResultadosBusqueda(
     datosViewModel: DatosViewModel,
-    titulos : MutableState<String>
+    titulos : MutableState<String>,
+    onNavToSubject : (String) -> Unit
 ) {
 
     when(datosViewModel.tipoBusqueda.value){
@@ -70,7 +66,7 @@ fun ResultadosBusqueda(
         }
         3 -> {
             titulos.value = "Buscar Materias"
-            VistaMaterias(datosViewModel = datosViewModel)
+            VistaMaterias(datosViewModel = datosViewModel, onNavToSubject = onNavToSubject)
         }
 
     }
@@ -87,6 +83,11 @@ private fun VistaProfesores(
     val focusManager = LocalFocusManager.current
     val textBusq = remember {mutableStateOf("")}
     val busquedaOpc = rememberSaveable{ mutableStateOf("Nombre")}
+    val pagina = remember {mutableStateOf(1)}
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+
 
     Column(
         modifier = Modifier
@@ -170,6 +171,7 @@ private fun VistaProfesores(
         )
 
         LazyColumn(
+            state= listState,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 4.dp),
@@ -181,11 +183,20 @@ private fun VistaProfesores(
             if (textBusq.value == ""){
 
                 getProfesores(datosViewModel = datosViewModel)
-                item {
-                    if (datosViewModel.profesoresState.value){
-                        for (datos in datosViewModel.profesores){
-                            CardProfesor(datos = datos)
+
+                if (datosViewModel.profesoresState.value){
+                    val ultimo : Int = datosViewModel.profesores.size / 50 + 1
+                    item {
+                        pageNavigator(pagina = pagina, datosViewModel = datosViewModel, ultimo = ultimo, listState = listState, coroutineScope = coroutineScope)
+                    }
+                    item{
+                        var cont = 50*(pagina.value - 1)
+
+                        while (cont <= pagina.value*50 && cont < datosViewModel.profesores.size){
+                            CardProfesor(datos = datosViewModel.profesores[cont])
+                            cont++
                         }
+
                         Divider(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -194,9 +205,12 @@ private fun VistaProfesores(
                             color = colorResource(id = R.color.azulOscuroInstitucional),
                             thickness = 1.dp
                         )
-                    }else{
-                        LoadingIndicator()
                     }
+                    item {
+                        pageNavigator(pagina = pagina, datosViewModel = datosViewModel, ultimo = ultimo, listState =  listState, coroutineScope = coroutineScope)
+                    }
+                }else{
+                    item{ LoadingIndicator() }
                 }
             }else{
                 item {
@@ -408,13 +422,16 @@ fun VistaEdificios(datosViewModel: DatosViewModel) {
 }
 
 @Composable
-private fun VistaMaterias(datosViewModel: DatosViewModel) {
+private fun VistaMaterias(datosViewModel: DatosViewModel, onNavToSubject: (String) -> Unit) {
 
     val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
     val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
     val focusManager = LocalFocusManager.current
     val textBusq = remember {mutableStateOf("")}
     val busquedaOpc = rememberSaveable{ mutableStateOf("Nombre")}
+    val pagina = remember{ mutableStateOf(1)}
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -449,13 +466,13 @@ private fun VistaMaterias(datosViewModel: DatosViewModel) {
                 datosViewModel.busquedaState.value = false
                 when (busquedaOpc.value){
                     "Nombre" -> {
-                        datosViewModel.buscarNombreMateria(key = textBusq)
+                        datosViewModel.buscarMateriaPorNombre(key = textBusq)
                     }
                     "Profesor"-> {
-                        datosViewModel.buscarProfesorMateria(key = textBusq)
+                        datosViewModel.buscarMateriaPorProfesor(key = textBusq)
                     }
                     "NRC" -> {
-                        datosViewModel.buscarNRCMateria(key = textBusq)
+                        datosViewModel.buscarMateriaPorNRC(key = textBusq)
                     }
                 }
 
@@ -467,13 +484,13 @@ private fun VistaMaterias(datosViewModel: DatosViewModel) {
                     datosViewModel.busquedaState.value = false
                     when (busquedaOpc.value){
                         "Nombre" -> {
-                            datosViewModel.buscarNombreMateria(key = textBusq)
+                            datosViewModel.buscarMateriaPorNombre(key = textBusq)
                         }
                         "Profesor"-> {
-                            datosViewModel.buscarProfesorMateria(key = textBusq)
+                            datosViewModel.buscarMateriaPorProfesor(key = textBusq)
                         }
                         "NRC" -> {
-                            datosViewModel.buscarNRCMateria(key = textBusq)
+                            datosViewModel.buscarMateriaPorNRC(key = textBusq)
                         }
                     }
                 }) {
@@ -506,6 +523,7 @@ private fun VistaMaterias(datosViewModel: DatosViewModel) {
         )
 
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 4.dp),
@@ -517,11 +535,33 @@ private fun VistaMaterias(datosViewModel: DatosViewModel) {
             if (textBusq.value == ""){
 
                 getMaterias(datosViewModel = datosViewModel)
-                item {
-                    if (datosViewModel.materiasState.value){
-                        for (datos in datosViewModel.materias){
-                            CardMaterias(datos = datos)
+
+                if (datosViewModel.materiasState.value) {
+                    val ultimo: Int = datosViewModel.materias.size / 50 + 1
+
+                    item {  }
+
+                    item {
+                        pageNavigator(
+                            pagina = pagina,
+                            datosViewModel = datosViewModel,
+                            ultimo = ultimo,
+                            listState = listState,
+                            coroutineScope = coroutineScope
+                        )
+                    }
+
+                    item (){
+                        var cont = 50 * (pagina.value - 1)
+
+                        while (cont <= pagina.value * 50 && cont < datosViewModel.materias.size) {
+
+                                CardMaterias(datos = datosViewModel.materias[cont], onNavToSubject = onNavToSubject)
+
+                            cont++
                         }
+                    }
+                    item {
                         Divider(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -530,15 +570,18 @@ private fun VistaMaterias(datosViewModel: DatosViewModel) {
                             color = colorResource(id = R.color.azulOscuroInstitucional),
                             thickness = 1.dp
                         )
-                    }else{
-                        LoadingIndicator()
                     }
+                    item {
+                        pageNavigator(pagina = pagina, datosViewModel = datosViewModel, ultimo = ultimo, listState = listState, coroutineScope = coroutineScope)
+                    }
+                }else{
+                    item { LoadingIndicator() }
                 }
             }else{
                 item {
                     if (datosViewModel.busquedaState.value){
                         for (item in datosViewModel.resultMaterias){
-                            CardMaterias(datos = item)
+                            CardMaterias(datos = item, onNavToSubject = onNavToSubject)
                         }
                         Divider(
                             modifier = Modifier
@@ -597,6 +640,7 @@ private fun LoadingIndicator() {
     }
 
 }
+
 
 @Composable
 private fun CardProfesor(
@@ -841,13 +885,15 @@ private fun CardEdicios(
 
 @Composable
 private fun CardMaterias(
-    datos : Materias?
+    datos : Materias?,
+    onNavToSubject: (String) -> Unit
 ) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 5.dp),
+            .padding(horizontal = 10.dp, vertical = 5.dp)
+            .clickable { onNavToSubject(datos!!.nrc) },
         backgroundColor = Color.White,
         elevation = 5.dp,
         border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),

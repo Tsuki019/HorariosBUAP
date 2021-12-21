@@ -74,3 +74,26 @@ fun getMaterias(datosViewModel: DatosViewModel){
 
     })
 }
+
+fun getMateriasHorario (datosViewModel: DatosViewModel){
+    val realTimeRef = FirebaseDatabase.getInstance().reference.child("Materias").child("materias_horario")
+    val materias = ArrayList<MateriasHorario?>()
+
+
+    realTimeRef.addValueEventListener(object  : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            // Get Post object and use the values to update the UI
+            for (snapshot in dataSnapshot.children){
+
+                materias.add(snapshot.getValue(MateriasHorario::class.java))
+            }
+            datosViewModel.llenarMateriasHorario(materias)
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Getting Post failed, log a message
+            // Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+        }
+
+    })
+}

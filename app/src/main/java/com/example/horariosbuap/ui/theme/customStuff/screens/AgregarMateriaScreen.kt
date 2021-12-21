@@ -1,21 +1,18 @@
 package com.example.horariosbuap.ui.theme.customStuff.screens
 
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,9 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.components.ButtonToggleGroup
-import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
+import com.example.horariosbuap.ui.theme.customStuff.components.pageNavigator
 import com.example.horariosbuap.ui.theme.dataBase.DatosViewModel
-import com.example.horariosbuap.ui.theme.dataBase.MateriaTabla
 import com.example.horariosbuap.ui.theme.dataBase.Materias
 import com.example.horariosbuap.ui.theme.dataBase.getMaterias
 import com.google.accompanist.insets.LocalWindowInsets
@@ -47,8 +43,11 @@ fun AgregarMateriasScreen(datosViewModel: DatosViewModel) {
     val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
     val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
     val focusManager = LocalFocusManager.current
-    val textBusq = remember { mutableStateOf("") }
-    val busquedaOpc = rememberSaveable{ mutableStateOf("Nombre") }
+    val textBusq = remember {mutableStateOf("")}
+    val busquedaOpc = rememberSaveable{ mutableStateOf("Nombre")}
+    val pagina = remember{ mutableStateOf(1)}
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -83,31 +82,31 @@ fun AgregarMateriasScreen(datosViewModel: DatosViewModel) {
                 datosViewModel.busquedaState.value = false
                 when (busquedaOpc.value){
                     "Nombre" -> {
-                        datosViewModel.buscarNombreMateria(key = textBusq)
+                        datosViewModel.buscarMateriaPorNombre(key = textBusq)
                     }
                     "Profesor"-> {
-                        datosViewModel.buscarProfesorMateria(key = textBusq)
+                        datosViewModel.buscarMateriaPorProfesor(key = textBusq)
                     }
                     "NRC" -> {
-                        datosViewModel.buscarNRCMateria(key = textBusq)
+                        datosViewModel.buscarMateriaPorNRC(key = textBusq)
                     }
                 }
 
 
             },
-            label = { Text(text = "Buscar Materia") },
+            label = { Text(text = "Buscar Materia")},
             trailingIcon = {
                 IconButton(onClick = {
                     datosViewModel.busquedaState.value = false
                     when (busquedaOpc.value){
                         "Nombre" -> {
-                            datosViewModel.buscarNombreMateria(key = textBusq)
+                            datosViewModel.buscarMateriaPorNombre(key = textBusq)
                         }
                         "Profesor"-> {
-                            datosViewModel.buscarProfesorMateria(key = textBusq)
+                            datosViewModel.buscarMateriaPorProfesor(key = textBusq)
                         }
                         "NRC" -> {
-                            datosViewModel.buscarNRCMateria(key = textBusq)
+                            datosViewModel.buscarMateriaPorNRC(key = textBusq)
                         }
                     }
                 }) {
@@ -140,6 +139,7 @@ fun AgregarMateriasScreen(datosViewModel: DatosViewModel) {
         )
 
         LazyColumn(
+            state = listState,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 4.dp),
@@ -151,11 +151,33 @@ fun AgregarMateriasScreen(datosViewModel: DatosViewModel) {
             if (textBusq.value == ""){
 
                 getMaterias(datosViewModel = datosViewModel)
-                item {
-                    if (datosViewModel.materiasState.value){
-                        for (datos in datosViewModel.materias){
-                            CardMaterias(datos = datos)
+
+                if (datosViewModel.materiasState.value) {
+                    val ultimo: Int = datosViewModel.materias.size / 50 + 1
+
+                    item {  }
+
+                    item {
+                        pageNavigator(
+                            pagina = pagina,
+                            datosViewModel = datosViewModel,
+                            ultimo = ultimo,
+                            listState = listState,
+                            coroutineScope = coroutineScope
+                        )
+                    }
+
+                    item (){
+                        var cont = 50 * (pagina.value - 1)
+
+                        while (cont <= pagina.value * 50 && cont < datosViewModel.materias.size) {
+
+                            CardMaterias(datos = datosViewModel.materias[cont])
+
+                            cont++
                         }
+                    }
+                    item {
                         Divider(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -164,9 +186,12 @@ fun AgregarMateriasScreen(datosViewModel: DatosViewModel) {
                             color = colorResource(id = R.color.azulOscuroInstitucional),
                             thickness = 1.dp
                         )
-                    }else{
-                        LoadingIndicator()
                     }
+                    item {
+                        pageNavigator(pagina = pagina, datosViewModel = datosViewModel, ultimo = ultimo, listState = listState, coroutineScope = coroutineScope)
+                    }
+                }else{
+                    item { LoadingIndicator() }
                 }
             }else{
                 item {

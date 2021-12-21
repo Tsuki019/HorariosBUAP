@@ -17,7 +17,9 @@ class DatosViewModel : ViewModel() {
     var resultSalones : ArrayList<Edificios?> = ArrayList()
 
     var materias : ArrayList<Materias?> = ArrayList()
-    var materiasState = mutableStateOf(false) //Detecta si ya esta lleno la lista de materias
+    var materiasHorario : ArrayList<MateriasHorario?> = ArrayList()
+    var materiasHorarioState = mutableStateOf(false) //Detecta si ya esta llenq la lista de materias por horario
+    var materiasState = mutableStateOf(false) //Detecta si ya esta llena la lista de materias
     var resultMaterias : ArrayList<Materias?> = ArrayList()
 
 
@@ -39,73 +41,88 @@ class DatosViewModel : ViewModel() {
         materiasState.value = !materias.isEmpty()
     }
 
-    fun buscarNombreProfesor(
-        key : MutableState<String>
-    ){
+    fun llenarMateriasHorario(value: ArrayList<MateriasHorario?>){
+        materiasHorario = value
+        materiasHorarioState.value = !materiasHorario.isEmpty()
+    }
+
+    fun buscarNombreProfesor(key : MutableState<String>){
         val list : ArrayList<Profesores?> = arrayListOf()
 
-        for(dato in profesores){
-            if (dato!!.nombre.lowercase().contains(key.value.lowercase())){
-                list.add(dato)
+        if (key.value.length > 1){
+            for(dato in profesores){
+                if (dato!!.nombre.lowercase().contains(key.value.lowercase())){
+                    list.add(dato)
+                }
             }
+            resultProfesores = list
+            busquedaState.value = !resultProfesores.isEmpty()
         }
-        resultProfesores = list
-        busquedaState.value = !resultProfesores.isEmpty()
     }
 
-    fun buscarPuestoProfesor(
-        key : MutableState<String>
-    ){
+    fun buscarPuestoProfesor(key : MutableState<String>){
         val list : ArrayList<Profesores?> = arrayListOf()
 
-        for(dato in profesores){
-            if (dato!!.puesto.lowercase().contains(key.value.lowercase())){
-                list.add(dato)
+        if (key.value.length > 1){
+            for(dato in profesores){
+                if (dato!!.puesto.lowercase().contains(key.value.lowercase())){
+                    list.add(dato)
+                }
             }
+            resultProfesores = list
+            busquedaState.value = !resultProfesores.isEmpty()
         }
-        resultProfesores = list
-        busquedaState.value = !resultProfesores.isEmpty()
     }
 
-    fun buscarPorEdificio(key: MutableState<String>) {
+    fun buscarPorEdificio(key: MutableState<String>) {}
 
-    }
-
-    fun buscarNombreMateria(key: MutableState<String>) {
+    fun buscarMateriaPorNombre(key: MutableState<String>) {
         val list : ArrayList<Materias?> = arrayListOf()
 
-        for(dato in materias){
-            if (dato!!.nombre.lowercase().contains(key.value.lowercase())){
-                list.add(dato)
+        if (key.value.length > 1){
+            for(dato in materias){
+                if (dato!!.nombre.lowercase().contains(key.value.lowercase())){
+                    list.add(dato)
+                }
             }
+            resultMaterias = list
+            busquedaState.value = !resultMaterias.isEmpty()
         }
-        resultMaterias = list
-        busquedaState.value = !resultMaterias.isEmpty()
+
     }
 
-    fun buscarProfesorMateria(key: MutableState<String>) {
+    fun buscarMateriaPorProfesor(key: MutableState<String>) {
         val list : ArrayList<Materias?> = arrayListOf()
 
-        for(dato in materias){
-            if (dato!!.profesor.lowercase().contains(key.value.lowercase())){
-                list.add(dato)
+        if (key.value.length > 1){
+            for(dato in materias){
+                if (dato!!.profesor.lowercase().contains(key.value.lowercase())){
+                    list.add(dato)
+                }
             }
+            resultMaterias = list
+            busquedaState.value = !resultMaterias.isEmpty()
         }
-        resultMaterias = list
-        busquedaState.value = !resultMaterias.isEmpty()
     }
 
-    fun buscarNRCMateria(key: MutableState<String>) {
+    fun buscarMateriaPorNRC(key: MutableState<String>) {
         val list : ArrayList<Materias?> = arrayListOf()
 
-        for(dato in materias){
-            if (dato!!.nrc.lowercase().contains(key.value.lowercase())){
-                list.add(dato)
+        if (key.value.length > 1){
+            for(dato in materias){
+                if (dato!!.nrc.lowercase().contains(key.value.lowercase())){
+                    list.add(dato)
+                }
             }
+            resultMaterias = list
+            busquedaState.value = !resultMaterias.isEmpty()
         }
-        resultMaterias = list
-        busquedaState.value = !resultMaterias.isEmpty()
     }
 
-
+    fun switchStates(){
+        edificiosState.value = !edificiosState.value
+        profesoresState.value = !profesoresState.value
+        materiasState.value = !materiasState.value
+        busquedaState.value = !busquedaState.value
+    }
 }

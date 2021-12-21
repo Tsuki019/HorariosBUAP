@@ -4,11 +4,8 @@ import android.app.Activity
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-
 import androidx.navigation.*
 import androidx.navigation.compose.rememberNavController
-import com.example.horariosbuap.MainDestinations.SINGLE_NEW_KEY
 import com.example.horariosbuap.ui.theme.customStuff.screens.*
 import com.example.horariosbuap.ui.theme.customStuff.screens.ui.theme.VistaNoticia
 import com.example.horariosbuap.ui.theme.dataBase.*
@@ -28,11 +25,16 @@ object MainDestinations{
     const val SHARE_ROUTE = "compartir"
     const val EXIT_ROUTE = "salir"
     const val SINGLE_NEW = "noticia_individual"
-    const val SINGLE_NEW_KEY = "noticiaId"
     const val LOGIN_ROUTE = "ingresar"
     const val REGISTRATION_ROUTE = "registrarse"
     const val SEARCH_RESULT_ROUTE = "resultados_busqueda"
     const val ADD_SUBJECT_ROUTE = "agregar_materia"
+    const val INFO_SUBJECT_ROUTE = "informacion_materia"
+}
+
+object NavArguments{
+    const val SINGLE_NEW_KEY = "noticiaId"
+    const val NRC_MATERIA = "nrc"
 }
 
 @ExperimentalAnimationApi
@@ -82,7 +84,7 @@ fun NavGraphBuilder.addSinglePostView(
     navController: NavHostController,
     titulos: MutableState<String>
 ){
-    composable(route = "${MainDestinations.SINGLE_NEW}/{$SINGLE_NEW_KEY}",
+    composable(route = "${MainDestinations.SINGLE_NEW}/{${NavArguments.SINGLE_NEW_KEY}}",
                enterTransition = {_, _ ->
                    slideInVertically(
                        initialOffsetY = {2000},
@@ -108,7 +110,7 @@ fun NavGraphBuilder.addSinglePostView(
                    )
                }
     ){ backStackEntry ->
-            VistaNoticia(noticiaId = backStackEntry.arguments?.getString(SINGLE_NEW_KEY))
+            VistaNoticia(noticiaId = backStackEntry.arguments?.getString(NavArguments.SINGLE_NEW_KEY))
             titulos.value = "Noticias"
     }
 }
@@ -553,6 +555,7 @@ fun NavGraphBuilder.addRegister(
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addAddSubject(
     datosViewModel: DatosViewModel,
+    titulos: MutableState<String>
 ) {
     composable(route = MainDestinations.ADD_SUBJECT_ROUTE, enterTransition = { _, _ ->
         fadeIn(
@@ -573,20 +576,50 @@ fun NavGraphBuilder.addAddSubject(
     }) {
 
         AgregarMateriasScreen(datosViewModel = datosViewModel)
+        titulos.value = "Agregar Materia"
+    }
+}
+
+@ExperimentalAnimationApi
+fun NavGraphBuilder.addInfoSubject(
+    navController: NavHostController,
+    datosViewModel: DatosViewModel
+){
+    composable(
+        route = MainDestinations.INFO_SUBJECT_ROUTE+"/{${NavArguments.NRC_MATERIA}}"
+        , enterTransition = { _, _ ->
+        fadeIn(
+            initialAlpha = 0F, animationSpec = tween(500)
+        )
+    }, exitTransition = { _, _ ->
+        fadeOut(
+            targetAlpha = 0F, animationSpec = tween(500)
+        )
+    }, popEnterTransition = { _, _ ->
+        fadeIn(
+            initialAlpha = 0F, animationSpec = tween(500)
+        )
+    }, popExitTransition = { _, _ ->
+        fadeOut(
+            targetAlpha = 0F, animationSpec = tween(500)
+        )
+    }) {backStackEntry ->
+
+        InformacionMateria(
+            nrc = backStackEntry.arguments?.getString(NavArguments.NRC_MATERIA),
+            datosViewModel = datosViewModel,
+            onBack = {navController.popBackStack()}
+        )
     }
 }
 
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addSearchResultScreen(
     datosViewModel: DatosViewModel,
-    titulos: MutableState<String>
+    titulos: MutableState<String>,
+    navController: NavHostController
 ) {
-     composable(
-//        route = MainDestinations.SEARCH_RESULT_ROUTE + "/{tipo}",
-        route = MainDestinations.SEARCH_RESULT_ROUTE,
-//        arguments = listOf(
-//            navArgument("tipo"){type = NavType.IntType}
-//        )
+     composable(route = MainDestinations.SEARCH_RESULT_ROUTE,
         enterTransition = { _, _ ->
              fadeIn(
                  initialAlpha = 0F, animationSpec = tween(500)
@@ -606,7 +639,9 @@ fun NavGraphBuilder.addSearchResultScreen(
          }
     )
     {
-        ResultadosBusqueda(datosViewModel = datosViewModel, titulos = titulos)
+        val actions  = MainActions(navController = navController)
+
+        ResultadosBusqueda(datosViewModel = datosViewModel, titulos = titulos, onNavToSubject =  actions.navigateToMateria)
     }
 
 
@@ -624,6 +659,10 @@ fun rememberAnimatedNavController(): NavHostController {
 
 class MainActions(navController: NavHostController){
     val navigateToArticle:(String) ->Unit = {postId: String ->
-        navController.navigate("${MainDestinations.SINGLE_NEW}/${postId}")
+        navController.navigate(route = "${MainDestinations.SINGLE_NEW}/${postId}")
+    }
+
+    val navigateToMateria:(String) -> Unit = {nrc: String ->
+        navController.navigate(route = MainDestinations.INFO_SUBJECT_ROUTE+"/${nrc}")
     }
 }

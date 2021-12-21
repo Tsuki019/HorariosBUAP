@@ -116,13 +116,13 @@ class MainActivity : ComponentActivity() {
                         },
                         bottomBar = {
                             when(titulos.value){
-                                "Mi cuenta", "Ajustes", "Acerca de la Aplicacion", "Noticias", "Horarios Buap", "Buscar Profesor", "Buscar Materias", "Buscar Salones"->{}
-                                else->{
+                                "Noticias y Calendarios", "Buscar", "Mi horario", "Espacio Libre"->{
                                     CustomBottomNav(
                                         navController = navController,
                                         currentRoute = currentRoute
                                     )
                                 }
+                                else->{}
                             }
                         }
                     ) {
@@ -168,10 +168,17 @@ class MainActivity : ComponentActivity() {
                                         viewModelLogin= viewModel,
                                         viewModel = registerViewModel,
                                      titulos = titulos)
-                            addAddSubject(datosViewModel = datosViewModel)
-                            addSearchResultScreen(
+                            addAddSubject(
                                 datosViewModel = datosViewModel,
                                 titulos = titulos)
+                            addSearchResultScreen(
+                                datosViewModel = datosViewModel,
+                                titulos = titulos,
+                                navController = navController)
+                            addInfoSubject(
+                                navController = navController,
+                                datosViewModel = datosViewModel
+                            )
                         }
                     }
                 }

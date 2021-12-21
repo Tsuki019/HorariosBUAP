@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.TextStyle
 
 
 @Composable
@@ -20,11 +22,14 @@ fun OutlinedMediaButton(
     modifier: Modifier = Modifier,
     text: String,
     onClick: () -> Unit,
-    buttonColor: Color
+    buttonColor: Color,
+    width : Dp = 280.dp,
+    heigth : Dp = 50.dp,
+    textStyle: TextStyle = MaterialTheme.typography.h6.copy(color = buttonColor)
 ) {
     OutlinedButton(modifier = Modifier
-        .width(280.dp)
-        .height(50.dp),
+        .width(width)
+        .height(heigth),
                    onClick = { onClick() },
                    shape = RoundedCornerShape(50),
                    colors = ButtonDefaults.outlinedButtonColors(
@@ -34,7 +39,7 @@ fun OutlinedMediaButton(
 
     ) {
         Text(text = text,
-            style = MaterialTheme.typography.h6.copy(color = buttonColor)
+            style = textStyle
         )
     }
     
