@@ -3,6 +3,7 @@
     <string name="title_activity_opctions">OpctionsActivity</string>
     <string name="mail_enviado">Para terminar el registro verifique su dirección de correo electronico en el correo que le enviamos.</string>
     <string name="warning_">Para terminar el registro verifique su dirección de correo electronico en el correo que le enviamos.</string>
+    <string name="CicloEscolar">Primavera 2022</string>
 
 <!--    ERRORES-->
     <string name="error_input_empty">Ningun campo debe estar vacio.</string>

@@ -47,7 +47,7 @@ fun pageNavigator(
                 PageButton(text = "${pagina.value - 1}", pagina = pagina, datosViewModel = datosViewModel, listState = listState, coroutineScope = coroutineScope)
                 PageButton(text = "${pagina.value}", pagina = pagina, datosViewModel = datosViewModel, listState = listState, coroutineScope = coroutineScope)
                 PageButton(text = "${pagina.value + 1}", pagina = pagina, datosViewModel = datosViewModel, listState = listState, coroutineScope = coroutineScope)
-                PageButton(text = "${pagina.value + 2}", pagina = pagina, datosViewModel = datosViewModel, listState = listState, coroutineScope = coroutineScope)
+//                PageButton(text = "${pagina.value + 2}", pagina = pagina, datosViewModel = datosViewModel, listState = listState, coroutineScope = coroutineScope)
             }
             if (pagina.value >= ultimo - 2){
                 PageButton(text = "${ultimo - 3}", pagina = pagina, datosViewModel = datosViewModel, listState = listState, coroutineScope = coroutineScope)

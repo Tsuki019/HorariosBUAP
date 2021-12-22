@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
@@ -38,7 +39,10 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 
 @Composable
-fun AgregarMateriasScreen(datosViewModel: DatosViewModel) {
+fun AgregarMateriasScreen(
+    datosViewModel : DatosViewModel,
+    onNavToInfo : (String) -> Unit
+) {
 
     val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
     val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
@@ -172,7 +176,7 @@ fun AgregarMateriasScreen(datosViewModel: DatosViewModel) {
 
                         while (cont <= pagina.value * 50 && cont < datosViewModel.materias.size) {
 
-                            CardMaterias(datos = datosViewModel.materias[cont])
+                            CardMaterias(datos = datosViewModel.materias[cont], onNavToInfo = onNavToInfo)
 
                             cont++
                         }
@@ -197,7 +201,7 @@ fun AgregarMateriasScreen(datosViewModel: DatosViewModel) {
                 item {
                     if (datosViewModel.busquedaState.value){
                         for (item in datosViewModel.resultMaterias){
-                            CardMaterias(datos = item)
+                            CardMaterias(datos = item, onNavToInfo = onNavToInfo)
                         }
                         Divider(
                             modifier = Modifier
@@ -242,7 +246,8 @@ fun AgregarMateriasScreen(datosViewModel: DatosViewModel) {
 
 @Composable
 private fun CardMaterias(
-    datos : Materias?
+    datos : Materias?,
+    onNavToInfo: (String) -> Unit
 ) {
 
     Card(
@@ -365,14 +370,28 @@ private fun CardMaterias(
                 thickness = 1.dp,
                 color = colorResource(id = R.color.azulOscuroInstitucional)
             )
-            Column(modifier = Modifier.fillMaxWidth()
-                .clickable {
-
-                },
-                horizontalAlignment = Alignment.CenterHorizontally
+            Row(
+                modifier = modifier.fillMaxWidth().padding(end = 20.dp, start = 5.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = modifier.padding(bottom = 5.dp),
+                    modifier = modifier
+                        .padding(bottom = 5.dp)
+                        .clickable { onNavToInfo(datos.nrc) },
+                    text = "Ver Horario",
+                    style = TextStyle(
+                        color = colorResource(id = R.color.azulOscuroInstitucional),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
+                        fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                    )
+                )
+                Divider(modifier = Modifier.padding(horizontal = 5.dp, vertical = 10.dp).rotate(90f).width(20.dp), color = colorResource(id = R.color.azulOscuroInstitucional))
+                Text(
+                    modifier = modifier
+                        .padding(bottom = 5.dp)
+                        .clickable { },
                     text = "Agregar",
                     style = TextStyle(
                         color = colorResource(id = R.color.azulOscuroInstitucional),

@@ -400,8 +400,7 @@ fun NavGraphBuilder.addShareOpt(
 
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addExitOpt(
-    navController: NavHostController,
-    titulos: MutableState<String>
+    navController: NavHostController
 ){
     composable(route = MainDestinations.EXIT_ROUTE,
                enterTransition = {_, _ ->
@@ -537,15 +536,6 @@ fun NavGraphBuilder.addRegister(
             )
             titulos.value = "Horarios Buap"
         }else{
-//            LoginScreen(state = viewModelLogin.state.value,
-//                        registerViewModel = viewModel,
-//                        onLogin = viewModelLogin::login,
-//                        onLoginWithGoogle = viewModelLogin::loginWithGoogle,
-//                        activity = activity,
-//                        onDissmisDialog = viewModelLogin::hideErrorDialog,
-//                        onNavigateToRegister = {navController.navigate(route = MainDestinations.REGISTRATION_ROUTE)}
-//            )
-
             navController.navigate(route = MainDestinations.LOGIN_ROUTE){popUpTo(MainDestinations.LOGIN_ROUTE){inclusive = true} }
             titulos.value = "Horarios Buap"
         }
@@ -554,6 +544,7 @@ fun NavGraphBuilder.addRegister(
 
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addAddSubject(
+    navController: NavHostController,
     datosViewModel: DatosViewModel,
     titulos: MutableState<String>
 ) {
@@ -574,8 +565,9 @@ fun NavGraphBuilder.addAddSubject(
             targetAlpha = 0F, animationSpec = tween(500)
         )
     }) {
+        val actions  = MainActions(navController = navController)
 
-        AgregarMateriasScreen(datosViewModel = datosViewModel)
+        AgregarMateriasScreen(datosViewModel = datosViewModel, onNavToInfo = actions.navigateToMateria)
         titulos.value = "Agregar Materia"
     }
 }

@@ -154,8 +154,7 @@ class MainActivity : ComponentActivity() {
                                         titulos = titulos)
                             addShareOpt(navController = navController,
                                         titulos = titulos)
-                            addExitOpt(navController = navController,
-                                       titulos = titulos)
+                            addExitOpt(navController = navController)
                             addLogin(
                                 navController = navController,
                                 viewModel = viewModel,
@@ -169,6 +168,7 @@ class MainActivity : ComponentActivity() {
                                         viewModel = registerViewModel,
                                      titulos = titulos)
                             addAddSubject(
+                                navController = navController,
                                 datosViewModel = datosViewModel,
                                 titulos = titulos)
                             addSearchResultScreen(
