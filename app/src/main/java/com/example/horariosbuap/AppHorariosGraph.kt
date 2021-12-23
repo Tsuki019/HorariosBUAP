@@ -30,6 +30,7 @@ object MainDestinations{
     const val SEARCH_RESULT_ROUTE = "resultados_busqueda"
     const val ADD_SUBJECT_ROUTE = "agregar_materia"
     const val INFO_SUBJECT_ROUTE = "informacion_materia"
+    const val RESET_PASSWORD_ROUTE = "reiniciar_contrasena"
 }
 
 object NavArguments{
@@ -480,11 +481,50 @@ fun NavGraphBuilder.addLogin(
                         onLoginWithGoogle = viewModel::loginWithGoogle,
                         activity = activity,
                         onDissmisDialog = viewModel::hideErrorDialog,
-                        onNavigateToRegister = {navController.navigate(route = MainDestinations.REGISTRATION_ROUTE)}
+                        onNavigateToRegister = {navController.navigate(route = MainDestinations.REGISTRATION_ROUTE)},
+                        onForgetPassword = {navController.navigate(route = MainDestinations.RESET_PASSWORD_ROUTE)}
             )
             registerViewModel.state.value = registerViewModel.state.value.copy(successRegister = false)
             titulos.value = "Horarios Buap"
         }
+    }
+}
+
+@ExperimentalAnimationApi
+fun NavGraphBuilder.addResetPassword(
+    titulos: MutableState<String>,
+    navController: NavHostController
+){
+    composable(route = MainDestinations.RESET_PASSWORD_ROUTE,
+               enterTransition = {_, _ ->
+                   fadeIn(
+                       initialAlpha = 0F,
+                       animationSpec = tween(500)
+                   )
+               },
+               exitTransition = {_, _ ->
+                   fadeOut(
+                       targetAlpha = 0F,
+                       animationSpec = tween(500)
+                   )
+               },
+               popEnterTransition = {_, _ ->
+                   fadeIn(
+                       initialAlpha = 0F,
+                       animationSpec = tween(500)
+                   )
+               },
+               popExitTransition = {_, _ ->
+                   fadeOut(
+                       targetAlpha = 0F,
+                       animationSpec = tween(500)
+                   )
+               }
+    ){
+
+        titulos.value = "Reiniciar Contraseña"
+
+        ReestablecerContrasena(onBack = {navController.popBackStack()})
     }
 }
 
@@ -527,8 +567,9 @@ fun NavGraphBuilder.addRegister(
             RegistrationScreen(
                 state = viewModel.state.value,
                 onRegister = viewModel::register,
-                onBack = { navController.navigate(route = MainDestinations.LOGIN_ROUTE){
-                    popUpTo(MainDestinations.LOGIN_ROUTE){inclusive = true}} },
+                onBack = {navController.popBackStack()},
+//                onBack = { navController.navigate(route = MainDestinations.LOGIN_ROUTE){
+//                    popUpTo(MainDestinations.LOGIN_ROUTE){inclusive = true}} },
                 onLoginWithGoogle = viewModelLogin::loginWithGoogle,
                 activity = activity,
                 onDismissDialog = viewModel::hideErrorDialog,

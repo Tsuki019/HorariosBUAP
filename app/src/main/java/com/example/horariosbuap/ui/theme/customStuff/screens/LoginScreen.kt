@@ -28,6 +28,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.components.EventDialog
@@ -46,7 +47,8 @@ fun LoginScreen(
     onLoginWithGoogle: (Activity) -> Unit,
     activity: Activity,
     onNavigateToRegister: () -> Unit,
-    onDissmisDialog: () -> Unit
+    onDissmisDialog: () -> Unit,
+    onForgetPassword : () -> Unit
 ) {
 
     val emailValue = rememberSaveable{ mutableStateOf("")}
@@ -144,13 +146,21 @@ fun LoginScreen(
                                 if (passwordVisibility){ VisualTransformation.None}
                                 else {PasswordVisualTransformation()}
                             )
-
-                            Text(
-                                text = "¿Olvidaste tu contraseña?",
-                                style = MaterialTheme.typography.body1,
-                                modifier = Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.End
+                            ClickableText(
+                                modifier = Modifier.fillMaxWidth().wrapContentSize(align = Alignment.BottomEnd),
+                                text = buildAnnotatedString {
+                                    withStyle(
+                                        style = SpanStyle(
+                                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                                            fontSize = 16.sp
+                                        ),
+                                    ){
+                                        append("¿Olvidaste tu contraseña?")
+                                    }}
                             )
+                            {
+                                onForgetPassword()
+                            }
                         }
 
                         Column (
@@ -211,7 +221,7 @@ fun LoginScreen(
                                     text = buildAnnotatedString { append("¿No tienes una cuenta? ")
                                         withStyle(
                                             style = SpanStyle(
-                                                color = MaterialTheme.colors.primary,
+                                                color = colorResource(id = R.color.azulOscuroInstitucional),
                                                 fontWeight = FontWeight.Bold
                                             )
                                         ){

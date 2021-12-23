@@ -179,6 +179,10 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 datosViewModel = datosViewModel
                             )
+                            addResetPassword(
+                                titulos = titulos,
+                                navController = navController
+                            )
                         }
                     }
                 }

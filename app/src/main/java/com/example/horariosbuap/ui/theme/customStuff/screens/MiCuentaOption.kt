@@ -101,7 +101,7 @@ fun TituloSeccion(text : String) {
 }
 
 @Composable
-fun Divisor() {
+private fun Divisor() {
 
     Divider(
         modifier = Modifier
