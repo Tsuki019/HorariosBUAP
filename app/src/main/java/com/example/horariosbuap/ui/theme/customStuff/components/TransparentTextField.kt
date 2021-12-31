@@ -24,6 +24,7 @@ fun TransparentTextField(
     textFieldValue: MutableState<String>,
     textLabel: String,
     maxChar: Int? = null,
+    onValueChange : () -> Unit = {},
     capitalization: KeyboardCapitalization = KeyboardCapitalization.None,
     keyboardType: KeyboardType,
     keyboardActions: KeyboardActions,
@@ -38,7 +39,9 @@ fun TransparentTextField(
     TextField(
         modifier = modifier.fillMaxWidth(),
         value = textFieldValue.value.take(maxChar?: 40),
-        onValueChange = {textFieldValue.value = it},
+        onValueChange = {
+            onValueChange()
+            textFieldValue.value = it },
         label = { Text(text = textLabel)},
         trailingIcon = trailingIcon,
         keyboardOptions = KeyboardOptions(

@@ -6,20 +6,21 @@ import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 
 class DatosViewModel : ViewModel() {
-    var state : List<MateriaTabla> = emptyList()
-
-    var profesoresState = mutableStateOf(false) //Detecta si ya esta lleno la lista de profesores
+    val profesoresState = mutableStateOf(false) //Detecta si ya esta lleno la lista de profesores
     var profesores: ArrayList<Profesores?> = ArrayList()
     var resultProfesores : ArrayList<Profesores?> = ArrayList()
 
     var edificios : ArrayList<Edificios?> = ArrayList()
-    var edificiosState = mutableStateOf(false) //Detecta si ya esta lleno la lista de edificios
-    var resultSalones : ArrayList<Edificios?> = ArrayList()
+    val edificiosState = mutableStateOf(false) //Detecta si ya esta lleno la lista de edificios
+
+    var salones : ArrayList<Salones?> = ArrayList()
+    val salonesState = mutableStateOf(false)
+    var resultSalones : ArrayList<Salones?> = ArrayList()
 
     var materias : ArrayList<Materias?> = ArrayList()
     var materiasHorario : ArrayList<MateriasHorario?> = ArrayList()
-    var materiasHorarioState = mutableStateOf(false) //Detecta si ya esta llenq la lista de materias por horario
-    var materiasState = mutableStateOf(false) //Detecta si ya esta llena la lista de materias
+    val materiasHorarioState = mutableStateOf(false) //Detecta si ya esta llenq la lista de materias por horario
+    val materiasState = mutableStateOf(false) //Detecta si ya esta llena la lista de materias
     var resultMaterias : ArrayList<Materias?> = ArrayList()
 
 
@@ -74,7 +75,19 @@ class DatosViewModel : ViewModel() {
         }
     }
 
-    fun buscarPorEdificio(key: MutableState<String>) {}
+    fun buscarSalones(key: MutableState<String>) {
+        val list : ArrayList<Salones?> = arrayListOf()
+
+        if (key.value.length > 1){
+            for(dato in salones){
+                if (dato!!.data.lowercase().contains(key.value.lowercase())){
+                    list.add(dato)
+                }
+            }
+            resultSalones = list
+            busquedaState.value = !resultSalones.isEmpty()
+        }
+    }
 
     fun buscarMateriaPorNombre(key: MutableState<String>) {
         val list : ArrayList<Materias?> = arrayListOf()
@@ -124,5 +137,10 @@ class DatosViewModel : ViewModel() {
         profesoresState.value = !profesoresState.value
         materiasState.value = !materiasState.value
         busquedaState.value = !busquedaState.value
+    }
+
+    fun llenarSalones(value: ArrayList<Salones?>) {
+        salones = value
+        salonesState.value = !salones.isEmpty()
     }
 }

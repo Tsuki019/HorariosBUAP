@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
 
 fun getProfesores(datosViewModel : DatosViewModel){
 
@@ -31,7 +32,7 @@ fun getProfesores(datosViewModel : DatosViewModel){
 
 fun getEdificios(datosViewModel: DatosViewModel){
 
-    val realTimeRef = FirebaseDatabase.getInstance().reference.child("Edificios")
+    val realTimeRef = FirebaseDatabase.getInstance().reference.child("Edificios").child("edificios")
     val edificios = ArrayList<Edificios?>()
 
 
@@ -42,6 +43,29 @@ fun getEdificios(datosViewModel: DatosViewModel){
                 edificios.add(snapshot.getValue(Edificios::class.java))
             }
             datosViewModel.llenarEdificios(edificios)
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Getting Post failed, log a message
+            // Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+        }
+
+    })
+}
+
+fun getSalones(datosViewModel: DatosViewModel){
+
+    val realTimeRef = FirebaseDatabase.getInstance().reference.child("Edificios").child("salones")
+    val salones = ArrayList<Salones?>()
+
+
+    realTimeRef.addValueEventListener(object  : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            // Get Post object and use the values to update the UI
+            for (snapshot in dataSnapshot.children){
+                salones.add(snapshot.getValue(Salones::class.java))
+            }
+            datosViewModel.llenarSalones(salones)
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
@@ -88,6 +112,31 @@ fun getMateriasHorario (datosViewModel: DatosViewModel){
                 materias.add(snapshot.getValue(MateriasHorario::class.java))
             }
             datosViewModel.llenarMateriasHorario(materias)
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Getting Post failed, log a message
+            // Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+        }
+
+    })
+}
+
+fun getHorarios(
+    userDataViewModel: UserDataViewModel
+){
+    val realTimeRef = FirebaseDatabase.getInstance().reference.child("Usuarios").child("materias_horario")
+    val materias = ArrayList<MateriasHorario?>()
+
+
+    realTimeRef.addValueEventListener(object  : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            // Get Post object and use the values to update the UI
+            for (snapshot in dataSnapshot.children){
+
+                materias.add(snapshot.getValue(MateriasHorario::class.java))
+            }
+//            userDataViewModel.llenarMateriasHorario(materias)
         }
 
         override fun onCancelled(databaseError: DatabaseError) {

@@ -127,9 +127,8 @@ fun NewsCard(
             topStartPercent = 8
         ),
         modifier = modifier.size(280.dp, 240.dp),
-        border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional))
+        border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.azulOscuroInstitucional))
     ) {
-//        Column(modifier = Modifier.clickable(onClick = { navigateToArticle(post.id) })) {
         Column() {
 
             Image(

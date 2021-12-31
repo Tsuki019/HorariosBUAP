@@ -125,6 +125,7 @@ class LoginViewModel : ViewModel() {
 
             state.value = state.value.copy(displayProgressBar = true)
 
+            println("======${account}======")
             account?.idToken?.let { token ->
                 val auth = FirebaseAuth.getInstance()
                 val credential =  GoogleAuthProvider.getCredential(token, null)
@@ -137,9 +138,9 @@ class LoginViewModel : ViewModel() {
                             state.value = state.value.copy(
                                 name = auth.currentUser!!.displayName!!,
                                 email = auth.currentUser!!.email!!,
-                                image = auth.currentUser!!.photoUrl.toString())
-
-                            state.value = state.value.copy(successLogin = true)
+                                image = auth.currentUser!!.photoUrl.toString(),
+                                successLogin = true)
+                            setNuevoUsuario(userId = auth.currentUser!!.uid, auth.currentUser!!.email!!, provider = "GOOGLE")
                         }else{
                             state.value = state.value.copy(errorMessage = R.string.error_login_google)
                         }
@@ -151,6 +152,7 @@ class LoginViewModel : ViewModel() {
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             state.value = state.value.copy(errorMessage = R.string.error_login_google)
             state.value = state.value.copy(displayProgressBar = false)
+            println("======$e======")
             return
         }
 

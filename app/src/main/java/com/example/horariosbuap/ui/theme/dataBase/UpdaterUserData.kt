@@ -110,12 +110,17 @@ fun UpdateUserPassword(
         }
 }
 
-fun LogOutUser(viewModel: LoginViewModel){
+fun LogOutUser(viewModel: LoginViewModel, userDataViewModel: UserDataViewModel){
     val auth = Firebase.auth
 
-    if (auth != null){
+    if (auth.currentUser != null){
         auth.signOut()
 
+        userDataViewModel.userData.value = userDataViewModel.userData.value.copy(numHorarios = 0, correo = "", provider = "")
+        userDataViewModel.horarios.clear()
+        userDataViewModel.isUserDataLoaded.value = false
+        userDataViewModel.isMateriasHorarioFill.value = false
+        userDataViewModel.isMateriasUnicasFill.value = false
         viewModel.state.value = viewModel.state.value.copy(
             name = "",
             email = "",

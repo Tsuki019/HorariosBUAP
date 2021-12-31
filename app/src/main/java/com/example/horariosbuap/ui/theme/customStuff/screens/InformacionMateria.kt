@@ -4,10 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,13 +20,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.components.OutlinedMediaButton
-import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.dataBase.DatosViewModel
 import com.example.horariosbuap.ui.theme.dataBase.Materias
 import com.example.horariosbuap.ui.theme.dataBase.MateriasHorario
 import com.example.horariosbuap.ui.theme.dataBase.getMateriasHorario
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
 
 @Composable
 fun InformacionMateria(
@@ -40,7 +34,7 @@ fun InformacionMateria(
 
 
     val materiaInfo = InfoMateria(datosViewModel = datosViewModel, nrc = nrc!!)
-    val materiasHorario = HorarioMateria(datosViewModel = datosViewModel, nrc)
+    val materiasHorario = buscarHorarioMateria(datosViewModel = datosViewModel, nrc)
 
 
     Box(
@@ -269,7 +263,7 @@ private fun InfoMateria(
     return Materias()
 }
 
-private fun HorarioMateria(
+fun buscarHorarioMateria(
     datosViewModel: DatosViewModel,
     nrc: String
 ) : ArrayList<MateriasHorario>{

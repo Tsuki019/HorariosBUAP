@@ -118,8 +118,6 @@ fun SeccionBusqueda(
             topStartPercent = 8
         )
     ) {
-        val modifier = Modifier.padding(start = 5.dp)
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -143,67 +141,6 @@ fun SeccionBusqueda(
                     color = colorResource(id = R.color.azulOscuroInstitucional),
                     fontWeight = FontWeight.Bold)
             )
-        }
-    }
-}
-
-@Composable
-fun PostCardData(
-    datos : Profesores
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 5.dp),
-        backgroundColor = Color.White,
-        elevation = 5.dp,
-        border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
-        shape = RoundedCornerShape(
-            bottomEndPercent = 8,
-            bottomStartPercent = 8,
-            topEndPercent = 8,
-            topStartPercent = 8
-        )
-    ) {
-        val modifier = Modifier.padding(start = 5.dp)
-
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                modifier = modifier.padding(top = 3.dp),
-                text = datos.nombre,
-                style = MaterialTheme.typography.h5.copy(color = colorResource(id = R.color.azulOscuroInstitucional), fontWeight = FontWeight.Bold))
-            Divider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp, vertical = 3.dp),
-                thickness = 1.dp,
-                color = colorResource(id = R.color.azulOscuroInstitucional)
-            )
-            Text(
-                modifier = modifier,
-                text = datos.puesto,
-                style = MaterialTheme.typography.h6.copy(color = colorResource(id = R.color.azulOscuroInstitucional), fontWeight = FontWeight.Bold))
-            if (datos.cubiculo != ""){
-                Text(
-                    modifier = modifier,
-                    text = datos.cubiculo,
-                    style = MaterialTheme.typography.h6.copy(color = colorResource(id = R.color.azulClaroInstitucional)))
-            }
-            if (datos.correo2 != ""){
-                Text(
-                    modifier = modifier,
-                    text = datos.correo,
-                    style = MaterialTheme.typography.h6.copy(color = colorResource(id = R.color.azulClaroInstitucional)))
-                Text(
-                    modifier = modifier.padding(bottom = 5.dp),
-                    text = datos.correo2,
-                    style = MaterialTheme.typography.h6.copy(color = colorResource(id = R.color.azulClaroInstitucional)))
-            }else{
-                Text(
-                    modifier = modifier.padding(bottom = 5.dp),
-                    text = datos.correo,
-                    style = MaterialTheme.typography.h6.copy(color = colorResource(id = R.color.azulClaroInstitucional)))
-            }
         }
     }
 }

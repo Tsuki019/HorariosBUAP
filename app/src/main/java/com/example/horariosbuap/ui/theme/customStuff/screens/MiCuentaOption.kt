@@ -50,7 +50,8 @@ import kotlinx.coroutines.launch
 fun MiCuentaOption(
     viewModel: LoginViewModel,
     activity: Activity,
-    onSignOut: () -> Unit
+    onSignOut: () -> Unit,
+    userDataViewModel: UserDataViewModel
 ) {
 
     val cambiarImagenState = remember { mutableStateOf(false)}
@@ -84,8 +85,8 @@ fun MiCuentaOption(
          item { Divisor()}
          item { Correo(viewModel = viewModel) }
          item { Divisor() }
-         item { Contrasena(viewModel = viewModel, activity = activity) }
-         item { SalirDeCuenta(viewModel = viewModel, onSignOut = onSignOut) }
+         item { if (userDataViewModel.userData.value.provider != "GOOGLE") Contrasena(viewModel = viewModel, activity = activity) }
+         item { SalirDeCuenta(viewModel = viewModel, onSignOut = onSignOut, userDataViewModel = userDataViewModel) }
      }
     }
 }
@@ -461,7 +462,7 @@ fun Contrasena(
 }
 
 @Composable
-fun SalirDeCuenta(viewModel: LoginViewModel, onSignOut : () -> Unit) {
+fun SalirDeCuenta(viewModel: LoginViewModel, onSignOut : () -> Unit, userDataViewModel: UserDataViewModel) {
     val exit = remember{ mutableStateOf(false)}
 
     Column (
@@ -491,7 +492,7 @@ fun SalirDeCuenta(viewModel: LoginViewModel, onSignOut : () -> Unit) {
                             )
                         },
                         text =  {
-                            Text(text = "¿Segurop que desea salir de su cuenta?",
+                            Text(text = "¿Seguro que desea salir de su cuenta?",
                                  style = TextStyle(color = MaterialTheme.colors.onSurface,
                                                    fontSize = 16.sp)
                             )
@@ -503,7 +504,7 @@ fun SalirDeCuenta(viewModel: LoginViewModel, onSignOut : () -> Unit) {
                                 horizontalArrangement = Arrangement.End)
                             {
                                 TextButton(onClick = {
-                                    LogOutUser(viewModel = viewModel)
+                                    LogOutUser(viewModel = viewModel, userDataViewModel = userDataViewModel)
                                     exit.value = false
                                     onSignOut()
                                 }
@@ -514,7 +515,7 @@ fun SalirDeCuenta(viewModel: LoginViewModel, onSignOut : () -> Unit) {
                                     exit.value = false
                                 }
                                 ) {
-                                    Text(text = "Cancelar", style = MaterialTheme.typography.button)
+                                    Text(text = "Cancelar", style = MaterialTheme.typography.button.copy(color = colorResource(id = R.color.azulOscuroInstitucional)))
                                 }
                             }
                         }

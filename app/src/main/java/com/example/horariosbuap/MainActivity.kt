@@ -32,6 +32,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import androidx.lifecycle.Observer
 import com.example.horariosbuap.ui.theme.dataBase.*
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.ktx.firestoreSettings
 
 
 @ExperimentalAnimationApi
@@ -40,6 +43,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val db = FirebaseFirestore.getInstance()
+        var settings = FirebaseFirestoreSettings.Builder()
+            .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+            .build()
+        db.firestoreSettings = settings
+        settings = firestoreSettings {
+            isPersistenceEnabled = true
+        }
+        db.firestoreSettings = settings
+
         setContent {
 
             HorariosBUAPTheme {
@@ -47,6 +60,7 @@ class MainActivity : ComponentActivity() {
                 val viewModel : LoginViewModel by viewModels()
                 val registerViewModel : RegisterViewModel by viewModels()
                 val datosViewModel : DatosViewModel by viewModels()
+                val userDataViewModel : UserDataViewModel by viewModels()
 
                 val systemUiController = rememberSystemUiController()
                 val navBarColor = colorResource(id = R.color.azulOscuroInstitucional)
@@ -76,8 +90,6 @@ class MainActivity : ComponentActivity() {
 
                 database.materias().getAll().observe(this, Observer {
                     listaMaterias = it
-
-                    datosViewModel.state = listaMaterias
                 })
 
 
@@ -138,16 +150,18 @@ class MainActivity : ComponentActivity() {
                                       datosViewModel = datosViewModel,
                                       titulos = titulos)
                             addSchedule(navController = navController,
-                                        viewModel = viewModel,
+                                        userDataViewModel = userDataViewModel,
                                         titulos = titulos,
-                                        datosViewModel = datosViewModel)
+                                        datosViewModel = datosViewModel,
+                                        coroutineScope = coroutineScope)
                             addFree(navController = navController,
                                     titulos = titulos)
                             addAccountOpt(
                                 navController = navController,
                                 viewModel = viewModel,
                                 titulos = titulos,
-                                activity = this@MainActivity)
+                                activity = this@MainActivity,
+                                userDataViewModel = userDataViewModel)
                             addSettingsOpt(navController = navController,
                                            titulos = titulos)
                             addAboutOpt(navController = navController,
@@ -176,6 +190,10 @@ class MainActivity : ComponentActivity() {
                                 titulos = titulos,
                                 navController = navController)
                             addInfoSubject(
+                                navController = navController,
+                                datosViewModel = datosViewModel
+                            )
+                            addClassRooms(
                                 navController = navController,
                                 datosViewModel = datosViewModel
                             )

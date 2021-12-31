@@ -1,22 +1,14 @@
 package com.example.horariosbuap.ui.theme.customStuff.screens
 
-import android.text.Layout
-import android.widget.GridLayout
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -29,6 +21,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalFocusManager
@@ -41,9 +34,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.BaselineShift
+import com.example.horariosbuap.ui.theme.customStuff.components.LoadingIndicator
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
@@ -59,7 +54,8 @@ import com.google.accompanist.insets.rememberInsetsPaddingValues
 fun ResultadosBusqueda(
     datosViewModel: DatosViewModel,
     titulos : MutableState<String>,
-    onNavToSubject : (String) -> Unit
+    onNavToSubject : (String) -> Unit,
+    onNavToClassRooms : (String) -> Unit
 ) {
 
     when(datosViewModel.tipoBusqueda.value){
@@ -70,7 +66,7 @@ fun ResultadosBusqueda(
         }
         2 -> {
             titulos.value = "Buscar Salones"
-            VistaEdificios(datosViewModel = datosViewModel)
+            VistaEdificios(datosViewModel = datosViewModel, onNavToClassRooms = onNavToClassRooms)
         }
         3 -> {
             titulos.value = "Buscar Materias"
@@ -235,7 +231,7 @@ private fun VistaProfesores(
                             thickness = 1.dp
                         )
                     }else{
-                        if (datosViewModel.resultProfesores.isEmpty()){
+                        if (textBusq.value.length > 1){
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -269,12 +265,20 @@ private fun VistaProfesores(
 
 @ExperimentalAnimationApi
 @Composable
-fun VistaEdificios(datosViewModel: DatosViewModel) {
+fun VistaEdificios(
+    datosViewModel: DatosViewModel,
+    onNavToClassRooms: (String) -> Unit)
+{
     val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
     val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
     val focusManager = LocalFocusManager.current
     val textBusq = remember {mutableStateOf("")}
     val busquedaOpc = rememberSaveable{ mutableStateOf("Salon")}
+
+    if (!datosViewModel.edificiosState.value)
+        getEdificios(datosViewModel = datosViewModel)
+    else
+        getSalones(datosViewModel = datosViewModel)
 
     Column(
         modifier = Modifier
@@ -307,13 +311,7 @@ fun VistaEdificios(datosViewModel: DatosViewModel) {
             onValueChange = {
                 textBusq.value = it
                 datosViewModel.busquedaState.value = false
-                when (busquedaOpc.value){
-                    "Salon" -> {
-                        datosViewModel.buscarPorEdificio(key = textBusq)
-                    }
-                }
-
-
+                datosViewModel.buscarSalones(key = textBusq)
             },
             label = { Text(text = "Buscar Salon")},
             trailingIcon = {
@@ -321,7 +319,7 @@ fun VistaEdificios(datosViewModel: DatosViewModel) {
                     datosViewModel.busquedaState.value = false
                     when (busquedaOpc.value){
                         "Salon" -> {
-                            datosViewModel.buscarPorEdificio(key = textBusq)
+                            datosViewModel.buscarSalones(key = textBusq)
                         }
                     }
                 }) {
@@ -364,11 +362,10 @@ fun VistaEdificios(datosViewModel: DatosViewModel) {
         ){
             if (textBusq.value == ""){
 
-                getEdificios(datosViewModel = datosViewModel)
                 item {
                     if (datosViewModel.edificiosState.value){
                         for (datos in datosViewModel.edificios){
-                            CardEdicios(datos = datos)
+                            CardEdicios(datos = datos, onNavToClassRoom = onNavToClassRooms)
                         }
                         Divider(
                             modifier = Modifier
@@ -385,9 +382,11 @@ fun VistaEdificios(datosViewModel: DatosViewModel) {
             }else{
                 item {
                     if (datosViewModel.busquedaState.value){
-                        for (item in datosViewModel.resultSalones){         //Cambiar a resultado por salones
-                            CardEdicios(datos = item)                       //Hacer y cambiar cardSalones
+
+                        for (salon in datosViewModel.resultSalones){
+                            CardSalones(salon = salon!!)
                         }
+
                         Divider(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -397,7 +396,7 @@ fun VistaEdificios(datosViewModel: DatosViewModel) {
                             thickness = 1.dp
                         )
                     }else{
-                        if (datosViewModel.resultSalones.isEmpty()){
+                        if (textBusq.value.length > 1){
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
@@ -429,7 +428,7 @@ fun VistaEdificios(datosViewModel: DatosViewModel) {
     }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
+@ExperimentalAnimationApi
 @Composable
 private fun VistaMaterias(
     datosViewModel: DatosViewModel,
@@ -606,7 +605,7 @@ private fun VistaMaterias(
                                 thickness = 1.dp
                             )
                         }else{
-                            if (datosViewModel.resultMaterias.isEmpty()){
+                            if (textBusq.value.length > 1){
                                 Column(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalAlignment = Alignment.CenterHorizontally
@@ -649,26 +648,9 @@ private fun VistaMaterias(
 
 }
 
-@Composable
-private fun LoadingIndicator() {
-
-    Box(
-        modifier = Modifier.fillMaxWidth(),
-        contentAlignment = Alignment.TopCenter
-    ){
-        CircularProgressIndicator(
-            modifier = Modifier
-                .size(80.dp)
-                .padding(15.dp),
-            color = colorResource(id = R.color.azulClaroInstitucional)
-        )
-    }
-
-}
-
 @ExperimentalAnimationApi
 @Composable
-private fun FloatingInfoBottom() {
+fun FloatingInfoBottom() {
     val stateButtom = remember { mutableStateOf(false) }
     val datosTextStyle  = SpanStyle(
         color = Color.White,
@@ -709,6 +691,84 @@ private fun FloatingInfoBottom() {
             )
         }
     }
+}
+
+@Composable
+private fun CardSalones(
+    modifier: Modifier = Modifier,
+    salon : Salones
+) {
+
+    val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
+    val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
+
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp, vertical = 5.dp),
+        backgroundColor = Color.White,
+        elevation = 5.dp,
+        border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+        shape = RoundedCornerShape(
+            bottomEndPercent = 8,
+            bottomStartPercent = 8,
+            topEndPercent = 8,
+            topStartPercent = 8
+        )
+    ) {
+        Column (modifier = Modifier
+            .fillMaxWidth()
+            .padding(3.dp)) {
+
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = salon.data,
+                style = TextStyle(
+                    color = azulOscuro,
+                    fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold
+                ),
+                textAlign = TextAlign.Center
+            )
+            Divider(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 15.dp), color = azulOscuro)
+            Row(modifier = Modifier.fillMaxWidth()) {
+                TableCell(text = "Edificio", weight = 0.5f, textColor = azulOscuro, fontWeight = FontWeight.Bold)
+                TableCell(text = "Piso", weight = 0.5f, textColor = azulOscuro, fontWeight = FontWeight.Bold)
+            }
+            Row(modifier = Modifier.fillMaxWidth()) {
+                TableCell(text = salon.edificio, weight = 0.5f)
+                TableCell(text = salon.piso, weight = 0.5f)
+            }
+
+        }
+    }
+}
+
+@Composable
+private fun RowScope.TableCell(
+    text: String,
+    weight: Float,
+    textColor : Color = colorResource(id = R.color.azulClaroInstitucional),
+    textSize : TextUnit = 16.sp,
+    fontWeight: FontWeight = FontWeight.Normal
+) {
+    Text(
+        text = text,
+        Modifier
+//            .border(1.dp, color = colorResource(id = R.color.azulOscuroInstitucional))
+            .weight(weight)
+            .padding(8.dp),
+        textAlign = TextAlign.Center,
+        style = TextStyle(
+            color = textColor,
+            fontSize = textSize,
+            fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+            fontWeight = fontWeight
+        )
+    )
 }
 
 @Composable
@@ -860,7 +920,8 @@ private fun CardProfesor(
 @ExperimentalAnimationApi
 @Composable
 private fun CardEdicios(
-    datos : Edificios?
+    datos : Edificios?,
+    onNavToClassRoom: (String) -> Unit
 ) {
     val modifier = Modifier.padding(start = 2.dp)
     val expanded = remember{ mutableStateOf(false)}
@@ -868,6 +929,7 @@ private fun CardEdicios(
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .height(200.dp)
             .padding(horizontal = 10.dp, vertical = 5.dp),
         backgroundColor = Color.White,
         elevation = 5.dp,
@@ -879,72 +941,70 @@ private fun CardEdicios(
             topStartPercent = 8
         )
     ) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .clickable { expanded.value = !expanded.value }
+        Column(modifier = Modifier.fillMaxSize()
         ) {
-            Row(
-                modifier = modifier.fillMaxSize()
-            ) {
-                Box(modifier = Modifier.padding(top = 10.dp),
-                    contentAlignment = Alignment.Center){
-                    Image(
-                        modifier = Modifier
-                            .clip(shape = RoundedCornerShape(corner = CornerSize(15)))
-                            .width(100.dp)
-                            .height(100.dp),
-                        painter = rememberImagePainter(data = datos!!.imagen),
-                        contentDescription = "",
-                        contentScale = ContentScale.FillBounds,
-                    )
-                }
-                Column(Modifier.fillMaxWidth()) {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ){
+                Image(
+                    modifier = Modifier.fillMaxSize(),
+                    painter = rememberImagePainter(data = datos!!.imagen),
+                    contentDescription = "",
+                    contentScale = ContentScale.FillBounds,
+                    alignment = Alignment.CenterStart
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                listOf(Color.Transparent, Color.White),
+                                startX = 0f,
+                                endX = Float.POSITIVE_INFINITY * 0.4f
+                            )
+                        )
+                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(end = 8.dp, bottom = 8.dp),
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.Bottom
+                ) {
                     Text(
-                        modifier = modifier.padding(top = 3.dp),
-                        text = "Edificio: ${datos!!.nombre}",
+                        modifier = Modifier
+                            .padding(top = 3.dp),
+                        text = "Edificio: ${datos.nombre}",
                         style = TextStyle(
                             color = colorResource(id = R.color.azulOscuroInstitucional),
                             fontWeight = FontWeight.Bold),
-                        fontSize = 20.sp,
+                        fontSize = 23.sp,
                         fontFamily = FontFamily(Font(R.font.source_sans_pro)
                         )
                     )
                     Divider(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 3.dp, vertical = 2.dp),
+                            .padding(horizontal = 3.dp, vertical = 2.dp)
+                            .fillMaxWidth(0.4f),
                         thickness = 1.dp,
-                        color = colorResource(id = R.color.azulOscuroInstitucional))
-                    Text(
-                        modifier = Modifier.padding(end = 2.dp),
-                        text = datos.descripcion,
-                        style = TextStyle(
-                            color = colorResource(id = R.color.azulClaroInstitucional),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
-                        ),
-                        textAlign = TextAlign.Justify
+                        color = colorResource(id = R.color.azulOscuroInstitucional)
                     )
-                }
-            }
-            AnimatedVisibility(visible = expanded.value) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 20.dp),
-                    text = "Expandido", textAlign = TextAlign.Center)
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ){
-                if (expanded.value){
-                    Icon(imageVector = Icons.Rounded.ExpandLess, contentDescription = "")
-                }else{
-                    Icon(imageVector = Icons.Rounded.ExpandMore, contentDescription = "")
+                    ClickableText(
+                        modifier = Modifier
+                            .padding(top = 12.dp, bottom = 4.dp),
+                        text = AnnotatedString(
+                            text = "Ver salones",
+                            spanStyle = SpanStyle(
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = colorResource(id = R.color.azulOscuroInstitucional),
+                                fontFamily = FontFamily(Font(R.font.source_sans_pro)
+                                )
+                            ),
+                            paragraphStyle = ParagraphStyle(textAlign = TextAlign.Center)
+                        ),
+                        onClick = {onNavToClassRoom(datos.nombre)}
+                    )
                 }
             }
         }
@@ -1074,4 +1134,14 @@ private fun CardMaterias(
             }
         }
     }
+}
+
+@ExperimentalAnimationApi
+@Preview
+@Composable
+fun PrevEdificioCard() {
+
+    val edificio : Edificios = Edificios("CCO1", imagen = "https://firebasestorage.googleapis.com/v0/b/horariosbuap.appspot.com/o/Edificios%2Fcco1.jpg?alt=media&token=e415c1e9-1706-480b-8683-702188d21d90", descripcion = "En este edificio se encuentra el POSGRADO de la Facultad de Ciencias de la Computación, además el consultorio médico, cubículos de profesores y salones de clase, numerados del modo 101 al 105.")
+
+    CardEdicios(datos = edificio, onNavToClassRoom = {})
 }

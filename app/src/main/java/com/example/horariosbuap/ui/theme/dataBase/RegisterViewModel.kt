@@ -6,21 +6,16 @@ import android.net.Uri
 import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.horariosbuap.R
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.actionCodeSettings
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class RegisterViewModel : ViewModel () {
     val state: MutableState<RegisterState> = mutableStateOf(RegisterState())
@@ -66,6 +61,7 @@ class RegisterViewModel : ViewModel () {
                                         activity = activity,
                                         state = loginViewModel.state
                                     )
+                                    setNuevoUsuario(user.uid, user.email!!, "EMAIL")
                                     state.value = state.value.copy(successRegister = true)
                                     state.value = state.value.copy(displayProcessbar = false)
 

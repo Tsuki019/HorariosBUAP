@@ -2,8 +2,12 @@ package com.example.horariosbuap
 
 import android.app.Activity
 import androidx.compose.animation.*
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.animateIntSizeAsState
+import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
+import androidx.compose.ui.unit.IntSize
 import androidx.navigation.*
 import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.ui.theme.customStuff.screens.*
@@ -11,6 +15,10 @@ import com.example.horariosbuap.ui.theme.customStuff.screens.ui.theme.VistaNotic
 import com.example.horariosbuap.ui.theme.dataBase.*
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.composable
+import com.google.firebase.auth.ktx.userProfileChangeRequest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 object MainDestinations{
@@ -31,11 +39,13 @@ object MainDestinations{
     const val ADD_SUBJECT_ROUTE = "agregar_materia"
     const val INFO_SUBJECT_ROUTE = "informacion_materia"
     const val RESET_PASSWORD_ROUTE = "reiniciar_contrasena"
+    const val CLASSROOMS_ROUTE = "salones_edificio"
 }
 
 object NavArguments{
     const val SINGLE_NEW_KEY = "noticiaId"
     const val NRC_MATERIA = "nrc"
+    const val EDIFICIO_ID = "edificioId"
 }
 
 @ExperimentalAnimationApi
@@ -170,10 +180,16 @@ fun NavGraphBuilder.addSearch(
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addSchedule(
     navController: NavHostController,
-    viewModel: LoginViewModel,
+    userDataViewModel: UserDataViewModel,
     titulos: MutableState<String>,
-    datosViewModel: DatosViewModel
+    datosViewModel: DatosViewModel,
+    coroutineScope: CoroutineScope
 ){
+    var testCont = 0
+    val animationState = mutableStateOf(false)
+    coroutineScope.launch {
+        delay(600)
+        animationState.value = true }
     composable(route = MainDestinations.SCHEDULE_ROUTE,
                enterTransition = {_, _ ->
                    slideInVertically(
@@ -200,9 +216,11 @@ fun NavGraphBuilder.addSchedule(
                    )
                }
     ){
+
         HorarioScreen(
+            isAnimationsOver = animationState,
             navController = navController,
-            viewModel = viewModel,
+            userDataViewModel = userDataViewModel,
             datosViewModel = datosViewModel,
             onAddSubject = {
                 navController.navigate(route = MainDestinations.ADD_SUBJECT_ROUTE)
@@ -252,7 +270,8 @@ fun NavGraphBuilder.addAccountOpt(
     navController: NavHostController,
     viewModel: LoginViewModel,
     titulos: MutableState<String>,
-    activity: Activity
+    activity: Activity,
+    userDataViewModel: UserDataViewModel
 ){
     composable(route = MainDestinations.ACCOUNT_ROUTE,
                enterTransition = {_, _ ->
@@ -284,7 +303,8 @@ fun NavGraphBuilder.addAccountOpt(
             viewModel = viewModel,
             activity = activity,
             onSignOut = {navController.navigate(route= MainDestinations.LOGIN_ROUTE) {
-                popUpTo(MainDestinations.NEWS_ROUTE) } }
+                popUpTo(MainDestinations.NEWS_ROUTE) } },
+            userDataViewModel = userDataViewModel
         )
 
         titulos.value = "Mi cuenta"
@@ -568,8 +588,6 @@ fun NavGraphBuilder.addRegister(
                 state = viewModel.state.value,
                 onRegister = viewModel::register,
                 onBack = {navController.popBackStack()},
-//                onBack = { navController.navigate(route = MainDestinations.LOGIN_ROUTE){
-//                    popUpTo(MainDestinations.LOGIN_ROUTE){inclusive = true}} },
                 onLoginWithGoogle = viewModelLogin::loginWithGoogle,
                 activity = activity,
                 onDismissDialog = viewModel::hideErrorDialog,
@@ -647,6 +665,40 @@ fun NavGraphBuilder.addInfoSubject(
 }
 
 @ExperimentalAnimationApi
+fun NavGraphBuilder.addClassRooms(
+    navController: NavHostController,
+    datosViewModel: DatosViewModel
+){
+    composable(
+        route = MainDestinations.CLASSROOMS_ROUTE+"/{${NavArguments.EDIFICIO_ID}}"
+        , enterTransition = { _, _ ->
+            fadeIn(
+                initialAlpha = 0F, animationSpec = tween(500)
+            )
+        }, exitTransition = { _, _ ->
+            fadeOut(
+                targetAlpha = 0F, animationSpec = tween(500)
+            )
+        }, popEnterTransition = { _, _ ->
+            fadeIn(
+                initialAlpha = 0F, animationSpec = tween(500)
+            )
+        }, popExitTransition = { _, _ ->
+            fadeOut(
+                targetAlpha = 0F, animationSpec = tween(500)
+            )
+        })
+    {backStackEntry ->
+
+        SalonesPorEdificio(
+            edificio = backStackEntry.arguments?.getString(NavArguments.EDIFICIO_ID),
+            salones = datosViewModel.salones,
+            onBack = {navController.popBackStack()}
+        )
+    }
+}
+
+@ExperimentalAnimationApi
 fun NavGraphBuilder.addSearchResultScreen(
     datosViewModel: DatosViewModel,
     titulos: MutableState<String>,
@@ -674,7 +726,12 @@ fun NavGraphBuilder.addSearchResultScreen(
     {
         val actions  = MainActions(navController = navController)
 
-        ResultadosBusqueda(datosViewModel = datosViewModel, titulos = titulos, onNavToSubject =  actions.navigateToMateria)
+        ResultadosBusqueda(
+            datosViewModel = datosViewModel,
+            titulos = titulos,
+            onNavToSubject = actions.navigateToMateria,
+            onNavToClassRooms = actions.navigateToSalones
+        )
     }
 
 
@@ -697,5 +754,9 @@ class MainActions(navController: NavHostController){
 
     val navigateToMateria:(String) -> Unit = {nrc: String ->
         navController.navigate(route = MainDestinations.INFO_SUBJECT_ROUTE+"/${nrc}")
+    }
+
+    val navigateToSalones:(String) -> Unit = {edificioId: String ->
+        navController.navigate(route = MainDestinations.CLASSROOMS_ROUTE+"/${edificioId}")
     }
 }
