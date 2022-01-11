@@ -1,11 +1,13 @@
 package com.example.horariosbuap.ui.theme.customStuff.screens
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,21 +22,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.components.OutlinedMediaButton
-import com.example.horariosbuap.ui.theme.dataBase.DatosViewModel
-import com.example.horariosbuap.ui.theme.dataBase.Materias
-import com.example.horariosbuap.ui.theme.dataBase.MateriasHorario
+import com.example.horariosbuap.viewmodel.DatosViewModel
+import com.example.horariosbuap.model.Materias
+import com.example.horariosbuap.model.MateriasHorario
 import com.example.horariosbuap.ui.theme.dataBase.getMateriasHorario
+import com.example.horariosbuap.viewmodel.UserDataViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.example.horariosbuap.ui.theme.customStuff.components.AlertaConformacion
+
+private val materiaElegida = mutableStateOf(Materias())
 
 @Composable
 fun InformacionMateria(
     nrc : String?,
     datosViewModel: DatosViewModel,
-    onBack : () -> Unit
+    onBack : () -> Unit,
+    nombreHorario : String,
+    userDataViewModel: UserDataViewModel,
+    activity : Activity,
 ) {
 
-
+    val userId =  FirebaseAuth.getInstance().currentUser!!.uid
     val materiaInfo = InfoMateria(datosViewModel = datosViewModel, nrc = nrc!!)
-    val materiasHorario = buscarHorarioMateria(datosViewModel = datosViewModel, nrc)
+    val materiasHorario = datosViewModel.buscarHorarioMateria(nrc = nrc)
 
 
     Box(
@@ -95,27 +105,38 @@ fun InformacionMateria(
                 color = colorResource(id = R.color.azulOscuroInstitucional)) }
             item { TablasHorario(materiaHorario = materiasHorario) }
             item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 30.dp, vertical = 6.dp)
-                        .wrapContentSize(Alignment.Center)
-                ) {
-                    OutlinedMediaButton(
-                        text = "Agregar a Mi Horario",
-                        onClick = { /*TODO*/ },
-                        buttonColor = colorResource(id = R.color.azulOscuroInstitucional),
-                        width = 170.dp,
-                        heigth = 40.dp,
-                        textStyle = TextStyle(
-                            fontSize= 15.sp,
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                if (nombreHorario != " "){
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 30.dp, vertical = 6.dp)
+                            .wrapContentSize(Alignment.Center)
+                    ) {
+                        OutlinedMediaButton(
+                            text = "Agregar a Mi Horario",
+                            onClick = { materiaElegida.value= materiaInfo },
+                            buttonColor = colorResource(id = R.color.azulOscuroInstitucional),
+                            width = 170.dp,
+                            heigth = 40.dp,
+                            textStyle = TextStyle(
+                                fontSize= 15.sp,
+                                color = colorResource(id = R.color.azulOscuroInstitucional),
+                                fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            )
                         )
-                    )
+                    }
                 }
-
             }
+        }
+        if (materiaElegida.value.nombre != ""){
+            AlertaConformacion(
+                nombreHorario = nombreHorario,
+                userId = userId,
+                userDataViewModel = userDataViewModel,
+                materiaElegida = materiaElegida,
+                activity = activity,
+                datosViewModel = datosViewModel
+            )
         }
     }
 }
@@ -252,7 +273,7 @@ private fun RowScope.TableCell(
 private fun InfoMateria(
     datosViewModel: DatosViewModel,
     nrc: String
-) : Materias{
+) : Materias {
 
     for (materia in datosViewModel.materias){
         if (materia!!.nrc == nrc){
@@ -263,22 +284,3 @@ private fun InfoMateria(
     return Materias()
 }
 
-fun buscarHorarioMateria(
-    datosViewModel: DatosViewModel,
-    nrc: String
-) : ArrayList<MateriasHorario>{
-    val materiasList : ArrayList<MateriasHorario> = ArrayList()
-
-    if (!datosViewModel.materiasHorarioState.value){
-        getMateriasHorario(datosViewModel = datosViewModel)
-    }else{
-        for (materia in datosViewModel.materiasHorario){
-            if (materia!!.nrc == nrc){
-                materiasList.add(materia)
-            }
-        }
-        return materiasList
-    }
-
-    return materiasList
-}

@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.dataBase
+package com.example.horariosbuap.model
 
 import android.os.Bundle
 import androidx.activity.compose.setContent

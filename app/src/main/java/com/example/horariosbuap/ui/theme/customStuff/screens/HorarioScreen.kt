@@ -44,6 +44,11 @@ import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.*
+import com.example.horariosbuap.model.MateriasHorario
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
+import com.example.horariosbuap.ui.theme.primaryColorCustom
+import com.example.horariosbuap.viewmodel.DatosViewModel
+import com.example.horariosbuap.viewmodel.UserDataViewModel
 import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
@@ -53,7 +58,8 @@ fun HorarioScreen(
     navController: NavController,
     userDataViewModel: UserDataViewModel,
     datosViewModel: DatosViewModel,
-    onAddSubject : () -> Unit
+    onAddSubject : () -> Unit,
+    onNavToHorario : (String) -> Unit
 ) {
     val auth = Firebase.auth
     val currentUser = auth.currentUser
@@ -76,6 +82,7 @@ fun HorarioScreen(
                     onAddSubject = onAddSubject,
                     userDataViewModel = userDataViewModel,
                     userId = auth.currentUser!!.uid,
+                    onNavToHorario = onNavToHorario
                 )
             }else{
                 if (isAnimationsOver.value){
@@ -104,7 +111,7 @@ fun VerHorariosScreen(
     onAddSubject: () -> Unit,
     userDataViewModel: UserDataViewModel,
     userId : String,
-
+    onNavToHorario : (String) -> Unit
 ) {
     val isDeleting = remember { mutableStateOf(false)}
     val isAnimationVisible = remember { mutableStateOf(false)}
@@ -145,10 +152,10 @@ fun VerHorariosScreen(
                     items(userDataViewModel.horarios) { item ->
                         BotonHorario(
                             nombre = item.nombre,
-                            onNavigateToHorario = {},
+                            onNavToHorario = onNavToHorario,
                             isDeleting = isDeleting,
                             isAlertVisible = isAlertVisible,
-                            nombreHorarioActual = nombreHorarioActual
+                            nombreHorarioActual = nombreHorarioActual,
                         )
                     }
                 }
@@ -398,7 +405,7 @@ private fun AlertaConformacion(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(4.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
                 TextButton(onClick = {
@@ -410,18 +417,19 @@ private fun AlertaConformacion(
                         text = "Borrar",
                         style = TextStyle(
                             color = Color.Red,
-                            fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                            fontSize = 20.sp,
+                            fontFamily = sansPro,
                         )
                     )
                 }
+                Divider(modifier = Modifier.width(8.dp), color = Color.Transparent)
                 TextButton(onClick = { isAlertVisible.value = false }) {
                     Text(
                         text = "Cancelar",
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulClaroInstitucional),
-                            fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                            color = primaryColorCustom,
+                            fontSize = 20.sp,
+                            fontFamily = sansPro,
                         )
                     )
                 }
@@ -434,7 +442,7 @@ private fun AlertaConformacion(
 @Composable
 private fun BotonHorario(
     nombre : String,
-    onNavigateToHorario : (String) -> Unit,
+    onNavToHorario : (String) -> Unit,
     isDeleting : MutableState<Boolean>,
     isAlertVisible : MutableState<Boolean>,
     nombreHorarioActual : MutableState<String>
@@ -445,8 +453,8 @@ private fun BotonHorario(
             .fillMaxWidth()
             .height(80.dp)
             .padding(10.dp)
-            .clickable { onNavigateToHorario(nombre) },
-        border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+            .clickable { onNavToHorario(nombre) },
+        border = BorderStroke(width = 1.dp, color = primaryColorCustom),
         shape = RoundedCornerShape(10),
         backgroundColor = Color.White,
         elevation = 4.dp
@@ -512,72 +520,5 @@ fun TestBotonHorario() {
     val isVisible = remember { mutableStateOf(true) }
     val isAlertaVisible = remember { mutableStateOf(false) }
     val nombre = remember { mutableStateOf("") }
-    BotonHorario(nombre = "Horario", onNavigateToHorario = {}, isDeleting = isVisible, isAlertVisible = isAlertaVisible, nombreHorarioActual = nombre )
-}
-
-@ExperimentalAnimationApi
-@Composable
-private fun CardMateriasPorDia(
-    modifier: Modifier = Modifier,
-    dia : String,
-    materias : List<MateriasHorario>
-) {
-    val expanded = remember{ mutableStateOf(false)}
-
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 15.dp)
-            .clickable { expanded.value = !expanded.value },
-        backgroundColor = Color.White,
-        shape = RoundedCornerShape(CornerSize(10.dp)),
-        elevation = 5.dp
-    ) {
-
-
-        Column(modifier = modifier
-            .fillMaxWidth()
-            .padding(3.dp)
-        ) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = dia,
-                style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
-                    fontFamily = FontFamily(Font(R.font.source_sans_pro)),
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                textAlign = TextAlign.Center
-            )
-            AnimatedVisibility(visible = expanded.value) {
-
-            }
-            Icon(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(2.dp)
-                    .wrapContentSize(align = Alignment.Center),
-                imageVector = if(!expanded.value) Icons.Rounded.ExpandMore
-                else Icons.Rounded.ExpandLess,
-                contentDescription = "",
-                tint = colorResource(id = R.color.azulOscuroInstitucional)
-            )
-        }
-    }
-}
-
-@ExperimentalAnimationApi
-@Preview
-@Composable
-fun TestCardMateriasPorDia() {
-
-
-    val materia = listOf(
-        MateriasHorario("L", "Edif CCO2", "0900", "23123", "0959"),
-        MateriasHorario("L", "Edif CCO1", "1200", "23123", "1259"),
-        MateriasHorario("L", "Edif CCO3", "1300", "23123", "1359")
-    )
-
-    CardMateriasPorDia(dia = "Lunes", materias = materia)
+    BotonHorario(nombre = "Horario", onNavToHorario = {}, isDeleting = isVisible, isAlertVisible = isAlertaVisible, nombreHorarioActual = nombre )
 }

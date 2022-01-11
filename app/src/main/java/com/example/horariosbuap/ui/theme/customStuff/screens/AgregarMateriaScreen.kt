@@ -1,5 +1,6 @@
 package com.example.horariosbuap.ui.theme.customStuff.screens
 
+import android.app.Activity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -33,22 +34,32 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.horariosbuap.MainActivity
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.components.ButtonToggleGroup
 import com.example.horariosbuap.ui.theme.customStuff.components.pageNavigator
-import com.example.horariosbuap.ui.theme.dataBase.DatosViewModel
-import com.example.horariosbuap.ui.theme.dataBase.Materias
+import com.example.horariosbuap.viewmodel.DatosViewModel
+import com.example.horariosbuap.model.Materias
 import com.example.horariosbuap.ui.theme.dataBase.getMaterias
+import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
+import com.google.firebase.auth.FirebaseAuth
+import com.example.horariosbuap.ui.theme.customStuff.components.AlertaConformacion
+
+private val materiaElegida = mutableStateOf(Materias())
 
 @ExperimentalAnimationApi
 @Composable
 fun AgregarMateriasScreen(
+    nombreHorario : String,
     datosViewModel : DatosViewModel,
-    onNavToInfo : (String) -> Unit
+    onNavToInfo : (String, String) -> Unit,
+    userDataViewModel: UserDataViewModel,
+    activity: Activity
 ) {
 
+    val userId = FirebaseAuth.getInstance().currentUser!!.uid
     val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
     val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
     val focusManager = LocalFocusManager.current
@@ -183,7 +194,7 @@ fun AgregarMateriasScreen(
 
                             while (cont <= pagina.value * 50 && cont < datosViewModel.materias.size) {
 
-                                CardMaterias(datos = datosViewModel.materias[cont], onNavToInfo = onNavToInfo)
+                                CardMaterias(datos = datosViewModel.materias[cont], onNavToInfo = onNavToInfo, nombreHorario = nombreHorario)
 
                                 cont++
                             }
@@ -208,7 +219,7 @@ fun AgregarMateriasScreen(
                     item {
                         if (datosViewModel.busquedaState.value){
                             for (item in datosViewModel.resultMaterias){
-                                CardMaterias(datos = item, onNavToInfo = onNavToInfo)
+                                CardMaterias(datos = item, onNavToInfo = onNavToInfo, nombreHorario = nombreHorario)
                             }
                             Divider(
                                 modifier = Modifier
@@ -258,6 +269,17 @@ fun AgregarMateriasScreen(
         ){
             FloatingInfoBottom()
         }
+
+        if (materiaElegida.value.nombre != ""){
+            AlertaConformacion(
+                nombreHorario = nombreHorario,
+                userId = userId,
+                userDataViewModel = userDataViewModel,
+                materiaElegida = materiaElegida,
+                activity = activity,
+                datosViewModel = datosViewModel
+            )
+        }
     }
 
 }
@@ -265,7 +287,8 @@ fun AgregarMateriasScreen(
 @Composable
 private fun CardMaterias(
     datos : Materias?,
-    onNavToInfo: (String) -> Unit
+    onNavToInfo: (String, String) -> Unit,
+    nombreHorario: String
 ) {
 
     Card(
@@ -407,7 +430,7 @@ private fun CardMaterias(
                             fontFamily = FontFamily(Font(R.font.source_sans_pro))
                         )
                     ),
-                    onClick = {onNavToInfo(datos.nrc)}
+                    onClick = {onNavToInfo(datos.nrc, nombreHorario)}
                 )
                 Divider(modifier = Modifier
                     .padding(horizontal = 5.dp, vertical = 10.dp)
@@ -425,7 +448,7 @@ private fun CardMaterias(
                             fontFamily = FontFamily(Font(R.font.source_sans_pro))
                         )
                     ),
-                    onClick = {}
+                    onClick = { materiaElegida.value = datos }
                 )
             }
         }

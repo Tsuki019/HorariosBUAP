@@ -23,6 +23,7 @@
     <string name="error_download_image">Error al recuperar la imagen, por favor inténtelo de nuevo</string>
     <string name="error_size_image">La imagen debe pesar menos de 1MB</string>
     <string name="error_update_user_data">A ocurrido un error al actualizar los datos, por favor intentelo de nuevo</string>
+    <string name="error_match_schedule_subjects">No se ha agregado porque ya tiene registrada otra materia con ese horario.</string>
 
 
 <!--    Google default values-->

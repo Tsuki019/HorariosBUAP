@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.dataBase
+package com.example.horariosbuap.core
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

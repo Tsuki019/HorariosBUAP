@@ -43,9 +43,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.horariosbuap.R
+import com.example.horariosbuap.model.Edificios
+import com.example.horariosbuap.model.Materias
+import com.example.horariosbuap.model.Profesores
+import com.example.horariosbuap.model.Salones
 import com.example.horariosbuap.ui.theme.customStuff.components.ButtonToggleGroup
 import com.example.horariosbuap.ui.theme.customStuff.components.pageNavigator
 import com.example.horariosbuap.ui.theme.dataBase.*
+import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 
@@ -54,7 +59,7 @@ import com.google.accompanist.insets.rememberInsetsPaddingValues
 fun ResultadosBusqueda(
     datosViewModel: DatosViewModel,
     titulos : MutableState<String>,
-    onNavToSubject : (String) -> Unit,
+    onNavToSubject : (String, String) -> Unit,
     onNavToClassRooms : (String) -> Unit
 ) {
 
@@ -432,7 +437,7 @@ fun VistaEdificios(
 @Composable
 private fun VistaMaterias(
     datosViewModel: DatosViewModel,
-    onNavToSubject: (String) -> Unit
+    onNavToSubject: (String, String) -> Unit
 ) {
 
     val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
@@ -1015,14 +1020,14 @@ private fun CardEdicios(
 @Composable
 private fun CardMaterias(
     datos : Materias?,
-    onNavToSubject: (String) -> Unit
+    onNavToSubject: (String, String) -> Unit
 ) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
-            .clickable { onNavToSubject(datos!!.nrc) },
+            .clickable { onNavToSubject(datos!!.nrc, " ") },
         backgroundColor = Color.White,
         elevation = 5.dp,
         border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),

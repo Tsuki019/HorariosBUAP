@@ -13,7 +13,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.horariosbuap.R
-import com.example.horariosbuap.ui.theme.dataBase.DatosViewModel
+import com.example.horariosbuap.viewmodel.DatosViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

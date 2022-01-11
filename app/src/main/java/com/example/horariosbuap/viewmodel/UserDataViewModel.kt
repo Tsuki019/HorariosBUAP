@@ -1,9 +1,12 @@
-package com.example.horariosbuap.ui.theme.dataBase
+package com.example.horariosbuap.viewmodel
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.horariosbuap.ui.theme.customStuff.screens.buscarHorarioMateria
+import com.example.horariosbuap.model.HorarioUsuario
+import com.example.horariosbuap.model.Materias
+import com.example.horariosbuap.model.MateriasHorario
+import com.example.horariosbuap.model.UserDB
 
 class UserDataViewModel : ViewModel()
 {
@@ -22,7 +25,6 @@ class UserDataViewModel : ViewModel()
     ){
         for(nombre in nombres){
             horarios.add(HorarioUsuario(nombre = nombre))
-            println("=========== DENTRO DEL FOR ${horarios.size} ==========")
         }
         isUserDataLoaded.value = true
     }
@@ -42,7 +44,7 @@ class UserDataViewModel : ViewModel()
         materias: ArrayList<Materias>
     ) {
         var band = false
-        for (i in 0 .. horarios.size){
+        for (i in 0 until horarios.size){
             if (horarios[i].nombre == nombre && !band){
                 horarios[i].materiasUnicas = materias
                 band = true
@@ -51,6 +53,7 @@ class UserDataViewModel : ViewModel()
         if (!band){
             horarios.add(HorarioUsuario(nombre = nombre, materiasUnicas = materias))
         }
+        isMateriasUnicasFill.value = true
     }
 
     fun agregarMateriasHorario(
@@ -58,7 +61,7 @@ class UserDataViewModel : ViewModel()
         materias: ArrayList<MateriasHorario>
     ) {
         var band = false
-        for (i in 0 .. horarios.size){
+        for (i in 0 until horarios.size){
             if (horarios[i].nombre == nombre && !band){
                 horarios[i].materiasHorarios = materias
                 band = true
@@ -74,9 +77,24 @@ class UserDataViewModel : ViewModel()
         nombreHorario : String,
         materia : Materias
     ){
-        for (i in 0 .. horarios.size){
+        for (i in 0 until horarios.size){
             if (horarios[i].nombre == nombreHorario){
                 horarios[i].materiasUnicas.add(materia)
+                break
+            }
+        }
+    }
+
+    fun agregarHorariosDeMateria(
+        nombreHorario: String,
+        materiaHorarios: ArrayList<MateriasHorario>
+    ){
+        for(i in 0 until horarios.size){
+            if (horarios[i].nombre == nombreHorario){
+                for(horario in materiaHorarios){
+                    horarios[i].materiasHorarios.add(horario)
+                }
+                break
             }
         }
     }
@@ -118,5 +136,30 @@ class UserDataViewModel : ViewModel()
                 break
             }
         }
+    }
+
+    fun revisarDisponibilidadHorarios(
+        nrc : String,
+        nombreHorario: String,
+        datosViewModel: DatosViewModel
+    ) : Boolean{
+        var horarioLibre = true
+        val materiasHorarios = datosViewModel.buscarHorarioMateria(nrc)
+        val horario = horarios.find { materiasHor -> materiasHor.nombre == nombreHorario }
+
+        if (horario!!.materiasHorarios.size > 0){
+            for (horarioSolo in  horario.materiasHorarios){
+                for (horarioRegistrado in  materiasHorarios){
+                    if (horarioSolo.entrada == horarioRegistrado.entrada && horarioSolo.dia == horarioRegistrado.dia){
+                        horarioLibre = false
+                        break
+                    }
+                }
+                if (!horarioLibre){
+                    break
+                }
+            }
+        }
+        return horarioLibre
     }
 }

@@ -6,6 +6,8 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.compose.runtime.MutableState
 import com.example.horariosbuap.R
+import com.example.horariosbuap.viewmodel.LoginViewModel
+import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest

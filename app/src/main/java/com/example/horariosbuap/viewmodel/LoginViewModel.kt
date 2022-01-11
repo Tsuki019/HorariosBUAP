@@ -1,17 +1,16 @@
-package com.example.horariosbuap.ui.theme.dataBase
+package com.example.horariosbuap.viewmodel
 
 //import com.example.horariosbuap.R
 import android.app.Activity
-import android.content.Intent
 import android.net.Uri
 import android.util.Patterns
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil.compose.rememberImagePainter
 import com.example.horariosbuap.R
+import com.example.horariosbuap.model.LoginState
+import com.example.horariosbuap.ui.theme.dataBase.setNuevoUsuario
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -21,10 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 

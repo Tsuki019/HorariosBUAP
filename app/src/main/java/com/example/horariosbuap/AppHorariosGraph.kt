@@ -1,22 +1,29 @@
 package com.example.horariosbuap
 
 import android.app.Activity
+import android.nfc.Tag
+import android.util.Log
 import androidx.compose.animation.*
-import androidx.compose.animation.core.FiniteAnimationSpec
-import androidx.compose.animation.core.animateIntSizeAsState
-import androidx.compose.animation.core.animateOffsetAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
-import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.res.colorResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.*
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.horariosbuap.model.loadNews
+import com.example.horariosbuap.ui.theme.customStuff.components.LoadingIndicator
 import com.example.horariosbuap.ui.theme.customStuff.screens.*
 import com.example.horariosbuap.ui.theme.customStuff.screens.ui.theme.VistaNoticia
-import com.example.horariosbuap.ui.theme.dataBase.*
+import com.example.horariosbuap.viewmodel.DatosViewModel
+import com.example.horariosbuap.viewmodel.LoginViewModel
+import com.example.horariosbuap.viewmodel.RegisterViewModel
+import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.composable
-import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.accompanist.pager.ExperimentalPagerApi
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -40,12 +47,14 @@ object MainDestinations{
     const val INFO_SUBJECT_ROUTE = "informacion_materia"
     const val RESET_PASSWORD_ROUTE = "reiniciar_contrasena"
     const val CLASSROOMS_ROUTE = "salones_edificio"
+    const val SCHEDULE_DETAILS_ROUTE = "detalles_horario"
 }
 
 object NavArguments{
     const val SINGLE_NEW_KEY = "noticiaId"
     const val NRC_MATERIA = "nrc"
     const val EDIFICIO_ID = "edificioId"
+    const val NOMBRE_HORARIO = "nomHorario"
 }
 
 @ExperimentalAnimationApi
@@ -53,32 +62,7 @@ fun NavGraphBuilder.addNews(
     navController: NavHostController,
     titulos: MutableState<String>
 ){
-    composable(route = MainDestinations.NEWS_ROUTE,
-               enterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {-2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {-2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {2000},
-                       animationSpec = tween(500)
-                   )
-               }
-    ){
+    composable(route = MainDestinations.NEWS_ROUTE){
 
         val actions  = MainActions(navController = navController)
 
@@ -95,32 +79,8 @@ fun NavGraphBuilder.addSinglePostView(
     navController: NavHostController,
     titulos: MutableState<String>
 ){
-    composable(route = "${MainDestinations.SINGLE_NEW}/{${NavArguments.SINGLE_NEW_KEY}}",
-               enterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {-2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {-2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {2000},
-                       animationSpec = tween(500)
-                   )
-               }
-    ){ backStackEntry ->
+    composable(route = "${MainDestinations.SINGLE_NEW}/{${NavArguments.SINGLE_NEW_KEY}}")
+    { backStackEntry ->
             VistaNoticia(noticiaId = backStackEntry.arguments?.getString(NavArguments.SINGLE_NEW_KEY))
             titulos.value = "Noticias"
     }
@@ -132,32 +92,8 @@ fun NavGraphBuilder.addSearch(
     datosViewModel: DatosViewModel,
     titulos: MutableState<String>
 ){
-    composable(route = MainDestinations.SEARCH_ROUTE,
-               enterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {-2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {-2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {2000},
-                       animationSpec = tween(500)
-                   )
-               }
-    ){
+    composable(route = MainDestinations.SEARCH_ROUTE)
+    {
 
         BuscarScreen(
             onSearchProfesor = {
@@ -185,37 +121,13 @@ fun NavGraphBuilder.addSchedule(
     datosViewModel: DatosViewModel,
     coroutineScope: CoroutineScope
 ){
-    var testCont = 0
     val animationState = mutableStateOf(false)
     coroutineScope.launch {
-        delay(600)
+        delay(400)
         animationState.value = true }
-    composable(route = MainDestinations.SCHEDULE_ROUTE,
-               enterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {-2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {-2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {2000},
-                       animationSpec = tween(500)
-                   )
-               }
-    ){
+    composable(route = MainDestinations.SCHEDULE_ROUTE)
+    {
+        val actions  = MainActions(navController = navController)
 
         HorarioScreen(
             isAnimationsOver = animationState,
@@ -224,7 +136,9 @@ fun NavGraphBuilder.addSchedule(
             datosViewModel = datosViewModel,
             onAddSubject = {
                 navController.navigate(route = MainDestinations.ADD_SUBJECT_ROUTE)
-            })
+            },
+            onNavToHorario = actions.navigateToHorario
+        )
         titulos.value = "Mi horario"
     }
 }
@@ -234,32 +148,8 @@ fun NavGraphBuilder.addFree(
     navController: NavHostController,
     titulos: MutableState<String>
 ){
-    composable(route = MainDestinations.FREE_ROUTE,
-               enterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {-2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   slideInVertically(
-                       initialOffsetY = {-2000},
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   slideOutVertically(
-                       targetOffsetY = {2000},
-                       animationSpec = tween(500)
-                   )
-               }
-    ){
+    composable(route = MainDestinations.FREE_ROUTE)
+    {
         LibreScreen(navController = navController)
         titulos.value = "Espacio Libre"
     }
@@ -273,32 +163,8 @@ fun NavGraphBuilder.addAccountOpt(
     activity: Activity,
     userDataViewModel: UserDataViewModel
 ){
-    composable(route = MainDestinations.ACCOUNT_ROUTE,
-               enterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               }
-    ){
+    composable(route = MainDestinations.ACCOUNT_ROUTE)
+    {
         MiCuentaOption(
             viewModel = viewModel,
             activity = activity,
@@ -317,32 +183,8 @@ fun NavGraphBuilder.addSettingsOpt(
     navController: NavHostController,
     titulos: MutableState<String>
 ){
-    composable(route = MainDestinations.SETTINGS_ROUTE,
-               enterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               }
-    ){
+    composable(route = MainDestinations.SETTINGS_ROUTE)
+    {
         AjustesOption()
         titulos.value = "Ajustes"
     }
@@ -353,32 +195,8 @@ fun NavGraphBuilder.addAboutOpt(
     navController: NavHostController,
     titulos: MutableState<String>
 ){
-    composable(route = MainDestinations.ABOUT_ROUTE,
-               enterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               }
-    ){
+    composable(route = MainDestinations.ABOUT_ROUTE)
+    {
         AcercaDeOption()
         titulos.value = "Acerca de la Aplicacion"
     }
@@ -389,32 +207,8 @@ fun NavGraphBuilder.addShareOpt(
     navController: NavHostController,
     titulos: MutableState<String>
 ){
-    composable(route = MainDestinations.SHARE_ROUTE,
-               enterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               }
-    ){
+    composable(route = MainDestinations.SHARE_ROUTE)
+    {
         CompartirOption()
     }
 }
@@ -423,32 +217,8 @@ fun NavGraphBuilder.addShareOpt(
 fun NavGraphBuilder.addExitOpt(
     navController: NavHostController
 ){
-    composable(route = MainDestinations.EXIT_ROUTE,
-               enterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               }
-    ){
+    composable(route = MainDestinations.EXIT_ROUTE)
+    {
         SalirOption()
     }
 }
@@ -461,32 +231,8 @@ fun NavGraphBuilder.addLogin(
     activity: Activity,
     titulos: MutableState<String>
 ){
-    composable(route = MainDestinations.LOGIN_ROUTE,
-               enterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               }
-    ){
+    composable(route = MainDestinations.LOGIN_ROUTE)
+    {
 
         if (viewModel.state.value.successLogin){
             LaunchedEffect(key1 = Unit){
@@ -515,32 +261,8 @@ fun NavGraphBuilder.addResetPassword(
     titulos: MutableState<String>,
     navController: NavHostController
 ){
-    composable(route = MainDestinations.RESET_PASSWORD_ROUTE,
-               enterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               }
-    ){
+    composable(route = MainDestinations.RESET_PASSWORD_ROUTE)
+    {
 
         titulos.value = "Reiniciar Contraseña"
 
@@ -556,32 +278,8 @@ fun NavGraphBuilder.addRegister(
     navController: NavHostController,
     titulos: MutableState<String>,
 ){
-    composable(route = MainDestinations.REGISTRATION_ROUTE,
-               enterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               exitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popEnterTransition = {_, _ ->
-                   fadeIn(
-                       initialAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               },
-               popExitTransition = {_, _ ->
-                   fadeOut(
-                       targetAlpha = 0F,
-                       animationSpec = tween(500)
-                   )
-               }
-    ){
+    composable(route = MainDestinations.REGISTRATION_ROUTE)
+    {
 
         if(!viewModel.state.value.successRegister){
             RegistrationScreen(
@@ -605,28 +303,21 @@ fun NavGraphBuilder.addRegister(
 fun NavGraphBuilder.addAddSubject(
     navController: NavHostController,
     datosViewModel: DatosViewModel,
-    titulos: MutableState<String>
+    titulos: MutableState<String>,
+    userDataViewModel: UserDataViewModel,
+    activity: Activity
 ) {
-    composable(route = MainDestinations.ADD_SUBJECT_ROUTE, enterTransition = { _, _ ->
-        fadeIn(
-            initialAlpha = 0F, animationSpec = tween(500)
-        )
-    }, exitTransition = { _, _ ->
-        fadeOut(
-            targetAlpha = 0F, animationSpec = tween(500)
-        )
-    }, popEnterTransition = { _, _ ->
-        fadeIn(
-            initialAlpha = 0F, animationSpec = tween(500)
-        )
-    }, popExitTransition = { _, _ ->
-        fadeOut(
-            targetAlpha = 0F, animationSpec = tween(500)
-        )
-    }) {
+    composable(route = MainDestinations.ADD_SUBJECT_ROUTE+"/{${NavArguments.NOMBRE_HORARIO}}")
+    {
         val actions  = MainActions(navController = navController)
 
-        AgregarMateriasScreen(datosViewModel = datosViewModel, onNavToInfo = actions.navigateToMateria)
+        AgregarMateriasScreen(
+            datosViewModel = datosViewModel,
+            onNavToInfo = actions.navigateToMateria,
+            nombreHorario = it.arguments?.getString(NavArguments.NOMBRE_HORARIO)!!,
+            userDataViewModel = userDataViewModel,
+            activity = activity
+        )
         titulos.value = "Agregar Materia"
     }
 }
@@ -634,32 +325,21 @@ fun NavGraphBuilder.addAddSubject(
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addInfoSubject(
     navController: NavHostController,
-    datosViewModel: DatosViewModel
+    datosViewModel: DatosViewModel,
+    userDataViewModel: UserDataViewModel,
+    activity: Activity
 ){
     composable(
-        route = MainDestinations.INFO_SUBJECT_ROUTE+"/{${NavArguments.NRC_MATERIA}}"
-        , enterTransition = { _, _ ->
-        fadeIn(
-            initialAlpha = 0F, animationSpec = tween(500)
-        )
-    }, exitTransition = { _, _ ->
-        fadeOut(
-            targetAlpha = 0F, animationSpec = tween(500)
-        )
-    }, popEnterTransition = { _, _ ->
-        fadeIn(
-            initialAlpha = 0F, animationSpec = tween(500)
-        )
-    }, popExitTransition = { _, _ ->
-        fadeOut(
-            targetAlpha = 0F, animationSpec = tween(500)
-        )
-    }) {backStackEntry ->
+        route = MainDestinations.INFO_SUBJECT_ROUTE+"/{${NavArguments.NRC_MATERIA}}/{${NavArguments.NOMBRE_HORARIO}}")
+    {backStackEntry ->
 
         InformacionMateria(
             nrc = backStackEntry.arguments?.getString(NavArguments.NRC_MATERIA),
             datosViewModel = datosViewModel,
-            onBack = {navController.popBackStack()}
+            onBack = {navController.popBackStack()},
+            nombreHorario = backStackEntry.arguments?.getString(NavArguments.NOMBRE_HORARIO)!!,
+            userDataViewModel = userDataViewModel,
+            activity = activity
         )
     }
 }
@@ -670,24 +350,7 @@ fun NavGraphBuilder.addClassRooms(
     datosViewModel: DatosViewModel
 ){
     composable(
-        route = MainDestinations.CLASSROOMS_ROUTE+"/{${NavArguments.EDIFICIO_ID}}"
-        , enterTransition = { _, _ ->
-            fadeIn(
-                initialAlpha = 0F, animationSpec = tween(500)
-            )
-        }, exitTransition = { _, _ ->
-            fadeOut(
-                targetAlpha = 0F, animationSpec = tween(500)
-            )
-        }, popEnterTransition = { _, _ ->
-            fadeIn(
-                initialAlpha = 0F, animationSpec = tween(500)
-            )
-        }, popExitTransition = { _, _ ->
-            fadeOut(
-                targetAlpha = 0F, animationSpec = tween(500)
-            )
-        })
+        route = MainDestinations.CLASSROOMS_ROUTE+"/{${NavArguments.EDIFICIO_ID}}")
     {backStackEntry ->
 
         SalonesPorEdificio(
@@ -704,25 +367,7 @@ fun NavGraphBuilder.addSearchResultScreen(
     titulos: MutableState<String>,
     navController: NavHostController
 ) {
-     composable(route = MainDestinations.SEARCH_RESULT_ROUTE,
-        enterTransition = { _, _ ->
-             fadeIn(
-                 initialAlpha = 0F, animationSpec = tween(500)
-             )
-         }, exitTransition = { _, _ ->
-             fadeOut(
-                 targetAlpha = 0F, animationSpec = tween(500)
-             )
-         }, popEnterTransition = { _, _ ->
-             fadeIn(
-                 initialAlpha = 0F, animationSpec = tween(500)
-             )
-         }, popExitTransition = { _, _ ->
-             fadeOut(
-                 targetAlpha = 0F, animationSpec = tween(500)
-             )
-         }
-    )
+     composable(route = MainDestinations.SEARCH_RESULT_ROUTE)
     {
         val actions  = MainActions(navController = navController)
 
@@ -737,6 +382,29 @@ fun NavGraphBuilder.addSearchResultScreen(
 
 }
 
+@ExperimentalPagerApi
+@ExperimentalAnimationApi
+fun NavGraphBuilder.addScheduleDetails(
+    navController: NavHostController,
+    userDataViewModel: UserDataViewModel,
+    titulos: MutableState<String>,
+    datosViewModel: DatosViewModel
+){
+    composable(route = MainDestinations.SCHEDULE_DETAILS_ROUTE+"/{${NavArguments.NOMBRE_HORARIO}}")
+    {backStackEntry ->
+
+            Log.w("Llamada", "DetallesHorario")
+            titulos.value = backStackEntry.arguments?.getString(NavArguments.NOMBRE_HORARIO)!!+" "
+            val actions = MainActions(navController = navController)
+
+            DetallesHorarioScreen(
+                nombreHorario = backStackEntry.arguments?.getString(NavArguments.NOMBRE_HORARIO),
+                userDataViewModel = userDataViewModel,
+                onNavToAddSubject = actions.navigateToAgregarMateria,
+                datosViewModel = datosViewModel
+            )
+    }
+}
 @ExperimentalAnimationApi
 @Composable
 fun rememberAnimatedNavController(): NavHostController {
@@ -752,11 +420,19 @@ class MainActions(navController: NavHostController){
         navController.navigate(route = "${MainDestinations.SINGLE_NEW}/${postId}")
     }
 
-    val navigateToMateria:(String) -> Unit = {nrc: String ->
-        navController.navigate(route = MainDestinations.INFO_SUBJECT_ROUTE+"/${nrc}")
+    val navigateToMateria:(String, String) -> Unit = {nrc: String, nombreHorario: String ->
+        navController.navigate(route = MainDestinations.INFO_SUBJECT_ROUTE+"/${nrc}/${nombreHorario}")
     }
 
     val navigateToSalones:(String) -> Unit = {edificioId: String ->
         navController.navigate(route = MainDestinations.CLASSROOMS_ROUTE+"/${edificioId}")
+    }
+
+    val navigateToHorario:(String) -> Unit = {nomHorario: String ->
+        navController.navigate(route = MainDestinations.SCHEDULE_DETAILS_ROUTE+"/${nomHorario}")
+    }
+
+    val navigateToAgregarMateria:(String) -> Unit = {nomHorario: String ->
+        navController.navigate(route = MainDestinations.ADD_SUBJECT_ROUTE+"/${nomHorario}")
     }
 }

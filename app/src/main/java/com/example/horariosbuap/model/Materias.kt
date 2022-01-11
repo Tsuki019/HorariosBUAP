@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.dataBase
+package com.example.horariosbuap.model
 
 data class Materias(
     val nombre : String = "",

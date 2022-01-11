@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.dataBase
+package com.example.horariosbuap.core
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -15,7 +15,7 @@ interface MateriasDao {
     fun get(id : Int) : LiveData<MateriaTabla>
 
     @Insert
-    fun insertAll(vararg materias:MateriaTabla)
+    fun insertAll(vararg materias: MateriaTabla)
 
     @Update
     fun update(materia : MateriaTabla)

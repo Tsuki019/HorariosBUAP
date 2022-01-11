@@ -1,11 +1,12 @@
 package com.example.horariosbuap.ui.theme.dataBase
 
-import androidx.compose.runtime.MutableState
+import com.example.horariosbuap.model.*
+import com.example.horariosbuap.viewmodel.DatosViewModel
+import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
 
 fun getProfesores(datosViewModel : DatosViewModel){
 

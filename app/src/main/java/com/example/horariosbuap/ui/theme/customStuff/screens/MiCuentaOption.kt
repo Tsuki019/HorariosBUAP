@@ -38,6 +38,8 @@ import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
 import com.example.horariosbuap.ui.theme.dataBase.*
+import com.example.horariosbuap.viewmodel.LoginViewModel
+import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.firebase.auth.EmailAuthProvider

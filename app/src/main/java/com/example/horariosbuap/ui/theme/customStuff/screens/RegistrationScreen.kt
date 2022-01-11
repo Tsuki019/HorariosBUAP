@@ -35,8 +35,8 @@ import com.example.horariosbuap.ui.theme.customStuff.components.EventDialog
 import com.example.horariosbuap.ui.theme.customStuff.components.OutlinedMediaButton
 import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
-import com.example.horariosbuap.ui.theme.dataBase.LoginViewModel
-import com.example.horariosbuap.ui.theme.dataBase.RegisterState
+import com.example.horariosbuap.viewmodel.LoginViewModel
+import com.example.horariosbuap.model.RegisterState
 
 
 @Composable

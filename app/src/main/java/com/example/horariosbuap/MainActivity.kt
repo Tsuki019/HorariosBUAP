@@ -31,27 +31,41 @@ import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import androidx.lifecycle.Observer
-import com.example.horariosbuap.ui.theme.dataBase.*
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import com.example.horariosbuap.core.AppDataBase
+import com.example.horariosbuap.core.MateriaTabla
+import com.example.horariosbuap.ui.theme.backgroundColorCustom
+import com.example.horariosbuap.viewmodel.DatosViewModel
+import com.example.horariosbuap.viewmodel.LoginViewModel
+import com.example.horariosbuap.viewmodel.RegisterViewModel
+import com.example.horariosbuap.viewmodel.UserDataViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestoreSettings
 
 
+@ExperimentalPagerApi
 @ExperimentalAnimationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val db = FirebaseFirestore.getInstance()
-        var settings = FirebaseFirestoreSettings.Builder()
-            .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
-            .build()
-        db.firestoreSettings = settings
-        settings = firestoreSettings {
-            isPersistenceEnabled = true
-        }
-        db.firestoreSettings = settings
+        try {
+            val db = FirebaseFirestore.getInstance()
+            var settings = FirebaseFirestoreSettings.Builder()
+                .setCacheSizeBytes(FirebaseFirestoreSettings.CACHE_SIZE_UNLIMITED)
+                .build()
+            db.firestoreSettings = settings
+            settings = firestoreSettings {
+                isPersistenceEnabled = true
+            }
+            db.firestoreSettings = settings
+        }catch (e : IllegalStateException){}
+
 
         setContent {
 
@@ -68,7 +82,7 @@ class MainActivity : ComponentActivity() {
                     systemUiController.setNavigationBarColor(navBarColor, darkIcons = false)
                 }
 
-                val navController = rememberAnimatedNavController()
+                val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.NEWS_ROUTE
                 val scaffoldState = rememberScaffoldState()
@@ -93,10 +107,10 @@ class MainActivity : ComponentActivity() {
                 })
 
 
-
                 BoxWithConstraints {
 
                     Scaffold(
+
                         scaffoldState = scaffoldState,
                         topBar = {
                             CustomToolBar(
@@ -136,9 +150,10 @@ class MainActivity : ComponentActivity() {
                                 }
                                 else->{}
                             }
-                        }
+                        },
+                        backgroundColor = backgroundColorCustom
                     ) {
-                        AnimatedNavHost(
+                        NavHost(
                             navController = navController,
                             startDestination = MainDestinations.NEWS_ROUTE,
                         ){
@@ -184,14 +199,19 @@ class MainActivity : ComponentActivity() {
                             addAddSubject(
                                 navController = navController,
                                 datosViewModel = datosViewModel,
-                                titulos = titulos)
+                                titulos = titulos,
+                                userDataViewModel = userDataViewModel,
+                                activity = this@MainActivity
+                            )
                             addSearchResultScreen(
                                 datosViewModel = datosViewModel,
                                 titulos = titulos,
                                 navController = navController)
                             addInfoSubject(
                                 navController = navController,
-                                datosViewModel = datosViewModel
+                                datosViewModel = datosViewModel,
+                                userDataViewModel = userDataViewModel,
+                                activity = this@MainActivity
                             )
                             addClassRooms(
                                 navController = navController,
@@ -200,6 +220,12 @@ class MainActivity : ComponentActivity() {
                             addResetPassword(
                                 titulos = titulos,
                                 navController = navController
+                            )
+                            addScheduleDetails(
+                                navController = navController,
+                                userDataViewModel = userDataViewModel,
+                                titulos = titulos,
+                                datosViewModel = datosViewModel
                             )
                         }
                     }

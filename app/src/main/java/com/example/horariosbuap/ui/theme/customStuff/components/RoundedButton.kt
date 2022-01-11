@@ -10,11 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.horariosbuap.R
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import org.w3c.dom.Text
 import java.time.format.TextStyle
 import kotlin.text.Typography
@@ -43,7 +45,13 @@ fun RoundedButton(
         ) {
            Text(
                text = text,
-           style = MaterialTheme.typography.h6.copy(color = Color.White, fontSize = fontSize))
+               color = Color.White,
+               fontSize = fontSize,
+               fontFamily = sansPro,
+               fontWeight = FontWeight.Medium,
+               letterSpacing = 0.15.sp
+
+           )
         }
     } else {
         CircularProgressIndicator(

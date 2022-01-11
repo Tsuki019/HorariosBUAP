@@ -38,9 +38,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.R
+import com.example.horariosbuap.model.News
+import com.example.horariosbuap.model.loadNews
 import com.example.horariosbuap.ui.theme.customStuff.BottomNavScreens
-import com.example.horariosbuap.ui.theme.dataBase.loadNews
-import com.example.horariosbuap.ui.theme.dataBase.News
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 

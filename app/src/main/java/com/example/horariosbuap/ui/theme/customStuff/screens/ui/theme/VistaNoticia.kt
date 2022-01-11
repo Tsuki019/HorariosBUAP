@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.example.horariosbuap.R
-import com.example.horariosbuap.ui.theme.dataBase.loadNews
-import com.example.horariosbuap.ui.theme.dataBase.News
+import com.example.horariosbuap.model.News
+import com.example.horariosbuap.model.loadNews
 
 @Composable
 fun VistaNoticia(noticiaId : String?) {

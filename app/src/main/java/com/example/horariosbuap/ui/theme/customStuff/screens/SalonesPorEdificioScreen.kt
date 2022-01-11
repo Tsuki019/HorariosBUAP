@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.components.BackArrowButtonn
-import com.example.horariosbuap.ui.theme.dataBase.Salones
+import com.example.horariosbuap.model.Salones
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import androidx.compose.foundation.lazy.items

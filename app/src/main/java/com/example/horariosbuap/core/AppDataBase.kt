@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.dataBase
+package com.example.horariosbuap.core
 
 import android.content.Context
 import androidx.room.Database
@@ -14,7 +14,7 @@ abstract class AppDataBase : RoomDatabase() {
         @Volatile
         private var INSTANCE : AppDataBase? = null
 
-        fun getDatabase(context: Context) : AppDataBase{
+        fun getDatabase(context: Context) : AppDataBase {
             val tempInstance = INSTANCE
 
             if (tempInstance != null){

@@ -1,9 +1,14 @@
-package com.example.horariosbuap.ui.theme.dataBase
+package com.example.horariosbuap.viewmodel
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.horariosbuap.model.*
+import com.example.horariosbuap.ui.theme.dataBase.getMateriasHorario
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class DatosViewModel : ViewModel() {
     val profesoresState = mutableStateOf(false) //Detecta si ya esta lleno la lista de profesores
@@ -142,5 +147,23 @@ class DatosViewModel : ViewModel() {
     fun llenarSalones(value: ArrayList<Salones?>) {
         salones = value
         salonesState.value = !salones.isEmpty()
+    }
+
+    fun buscarHorarioMateria(nrc: String) : ArrayList<MateriasHorario>{
+        println("ENTRA A BUSCAR")
+        val materiasList : ArrayList<MateriasHorario> = ArrayList()
+
+        if (!materiasHorarioState.value){
+            getMateriasHorario(datosViewModel = this)
+        }else{
+            for (materia in materiasHorario){
+                if (materia!!.nrc == nrc){
+                    materiasList.add(materia)
+                }
+            }
+            println("tamano ${materiasList.size}")
+            return materiasList
+        }
+        return materiasList
     }
 }

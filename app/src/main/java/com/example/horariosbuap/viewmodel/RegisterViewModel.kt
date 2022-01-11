@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.dataBase
+package com.example.horariosbuap.viewmodel
 
 import android.app.Activity
 import android.content.ContentValues.TAG
@@ -11,6 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.horariosbuap.R
+import com.example.horariosbuap.model.LoginState
+import com.example.horariosbuap.model.RegisterState
+import com.example.horariosbuap.ui.theme.dataBase.setNuevoUsuario
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest

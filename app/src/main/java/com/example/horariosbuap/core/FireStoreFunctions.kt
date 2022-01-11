@@ -1,10 +1,17 @@
 package com.example.horariosbuap.ui.theme.dataBase
 
-import androidx.compose.runtime.mutableStateOf
+import android.app.Activity
+import android.util.Log
+import android.widget.Toast
+import com.example.horariosbuap.model.Materias
+import com.example.horariosbuap.model.MateriasHorario
+import com.example.horariosbuap.model.UserDB
+import com.example.horariosbuap.viewmodel.DatosViewModel
+import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-val DATABASE = FirebaseFirestore.getInstance().collection("Users")
+private val DATABASE = FirebaseFirestore.getInstance().collection("Users")
 
 fun setNuevoUsuario(
 //    userDataViewModel: UserDataViewModel,
@@ -13,7 +20,7 @@ fun setNuevoUsuario(
     provider : String
 ){
     val user  = UserDB(numHorarios = 0, correo = correo, provider = provider)
-    var tempData :UserDB? = UserDB()
+    var tempData : UserDB? = UserDB()
 
     if (provider == "GOOGLE"){
         DATABASE.document(userId).get().addOnCompleteListener {task->
@@ -28,8 +35,8 @@ fun setNuevoUsuario(
 }
 
 fun getUserData(
-  userDataViewModel: UserDataViewModel,
-  userId : String
+    userDataViewModel: UserDataViewModel,
+    userId : String
 ){
     var user : UserDB? = UserDB()
     val nombres : ArrayList<String> = ArrayList()
@@ -64,15 +71,20 @@ fun getMateriasUnicas(
         userDataViewModel.isMateriasUnicasFill.value = false
 
         DATABASE.document(userId).collection("horarios").document(nombreHorario).collection("materiasUnicas").get().addOnSuccessListener { query ->
-            for(document in query){
-                materias.add(document.toObject(Materias::class.java))
+            if  (query.size() > 0){
+                for(document in query){
+                    materias.add(document.toObject(Materias::class.java))
+                }
             }
+
             userDataViewModel.agregarMateriasUnicas(nombre = nombreHorario, materias = materias)
+        }.addOnFailureListener { exception ->
+            println(">>>>>>>>>UNICAS> $exception")
         }
     }
 }
 
-private fun getMateriasHorario(
+fun getMateriasHorario(
     nombreHorario: String,
     userDataViewModel: UserDataViewModel,
     userId: String
@@ -82,25 +94,45 @@ private fun getMateriasHorario(
     if (userDataViewModel.isUserDataLoaded.value){
         userDataViewModel.isMateriasHorarioFill.value = false
 
-        DATABASE.document(userId).collection("horarios").document(nombreHorario).collection("materiasHorario").get().addOnSuccessListener { query ->
-            for(document in query){
-                materias.add(document.toObject(MateriasHorario::class.java))
+        DATABASE.document(userId).collection("horarios").document(nombreHorario).collection("materiaHorarios").get().addOnCompleteListener { task ->
+            if  (task.result.size() > 0){
+                for(document in task.result){
+                    materias.add(document.toObject(MateriasHorario::class.java))
+                }
             }
             userDataViewModel.agregarMateriasHorario(nombre = nombreHorario, materias = materias)
+        }.addOnFailureListener { exception ->
+            Log.w("MyErrors", "Error getMateriasHorario" )
         }
     }
 }
 
-fun setMateria(
+fun setMateriaUnica(
     materia : Materias,
+    nombreHorario : String,
+    userId: String,
+    userDataViewModel: UserDataViewModel,
+    activity: Activity
+){
+
+    DATABASE.document(userId).collection("horarios").document(nombreHorario).collection("materiasUnicas").add(materia)
+        .addOnCompleteListener {
+            userDataViewModel.agregarMateria(nombreHorario = nombreHorario, materia = materia)
+        }.addOnFailureListener { Toast.makeText(activity, "Error al agregar materia.", Toast.LENGTH_SHORT).show() }
+    Toast.makeText(activity, "Agregada con exito!", Toast.LENGTH_SHORT).show()
+}
+
+fun setMateriaHorarios(
+    horarios : ArrayList<MateriasHorario>,
     nombreHorario : String,
     userId: String,
     userDataViewModel: UserDataViewModel
 ){
-    DATABASE.document(userId).collection("horarios").document(nombreHorario).collection("materiasUnicas").add(materia)
-        .addOnCompleteListener {
-            userDataViewModel.agregarMateria(nombreHorario = nombreHorario, materia = materia)
-        }
+    horarios.forEach{horario ->
+        DATABASE.document(userId).collection("horarios").document(nombreHorario).collection("materiaHorarios").add(horario)
+            .addOnFailureListener { Log.w("MyError", "Error agregarMateriaHorarios") }
+    }
+    userDataViewModel.agregarHorariosDeMateria(nombreHorario = nombreHorario, materiaHorarios = horarios)
 }
 
 fun crearHorario(
