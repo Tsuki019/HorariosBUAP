@@ -3,10 +3,13 @@ package com.example.horariosbuap.viewmodel
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.horariosbuap.model.HorarioUsuario
 import com.example.horariosbuap.model.Materias
 import com.example.horariosbuap.model.MateriasHorario
 import com.example.horariosbuap.model.UserDB
+import dagger.hilt.android.scopes.ViewModelScoped
+import kotlinx.coroutines.launch
 
 class UserDataViewModel : ViewModel()
 {
@@ -15,7 +18,6 @@ class UserDataViewModel : ViewModel()
     val isMateriasHorarioFill = mutableStateOf(false)
     val isUserDataLoaded = mutableStateOf(false)
 
-    var nombresHorarios : ArrayList<(String)> = ArrayList()
     var userData : MutableState<UserDB> = mutableStateOf(UserDB())
 
     val datosFromCache = mutableStateOf(false)
@@ -134,6 +136,18 @@ class UserDataViewModel : ViewModel()
             if (horarios[i].nombre == nombre){
                 horarios.removeAt(i)
                 break
+            }
+        }
+    }
+
+    fun eliminarMateriaDeHorario(
+        nrc : String,
+        nombreHorario: String
+    ){
+        horarios.forEach{ horario ->
+            if (horario.nombre == nombreHorario){
+                horario.materiasHorarios.removeAll{ materiasHorario -> materiasHorario.nrc == nrc }
+                horario.materiasUnicas.removeAll{ materias -> materias.nrc == nrc }
             }
         }
     }

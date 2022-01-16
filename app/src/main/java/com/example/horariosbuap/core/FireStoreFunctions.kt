@@ -3,6 +3,8 @@ package com.example.horariosbuap.ui.theme.dataBase
 import android.app.Activity
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.rememberCoroutineScope
 import com.example.horariosbuap.model.Materias
 import com.example.horariosbuap.model.MateriasHorario
 import com.example.horariosbuap.model.UserDB
@@ -157,10 +159,34 @@ fun eliminarHorario(
     userDataViewModel: UserDataViewModel
 ){
     val user = FirebaseAuth.getInstance().currentUser
-    DATABASE.document(user!!.uid).collection("horarios").document(nombre).delete().addOnCompleteListener {
-        DATABASE.document(user.uid).update(hashMapOf("numHorarios" to (userDataViewModel.userData.value.numHorarios-1)) as Map<String, Any>).addOnCompleteListener {
-            userDataViewModel.userData.value = userDataViewModel.userData.value.copy(numHorarios = userDataViewModel.userData.value.numHorarios - 1)
-            userDataViewModel.eliminarHorario(nombre = nombre)
+    DATABASE.document(user!!.uid).collection("horarios").document(nombre).delete()
+//        .addOnCompleteListener {
+//            DATABASE.document(user.uid).update(hashMapOf("numHorarios" to (userDataViewModel.userData.value.numHorarios-1)) as Map<String, Any>).addOnCompleteListener {
+//            userDataViewModel.userData.value = userDataViewModel.userData.value.copy(numHorarios = userDataViewModel.userData.value.numHorarios - 1)
+//            userDataViewModel.eliminarHorario(nombre = nombre)
+//        }
+//        }
+    userDataViewModel.userData.value = userDataViewModel.userData.value.copy(numHorarios = userDataViewModel.userData.value.numHorarios - 1)
+    userDataViewModel.eliminarHorario(nombre = nombre)
+}
+
+fun eliminarMateria(
+    nrc : String,
+    nombreHorario : String,
+    userDataViewModel: UserDataViewModel,
+    actualizarDatos : MutableState<Boolean>
+){
+    val user = FirebaseAuth.getInstance().currentUser
+    DATABASE.document(user!!.uid).collection("horarios").document(nombreHorario).collection("materiasUnicas").whereEqualTo("nrc", nrc).get()
+        .addOnSuccessListener {
+            it.forEach{ it.reference.delete() }
         }
-    }
+    DATABASE.document(user.uid).collection("horarios").document(nombreHorario).collection("materiaHorarios").whereEqualTo("nrc", nrc).get()
+        .addOnSuccessListener {
+            it.forEach{
+                println(it.data)
+                it.reference.delete()}
+        }
+    userDataViewModel.eliminarMateriaDeHorario(nrc = nrc, nombreHorario = nombreHorario)
+    actualizarDatos.value = true
 }

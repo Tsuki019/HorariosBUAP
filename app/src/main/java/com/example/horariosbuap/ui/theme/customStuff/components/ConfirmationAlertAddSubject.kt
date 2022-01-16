@@ -95,6 +95,7 @@ fun AlertaConformacion(
                                 userDataViewModel = userDataViewModel,
                                 activity = activity,
                             )
+                            materiaElegida.value = Materias()
                         }else{
                             errorVisibility.value = true
                         }
