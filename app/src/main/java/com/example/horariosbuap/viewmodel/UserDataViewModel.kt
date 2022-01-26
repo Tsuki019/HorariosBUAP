@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 class UserDataViewModel : ViewModel()
 {
     val horarios : ArrayList<HorarioUsuario> = ArrayList()
-    val isMateriasUnicasFill = mutableStateOf(false)
+    val isMateriasUnicasFill = mutableStateOf(false)    //Identifica si las materiasUnicas del usuario se han leido correctamente de la base de datos
     val isMateriasHorarioFill = mutableStateOf(false)
     val isUserDataLoaded = mutableStateOf(false)
 

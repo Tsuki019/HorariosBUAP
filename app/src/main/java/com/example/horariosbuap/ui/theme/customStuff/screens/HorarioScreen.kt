@@ -1,5 +1,7 @@
 package com.example.horariosbuap.ui.theme.customStuff.screens
 
+import android.app.Activity
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
@@ -43,6 +45,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.*
 import com.example.horariosbuap.model.MateriasHorario
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
@@ -75,15 +78,15 @@ fun HorarioScreen(
 
             if (userDataViewModel.isUserDataLoaded.value){
                 if (!userDataViewModel.isMateriasUnicasFill.value){
+                    VerHorariosScreen(
+                        modifier = modifier,
+                        datosViewModel = datosViewModel,
+                        onAddSubject = onAddSubject,
+                        userDataViewModel = userDataViewModel,
+                        userId = auth.currentUser!!.uid,
+                        onNavToHorario = onNavToHorario
+                    )
                 }
-                VerHorariosScreen(
-                    modifier = modifier,
-                    datosViewModel = datosViewModel,
-                    onAddSubject = onAddSubject,
-                    userDataViewModel = userDataViewModel,
-                    userId = auth.currentUser!!.uid,
-                    onNavToHorario = onNavToHorario
-                )
             }else{
                 if (isAnimationsOver.value){
                     coroutinScope.launch {
@@ -119,6 +122,7 @@ fun VerHorariosScreen(
     val colorDisableButton = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.azulOscuroInstitucional).copy(0.4f))
     val isAlertVisible = remember { mutableStateOf(false)}
     val nombreHorarioActual = remember { mutableStateOf("")}
+    val context = LocalContext.current
 
     if (userDataViewModel.userData.value.numHorarios == 0) isDeleting.value = false
 
@@ -178,6 +182,7 @@ fun VerHorariosScreen(
                                 }else{
                                     //Mensaje de MAX 3 horarios
                                     println("Ha alcanzado la cantidad maxima de horarios: 3")
+                                    Toast.makeText(context,R.string.limit_Schedule, Toast.LENGTH_SHORT).show()
                                 }
                             }
                         )
