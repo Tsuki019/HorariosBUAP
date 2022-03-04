@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.horariosbuap.model.*
+import com.example.horariosbuap.ui.theme.customStuff.BottomNavScreens
 import com.example.horariosbuap.ui.theme.dataBase.getMateriasHorario
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -28,9 +29,11 @@ class DatosViewModel : ViewModel() {
     val materiasState = mutableStateOf(false) //Detecta si ya esta llena la lista de materias
     var resultMaterias : ArrayList<Materias?> = ArrayList()
 
-
     val busquedaState = mutableStateOf(false)
     val tipoBusqueda = mutableStateOf(0)
+
+    var noticias : ArrayList<News?> = ArrayList()
+    val isNewsFill = mutableStateOf(false)
 
     fun llenarProfesores(value : ArrayList<Profesores?>){
         profesores = value
@@ -165,5 +168,10 @@ class DatosViewModel : ViewModel() {
             return materiasList
         }
         return materiasList
+    }
+
+    fun llenarNoticias(news : ArrayList<News?>){
+        noticias = news
+        isNewsFill.value = true
     }
 }

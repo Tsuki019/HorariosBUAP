@@ -157,10 +157,16 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = MainDestinations.NEWS_ROUTE,
                         ){
-                            addNews(navController = navController,
-                                    titulos = titulos)
-                            addSinglePostView(navController = navController,
-                                              titulos = titulos)
+                            addNews(
+                                navController = navController,
+                                titulos = titulos,
+                                datosViewModel = datosViewModel
+                            )
+                            addSinglePostView(
+                                navController = navController,
+                                titulos = titulos,
+                                datosViewModel = datosViewModel
+                            )
                             addSearch(navController = navController,
                                       datosViewModel = datosViewModel,
                                       titulos = titulos)

@@ -11,6 +11,7 @@ import com.example.horariosbuap.model.UserDB
 import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 private val DATABASE = FirebaseFirestore.getInstance().collection("Users")
@@ -159,7 +160,20 @@ fun eliminarHorario(
     userDataViewModel: UserDataViewModel
 ){
     val user = FirebaseAuth.getInstance().currentUser
-    DATABASE.document(user!!.uid).collection("horarios").document(nombre).delete()
+    DATABASE.document(user!!.uid).collection("horarios").document(nombre).collection("materiaHorarios").get()
+        .addOnSuccessListener {
+            it.forEach { it.reference.delete() }
+        }
+        .addOnCompleteListener{
+            DATABASE.document(user.uid).collection("horarios").document(nombre).collection("materiasUnicas").get()
+                .addOnSuccessListener {
+                    it.forEach { it.reference.delete() }
+                }
+        }
+        .addOnCompleteListener {
+            DATABASE.document(user.uid).collection("horarios").document(nombre).delete()
+        }
+    DATABASE.document(user.uid).update("numHorarios", userDataViewModel.userData.value.numHorarios - 1)
 //        .addOnCompleteListener {
 //            DATABASE.document(user.uid).update(hashMapOf("numHorarios" to (userDataViewModel.userData.value.numHorarios-1)) as Map<String, Any>).addOnCompleteListener {
 //            userDataViewModel.userData.value = userDataViewModel.userData.value.copy(numHorarios = userDataViewModel.userData.value.numHorarios - 1)

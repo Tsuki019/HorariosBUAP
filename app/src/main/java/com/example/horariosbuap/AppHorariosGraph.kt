@@ -60,7 +60,8 @@ object NavArguments{
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addNews(
     navController: NavHostController,
-    titulos: MutableState<String>
+    titulos: MutableState<String>,
+    datosViewModel: DatosViewModel
 ){
     composable(route = MainDestinations.NEWS_ROUTE){
 
@@ -69,6 +70,7 @@ fun NavGraphBuilder.addNews(
         NoticiasScreen(
             navController = navController,
             navigateToArticle = actions.navigateToArticle,
+            datosViewModel = datosViewModel
         )
         titulos.value = "Noticias y Calendarios"
     }
@@ -77,11 +79,15 @@ fun NavGraphBuilder.addNews(
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addSinglePostView(
     navController: NavHostController,
-    titulos: MutableState<String>
+    titulos: MutableState<String>,
+    datosViewModel: DatosViewModel
 ){
     composable(route = "${MainDestinations.SINGLE_NEW}/{${NavArguments.SINGLE_NEW_KEY}}")
     { backStackEntry ->
-            VistaNoticia(noticiaId = backStackEntry.arguments?.getString(NavArguments.SINGLE_NEW_KEY))
+            VistaNoticia(
+                noticiaId = backStackEntry.arguments?.getString(NavArguments.SINGLE_NEW_KEY),
+                datosViewModel = datosViewModel
+            )
             titulos.value = "Noticias"
     }
 }

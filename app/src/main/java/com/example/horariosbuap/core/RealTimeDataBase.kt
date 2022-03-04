@@ -1,5 +1,10 @@
 package com.example.horariosbuap.ui.theme.dataBase
 
+import android.app.Activity
+import android.content.Context
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import com.example.horariosbuap.model.*
 import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.example.horariosbuap.viewmodel.UserDataViewModel
@@ -143,6 +148,29 @@ fun getHorarios(
         override fun onCancelled(databaseError: DatabaseError) {
             // Getting Post failed, log a message
             // Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+        }
+
+    })
+}
+
+fun getNoticias(
+    datosViewModel : DatosViewModel,
+    context : Context
+) {
+    val realTimeRef = FirebaseDatabase.getInstance().reference.child("Noticias")
+    val noticias = ArrayList<News?>()
+
+    realTimeRef.addValueEventListener(object  : ValueEventListener{
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            for (snapshot in dataSnapshot.children){
+                noticias.add(snapshot.getValue(News::class.java))
+            }
+            datosViewModel.llenarNoticias(noticias)
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            Log.w("OUT", "loadPost:onCancelled", error.toException())
+            Toast.makeText(context, "Error al cargar, verifique su conexion a internet", Toast.LENGTH_LONG ).show()
         }
 
     })

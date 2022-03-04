@@ -1,5 +1,6 @@
 package com.example.horariosbuap.ui.theme.customStuff.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
@@ -20,11 +21,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.BottomEnd
+import androidx.compose.ui.Alignment.Companion.BottomStart
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -37,21 +43,31 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
 import com.example.horariosbuap.R
 import com.example.horariosbuap.model.News
 import com.example.horariosbuap.model.loadNews
 import com.example.horariosbuap.ui.theme.customStuff.BottomNavScreens
+import com.example.horariosbuap.ui.theme.customStuff.components.LoadingIndicator
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
+import com.example.horariosbuap.ui.theme.dataBase.getNoticias
+import com.example.horariosbuap.ui.theme.primaryColorCustom
+import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
+import kotlinx.coroutines.launch
 
 @ExperimentalAnimationApi
 @Composable
 fun NoticiasScreen(
     navController: NavController,
     navigateToArticle: (String) -> Unit,
+    datosViewModel: DatosViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
     val currentScreen = remember{ mutableStateOf<BottomNavScreens>(BottomNavScreens.Noticias)}
+    val context = LocalContext.current
+
     val modifier = Modifier
         .fillMaxWidth()
         .wrapContentWidth(align = Alignment.CenterHorizontally)
@@ -63,17 +79,28 @@ fun NoticiasScreen(
             .fillMaxSize()
             .background(colorResource(id = R.color.blanco_fondo))
     ) {
+        if (!datosViewModel.isNewsFill.value){
+            coroutineScope.launch {
+                getNoticias(datosViewModel = datosViewModel, context)
+                println("CARGA NOTICIAS")
+            }
+        }
         NewsContent(modifier = modifier,
                     navController = navController,
-                    navigateToArticle = navigateToArticle)
+                    navigateToArticle = navigateToArticle,
+                    datosViewModel = datosViewModel
+        )
     }
 }
 
 @ExperimentalAnimationApi
 @Composable
-private fun NewsContent(modifier: Modifier,
-                        navController: NavController,
-                        navigateToArticle : (String) -> Unit){
+private fun NewsContent(
+    modifier: Modifier,
+    navController: NavController,
+    navigateToArticle : (String) -> Unit,
+    datosViewModel: DatosViewModel
+){
     LazyColumn(
         modifier = modifier,
         contentPadding = rememberInsetsPaddingValues(
@@ -81,7 +108,7 @@ private fun NewsContent(modifier: Modifier,
             applyTop = false
         )
     ) {
-        item { NewsDrawer(navController, navigateToArticle) }
+        item { Noticias(datosViewModel, navigateToArticle) }
         item { Text(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
             text = "Calendarios",
@@ -95,9 +122,9 @@ private fun NewsContent(modifier: Modifier,
         item { Calendars(image = painterResource(id = R.drawable.profesional_semestral2022), description = "Semestre 2022")}
         item { Calendars(image = painterResource(id = R.drawable.profesional_cuatrimestral2022), description = "Cuatrimestre 2022") }
         item { Calendars(image = painterResource(id = R.drawable.posgrado2022), description = "Posgrado 2022") }
-        item { Calendars(image = painterResource(id = R.drawable.semestre_2021), description = "Semestre 2021") }
-        item { Calendars(image = painterResource(id = R.drawable.cuatrimestre_2021), description = "Cuatrimestre 2021") }
-        item { Calendars(image = painterResource(id = R.drawable.posgrado_2021), description = "CPosgrado 2021") }
+        //item { Calendars(image = painterResource(id = R.drawable.semestre_2021), description = "Semestre 2021") }
+        //item { Calendars(image = painterResource(id = R.drawable.cuatrimestre_2021), description = "Cuatrimestre 2021") }
+        //item { Calendars(image = painterResource(id = R.drawable.posgrado_2021), description = "CPosgrado 2021") }
         item { Divider(modifier = Modifier.padding(vertical = 30.dp), color = Color.Transparent) }
     }
 }
@@ -116,7 +143,6 @@ private fun PostListDivider(
 @Composable
 fun NewsCard(
     news: News,
-    navigateToArticle: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -129,34 +155,46 @@ fun NewsCard(
         modifier = modifier.size(280.dp, 240.dp),
         border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.azulOscuroInstitucional))
     ) {
-        Column() {
+        Box(contentAlignment = BottomStart) {
 
             Image(
-                painter = news.Image,
+                painter = rememberImagePainter(data = news.imagen),
                 contentDescription = null, // decorative
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .height(100.dp)
-                    .fillMaxWidth()
+                    .fillMaxSize()
             )
-
-            Column(modifier = Modifier.padding(16.dp)) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        brush = Brush.verticalGradient(
+                            listOf(Color.Transparent, Color.White),
+                            startY = 0f,
+                            endY = Float.POSITIVE_INFINITY * 0.4f
+                        )
+                    )
+            )
+            Column(modifier = Modifier.padding(start = 16.dp, bottom = 6.dp)) {
                 Text(
-                    text = news.title,
-                    style = MaterialTheme.typography.h6,
+                    text = news.titulo,
+                    style = TextStyle(
+                        color = primaryColorCustom,
+                        fontFamily = sansPro,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp
+                    ),
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-//                Text(
-//                    text = post.metadata.author.name,
-//                    maxLines = 1,
-//                    overflow = TextOverflow.Ellipsis,
-//                    style = MaterialTheme.typography.body2
-//                )
 
                 Text(
-                    text = news.date,
-                    style = MaterialTheme.typography.body2
+                    text = news.fecha,
+                    style = TextStyle(
+                        color = primaryColorCustom,
+                        fontFamily = sansPro,
+                        fontSize = 15.sp
+                    ),
                 )
             }
         }
@@ -164,33 +202,38 @@ fun NewsCard(
 }
 
 @Composable
-private fun NewsDrawer(
-    navController: NavController,
+private fun Noticias(
+    datosViewModel: DatosViewModel,
     navigateToArticle: (String) -> Unit)
 {
-    val newsItems = loadNews()
-
-    Column() {
-        Text(
-            modifier = Modifier.padding(16.dp),
-            text = "Últimas Noticias",
-            style = MaterialTheme.typography.h5.copy(
-                color = colorResource(id = R.color.azulOscuroInstitucional),
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily(Font(R.font.source_sans_pro))))
-        
-        LazyRow(modifier = Modifier.padding(horizontal = 3.dp)) {
-            items(newsItems){ newsItem ->
-                NewsCard(
-                    newsItem,
-                    navigateToArticle,
-                    Modifier
-                        .padding(start = 16.dp, bottom = 16.dp)
-                        .clickable { navigateToArticle(newsItem.id) }
-                )
-            }
+    if (!datosViewModel.isNewsFill.value){
+        Box(contentAlignment = Center)
+        {
+            LoadingIndicator()
         }
-        PostListDivider()
+    }else{
+        val newsItems = datosViewModel.noticias
+        Column() {
+            Text(
+                modifier = Modifier.padding(16.dp),
+                text = "Últimas Noticias",
+                style = MaterialTheme.typography.h5.copy(
+                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.source_sans_pro))))
+
+            LazyRow(modifier = Modifier.padding(horizontal = 3.dp)) {
+                items(newsItems){ newsItem ->
+                    NewsCard(
+                        newsItem!!,
+                        Modifier
+                            .padding(start = 16.dp, bottom = 16.dp)
+                            .clickable { navigateToArticle(newsItem.id) }
+                    )
+                }
+            }
+            PostListDivider()
+        }
     }
 }
 
@@ -255,13 +298,13 @@ private fun Calendars(image : Painter, description : String) {
 
 
 
-@ExperimentalAnimationApi
-@Preview
-@Composable
-fun NotiView() {
-    val navController = rememberNavController()
-    val scaffoldState = rememberScaffoldState()
-
-    NoticiasScreen(navController = navController,
-                   navigateToArticle = { /*TODO*/ })
-}
+//@ExperimentalAnimationApi
+//@Preview
+//@Composable
+//fun NotiView() {
+//    val navController = rememberNavController()
+//    val scaffoldState = rememberScaffoldState()
+//
+//    NoticiasScreen(navController = navController,
+//                   navigateToArticle = {  })
+//}

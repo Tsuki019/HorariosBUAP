@@ -77,7 +77,8 @@ fun HorarioScreen(
         if(currentUser != null && currentUser.isEmailVerified){
 
             if (userDataViewModel.isUserDataLoaded.value){
-                if (!userDataViewModel.isMateriasUnicasFill.value){
+//                println(">>>>>>"+userDataViewModel.isMateriasUnicasFill)
+//                if (!userDataViewModel.isMateriasUnicasFill.value){
                     VerHorariosScreen(
                         modifier = modifier,
                         datosViewModel = datosViewModel,
@@ -86,7 +87,7 @@ fun HorarioScreen(
                         userId = auth.currentUser!!.uid,
                         onNavToHorario = onNavToHorario
                     )
-                }
+//                }
             }else{
                 if (isAnimationsOver.value){
                     coroutinScope.launch {
