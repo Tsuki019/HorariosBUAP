@@ -31,6 +31,7 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 
 
+@ExperimentalMaterialApi
 @Composable
 fun BuscarScreen(
     onSearchProfesor : () -> Unit,
@@ -51,7 +52,9 @@ fun BuscarScreen(
         ) {
 
             Text(
-                modifier = Modifier.padding(vertical = 20.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(vertical = 20.dp)
+                    .fillMaxWidth(),
                 style = TextStyle(
                     color = colorResource(id = R.color.azulOscuroInstitucional),
                     fontWeight = FontWeight.Bold,
@@ -94,6 +97,7 @@ fun BuscarScreen(
 
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun SeccionBusqueda(
     painter: Painter,
@@ -102,11 +106,11 @@ fun SeccionBusqueda(
 ) {
 
     Card(
+        onClick = { onClick() },
         modifier = Modifier
-            .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .height(130.dp)
-            .clickable(enabled = true) { onClick() },
+            .fillMaxWidth(),
         border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
         elevation = 5.dp,
         backgroundColor = Color.White,
@@ -144,6 +148,7 @@ fun SeccionBusqueda(
     }
 }
 
+@ExperimentalMaterialApi
 @Preview
 @Composable
 fun testBuscar() {

@@ -49,6 +49,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 
 @ExperimentalPagerApi
@@ -183,6 +184,7 @@ fun DetallesHorarioScreen(
     }
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
@@ -206,6 +208,7 @@ private fun TabsContent(
     }
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 private fun CardMateriasPorDia(
@@ -219,12 +222,12 @@ private fun CardMateriasPorDia(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 15.dp)
-            .clickable { expanded.value = !expanded.value },
+            .padding(horizontal = 10.dp, vertical = 15.dp),
         backgroundColor = Color.White,
         border = BorderStroke(width = 1.dp, color = primaryColorCustom),
         shape = RoundedCornerShape(CornerSize(10.dp)),
-        elevation = 5.dp
+        elevation = 5.dp,
+        onClick = { expanded.value = !expanded.value }
     ) {
 
 
@@ -388,6 +391,7 @@ private fun CardMateriasInscritas(
     }
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Preview
 @Composable
@@ -405,6 +409,7 @@ fun TestCardMateriasPorDia() {
     CardMateriasPorDia(dia = "Lunes", materiasHorario = materia, materiasUnicas = materiasUnicas)
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 private fun VerPorDiaTab(

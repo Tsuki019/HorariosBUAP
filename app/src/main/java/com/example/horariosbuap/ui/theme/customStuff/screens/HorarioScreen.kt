@@ -54,6 +54,7 @@ import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.example.horariosbuap.viewmodel.UserDataViewModel
 import kotlinx.coroutines.launch
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 fun HorarioScreen(
@@ -107,6 +108,7 @@ fun HorarioScreen(
     }
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 fun VerHorariosScreen(
@@ -444,6 +446,7 @@ private fun AlertaConformacion(
     )
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 private fun BotonHorario(
@@ -458,12 +461,12 @@ private fun BotonHorario(
         modifier = Modifier
             .fillMaxWidth()
             .height(80.dp)
-            .padding(10.dp)
-            .clickable { onNavToHorario(nombre) },
+            .padding(10.dp),
         border = BorderStroke(width = 1.dp, color = primaryColorCustom),
         shape = RoundedCornerShape(10),
         backgroundColor = Color.White,
-        elevation = 4.dp
+        elevation = 4.dp,
+        onClick = { onNavToHorario(nombre) }
     ) {
 
         Row(
@@ -519,6 +522,7 @@ private fun BotonHorario(
     }
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Preview
 @Composable

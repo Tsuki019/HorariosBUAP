@@ -8,10 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.horariosbuap.model.*
 import com.example.horariosbuap.ui.theme.customStuff.BottomNavScreens
 import com.example.horariosbuap.ui.theme.dataBase.getMateriasHorario
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DatosViewModel : ViewModel() {
+@HiltViewModel
+class DatosViewModel @Inject constructor() : ViewModel() {
     val profesoresState = mutableStateOf(false) //Detecta si ya esta lleno la lista de profesores
     var profesores: ArrayList<Profesores?> = ArrayList()
     var resultProfesores : ArrayList<Profesores?> = ArrayList()

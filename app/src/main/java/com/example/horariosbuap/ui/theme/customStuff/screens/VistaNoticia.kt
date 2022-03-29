@@ -83,7 +83,7 @@ fun Noticia( noticia : News) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 5.dp, end = 5.dp, bottom = 10.dp, top = 3.dp)
+            .padding(start = 8.dp, end = 8.dp, bottom = 10.dp, top = 3.dp)
     ) {
         Column(Modifier.fillMaxWidth()
         ) {
@@ -101,10 +101,10 @@ fun Noticia( noticia : News) {
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(160.dp),
+                    .heightIn(min = 100.dp, max = 300.dp),
                 painter = rememberImagePainter(data = noticia.imagen),
                 contentDescription = "",
-                contentScale = ContentScale.Crop)
+                contentScale = ContentScale.Inside)
             NoticiaDivider()
             Text(
                 modifier = Modifier.fillMaxWidth(),
@@ -113,7 +113,7 @@ fun Noticia( noticia : News) {
                 style = TextStyle(
                     fontFamily = sansPro,
                 ),
-                fontSize = 16.sp
+                fontSize = 18.sp
             )
             NoticiaDivider(thickness = 1.dp, verticalPadding = 7.dp)
             if (noticia.link != ""){

@@ -7,28 +7,35 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.ui.Alignment.Companion.BottomStart
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.TopEnd
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -37,6 +44,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,6 +55,7 @@ import coil.compose.rememberImagePainter
 import com.example.horariosbuap.R
 import com.example.horariosbuap.model.News
 import com.example.horariosbuap.model.loadNews
+import com.example.horariosbuap.ui.theme.backgroundColorCustom
 import com.example.horariosbuap.ui.theme.customStuff.BottomNavScreens
 import com.example.horariosbuap.ui.theme.customStuff.components.LoadingIndicator
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
@@ -56,7 +65,9 @@ import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.selects.select
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 fun NoticiasScreen(
@@ -67,6 +78,9 @@ fun NoticiasScreen(
     val coroutineScope = rememberCoroutineScope()
     val currentScreen = remember{ mutableStateOf<BottomNavScreens>(BottomNavScreens.Noticias)}
     val context = LocalContext.current
+    val imagenView = remember { mutableStateOf(false) }
+    val selectedImage = remember { mutableStateOf(R.drawable.profesional_semestral2022)}
+
 
     val modifier = Modifier
         .fillMaxWidth()
@@ -88,18 +102,86 @@ fun NoticiasScreen(
         NewsContent(modifier = modifier,
                     navController = navController,
                     navigateToArticle = navigateToArticle,
-                    datosViewModel = datosViewModel
+                    datosViewModel = datosViewModel,
+                    selectedImage = selectedImage,
+                    imagenView = imagenView
         )
+        if (imagenView.value){
+            val scale = remember { mutableStateOf(1f)}
+            val rotate = remember { mutableStateOf(0f)}
+            val dragX = remember { mutableStateOf( 0f)}
+            val dragY = remember { mutableStateOf( 0f)}
+
+            Box(modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp)
+                .background(backgroundColorCustom.copy(alpha = 0.8f))
+                .clip(CircleShape.copy(all = CornerSize(8)))
+            ){
+                Row(modifier = Modifier
+                    .fillMaxSize()
+                    .clip(RectangleShape)
+                    .pointerInput(Unit) {
+                        forEachGesture {
+                            awaitPointerEventScope {
+                                awaitFirstDown()
+                                do {
+                                    val event = awaitPointerEvent()
+                                    scale.value *= event.calculateZoom()
+                                    val offset = event.calculatePan()
+                                    dragX.value += offset.x
+                                    dragY.value += offset.y
+                                    rotate.value += event.calculateRotation()
+                                } while (imagenView.value)
+
+                            }
+                        }
+                    },
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        modifier = Modifier
+                            .padding(3.dp)
+                            .graphicsLayer(
+                                scaleX = maxOf(.5f, minOf(3f, scale.value)),
+                                scaleY = maxOf(.5f, minOf(3f, scale.value)),
+                                rotationZ = rotate.value,
+                                translationX = dragX.value,
+                                translationY = dragY.value
+                            ),
+                        painter = painterResource(id = selectedImage.value),
+                        contentDescription = null,
+                        contentScale = ContentScale.Inside
+                    )
+                }
+                Box(modifier = Modifier.padding(5.dp).fillMaxWidth(),contentAlignment = TopEnd) {
+                    IconButton(onClick = { imagenView.value = !imagenView.value }) {
+                        Icon(
+                            modifier = Modifier
+                                //.scale(2f)
+                                .height(50.dp)
+                                .width(50.dp),
+                            imageVector = Icons.Rounded.Close,
+                            contentDescription = "",
+                            tint = primaryColorCustom)
+                    }
+                }
+            }
+        }
     }
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 private fun NewsContent(
     modifier: Modifier,
     navController: NavController,
     navigateToArticle : (String) -> Unit,
-    datosViewModel: DatosViewModel
+    datosViewModel: DatosViewModel,
+    selectedImage: MutableState<Int>,
+    imagenView: MutableState<Boolean>
 ){
     LazyColumn(
         modifier = modifier,
@@ -119,9 +201,9 @@ private fun NewsContent(
                 fontSize = 20.sp
             )
         }
-        item { Calendars(image = painterResource(id = R.drawable.profesional_semestral2022), description = "Semestre 2022")}
-        item { Calendars(image = painterResource(id = R.drawable.profesional_cuatrimestral2022), description = "Cuatrimestre 2022") }
-        item { Calendars(image = painterResource(id = R.drawable.posgrado2022), description = "Posgrado 2022") }
+        item { Calendars(image = R.drawable.profesional_semestral2022, description = "Semestre 2022", selectedImage = selectedImage, imagenView = imagenView)}
+        item { Calendars(image = R.drawable.profesional_cuatrimestral2022, description = "Cuatrimestre 2022", selectedImage = selectedImage, imagenView = imagenView) }
+        item { Calendars(image = R.drawable.posgrado2022, description = "Posgrado 2022", selectedImage = selectedImage, imagenView = imagenView) }
         //item { Calendars(image = painterResource(id = R.drawable.semestre_2021), description = "Semestre 2021") }
         //item { Calendars(image = painterResource(id = R.drawable.cuatrimestre_2021), description = "Cuatrimestre 2021") }
         //item { Calendars(image = painterResource(id = R.drawable.posgrado_2021), description = "CPosgrado 2021") }
@@ -140,10 +222,13 @@ private fun PostListDivider(
     )
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun NewsCard(
     news: News,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToArticle: (String) -> Unit,
+    idNoticia : String
 ) {
     Card(
         shape =  RoundedCornerShape(
@@ -153,7 +238,8 @@ fun NewsCard(
             topStartPercent = 8
         ),
         modifier = modifier.size(280.dp, 240.dp),
-        border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.azulOscuroInstitucional))
+        border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+        onClick = { navigateToArticle(idNoticia) }
     ) {
         Box(contentAlignment = BottomStart) {
 
@@ -201,6 +287,7 @@ fun NewsCard(
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 private fun Noticias(
     datosViewModel: DatosViewModel,
@@ -227,8 +314,9 @@ private fun Noticias(
                     NewsCard(
                         newsItem!!,
                         Modifier
-                            .padding(start = 16.dp, bottom = 16.dp)
-                            .clickable { navigateToArticle(newsItem.id) }
+                            .padding(start = 16.dp, bottom = 16.dp),
+                        navigateToArticle = navigateToArticle,
+                        idNoticia = newsItem.id
                     )
                 }
             }
@@ -237,9 +325,10 @@ private fun Noticias(
     }
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
-private fun Calendars(image : Painter, description : String) {
+private fun Calendars(image : Int, description : String, selectedImage: MutableState<Int>, imagenView: MutableState<Boolean>) {
 
     val expanded = remember {mutableStateOf(false)}
 
@@ -252,8 +341,7 @@ private fun Calendars(image : Painter, description : String) {
                 .padding(top = 10.dp, bottom = 6.dp)
                 .padding(horizontal = 15.dp)
                 .align(alignment = CenterHorizontally)
-                .fillMaxWidth()
-                .clickable { expanded.value = !expanded.value },
+                .fillMaxWidth(),
             shape =  RoundedCornerShape(
                 bottomEndPercent = 8,
                 bottomStartPercent = 8,
@@ -261,7 +349,8 @@ private fun Calendars(image : Painter, description : String) {
                 topStartPercent = 8
             ),
             border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
-            elevation = 6.dp
+            elevation = 6.dp,
+            onClick = {expanded.value = !expanded.value}
         ){
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -278,12 +367,30 @@ private fun Calendars(image : Painter, description : String) {
                 )
                 PostListDivider()
                 AnimatedVisibility(visible = expanded.value) {
-                    Image(
-                        modifier = Modifier.padding(vertical = 3.dp),
-                        painter = image,
-                        contentDescription = null,
-                        contentScale = ContentScale.FillWidth
-                    )
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Image(
+                            modifier = Modifier
+                                .padding(3.dp)
+                                .clickable {
+                                    selectedImage.value = image
+                                    imagenView.value = !imagenView.value
+                                },
+                            painter = painterResource(id = image),
+                            contentDescription = null,
+                            contentScale = ContentScale.Inside
+                        )
+                        Text(modifier = Modifier.fillMaxWidth()
+                            .padding(vertical = 3.dp),
+                            text = "Click en la imagen para ampliar",
+                            style = TextStyle(
+                                color = primaryColorCustom,
+                                fontFamily = sansPro,
+                                fontSize = 14.sp,
+                                textAlign = TextAlign.Center,
+                            )
+                        )
+                    }
+
                 }
                 if (expanded.value){
                     Icon(imageVector = Icons.Rounded.ExpandLess, contentDescription = "")
