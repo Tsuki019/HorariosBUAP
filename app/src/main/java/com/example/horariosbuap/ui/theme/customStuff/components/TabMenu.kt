@@ -11,9 +11,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.horariosbuap.ui.theme.backgroundColorCustom
 import com.example.horariosbuap.ui.theme.primaryColorCustom
-import com.example.horariosbuap.ui.theme.secundaryColorCustom
+import com.example.horariosbuap.ui.theme.secondaryColorCustom
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
@@ -37,15 +36,15 @@ fun TabMenu(
             TabRowDefaults.Indicator(
                 modifier = Modifier.pagerTabIndicatorOffset(pagerState = pagerState, tabPositions = tabPositions),
                 height = 2.dp,
-                color = secundaryColorCustom
+                color = secondaryColorCustom
             )
         }
     ) {
         listElements.forEachIndexed { index, _ ->
             Tab(
                 modifier = Modifier.background(if (pagerState.currentPage == index) primaryColorCustom else primaryColorCustom.copy(0.9f)),
-                selectedContentColor = secundaryColorCustom,
-                unselectedContentColor = secundaryColorCustom.copy(0.8f),
+                selectedContentColor = secondaryColorCustom,
+                unselectedContentColor = secondaryColorCustom.copy(0.8f),
                 text = {
                     Text(
                         text = listElements[index],

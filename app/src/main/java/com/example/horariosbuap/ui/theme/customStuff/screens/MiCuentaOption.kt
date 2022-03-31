@@ -37,7 +37,10 @@ import coil.compose.rememberImagePainter
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.example.horariosbuap.ui.theme.dataBase.*
+import com.example.horariosbuap.ui.theme.primaryColorCustom
+import com.example.horariosbuap.ui.theme.secondaryColorCustom
 import com.example.horariosbuap.viewmodel.LoginViewModel
 import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.accompanist.insets.LocalWindowInsets
@@ -61,11 +64,11 @@ fun MiCuentaOption(
 
     Box(modifier = Modifier
         .fillMaxSize()
-        .background(colorResource(id = R.color.azulOscuroInstitucional))) {
+        .background(MaterialTheme.colors.background)) {
      LazyColumn(
          modifier = Modifier
              .fillMaxWidth()
-             .padding(5.dp),
+             .padding(horizontal = 5.dp),
          contentPadding = rememberInsetsPaddingValues(
              insets = LocalWindowInsets.current.systemBars,
              applyTop = false)
@@ -87,7 +90,7 @@ fun MiCuentaOption(
          item { Divisor()}
          item { Correo(viewModel = viewModel) }
          item { Divisor() }
-         item { if (userDataViewModel.userData.value.provider != "GOOGLE") Contrasena(viewModel = viewModel, activity = activity) }
+         item {if (userDataViewModel.userData.value.provider != "GOOGLE") Contrasena(viewModel = viewModel, activity = activity) }
          item { SalirDeCuenta(viewModel = viewModel, onSignOut = onSignOut, userDataViewModel = userDataViewModel) }
      }
     }
@@ -99,7 +102,12 @@ fun TituloSeccion(text : String) {
     Text(
         modifier = Modifier.padding(start = 8.dp),
         text = text,
-        style = MaterialTheme.typography.h6.copy(color = colorResource(id = R.color.azulClaroInstitucional))
+        style = TextStyle(
+            fontSize = 20.sp,
+            fontFamily = sansPro,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colors.primary
+        )
     )
 }
 
@@ -122,7 +130,7 @@ fun FotoPerfil(
 ) {
 
     Column(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally)
     {
         Image(modifier= Modifier
@@ -141,8 +149,8 @@ fun FotoPerfil(
             text = "Cambiar imagen",
             width = 200.dp,
             height = 40.dp,
-            progressIndicatorColor = colorResource(id = R.color.azulClaroInstitucional),
-            color = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.azulClaroInstitucional)),
+            progressIndicatorColor = secondaryColorCustom,
+            color = ButtonDefaults.buttonColors(backgroundColor = secondaryColorCustom),
             fontSize = 15.sp,
             onClick = {
                 cambiarImagenState.value = true
@@ -158,7 +166,6 @@ fun NombrePublico(
     viewModel: LoginViewModel,
     activity: Activity
 ) {
-    val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
     val maxChar: Int? = null
     val nameValue = remember { mutableStateOf(viewModel.state.value.name)}
     val progressBarState = remember { mutableStateOf(false)}
@@ -187,12 +194,12 @@ fun NombrePublico(
                     ),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
-                        cursorColor = azulClaro,
-                        focusedIndicatorColor = azulClaro,
-                        focusedLabelColor = azulClaro,
-                        unfocusedLabelColor = Color.White,
-                        unfocusedIndicatorColor = Color.White,
-                        textColor = Color.White
+                        cursorColor = MaterialTheme.colors.primaryVariant,
+                        focusedIndicatorColor = MaterialTheme.colors.primaryVariant,
+                        focusedLabelColor = MaterialTheme.colors.primaryVariant,
+                        unfocusedLabelColor = MaterialTheme.colors.secondary,
+                        unfocusedIndicatorColor = MaterialTheme.colors.secondary,
+                        textColor = MaterialTheme.colors.secondary
                     )
                 )
                 RoundedButton(
@@ -201,8 +208,8 @@ fun NombrePublico(
                     width = 90.dp,
                     height = 40.dp,
                     fontSize = 13.sp,
-                    color = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.azulClaroInstitucional)),
-                    progressIndicatorColor = colorResource(id = R.color.azulClaroInstitucional),
+                    color = ButtonDefaults.buttonColors(backgroundColor = secondaryColorCustom),
+                    progressIndicatorColor = secondaryColorCustom,
                     displayProgressBar = progressBarState.value,
                     onClick = {
                         if (nameValue.value != viewModel.state.value.name){
@@ -249,11 +256,11 @@ fun Correo(viewModel: LoginViewModel) {
             Text(
                 text = "Correo utilizado:",
                 fontSize = 14.sp,
-                color = Color.White)
+                color = MaterialTheme.colors.primary)
             Text(
                 text = viewModel.state.value.email,
                 fontSize = 18.sp,
-                color = Color.White,
+                color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold)
         }
 
@@ -333,15 +340,15 @@ fun Contrasena(
                         imageVector = if (currentPasswordVisibility) Icons.Rounded.Visibility
                         else Icons.Rounded.VisibilityOff,
                         contentDescription = "",
-                        tint = Color.White
+                        tint = MaterialTheme.colors.secondary
                     )
                 }
             },
             visualTransformation = if (currentPasswordVisibility) VisualTransformation.None
             else PasswordVisualTransformation(),
-            focusColor = colorResource(id = R.color.azulClaroInstitucional),
-            unFocusedColor = Color.White,
-            textColor = Color.White
+            focusColor = MaterialTheme.colors.primaryVariant,
+            unFocusedColor = MaterialTheme.colors.secondary,
+            textColor = MaterialTheme.colors.secondary
         )
 
         TransparentTextField(
@@ -363,15 +370,15 @@ fun Contrasena(
                         imageVector = if (newPasswordVisibility) Icons.Rounded.Visibility
                         else Icons.Rounded.VisibilityOff,
                         contentDescription = "",
-                        tint = Color.White
+                        tint = MaterialTheme.colors.secondary
                     )
                 }
             },
             visualTransformation = if (newPasswordVisibility) VisualTransformation.None
             else PasswordVisualTransformation(),
-            focusColor = colorResource(id = R.color.azulClaroInstitucional),
-            unFocusedColor = Color.White,
-            textColor = Color.White
+            focusColor = MaterialTheme.colors.primaryVariant,
+            unFocusedColor = MaterialTheme.colors.secondary,
+            textColor = MaterialTheme.colors.secondary
         )
 
         TransparentTextField(
@@ -392,15 +399,15 @@ fun Contrasena(
                         imageVector = if (confirmNewPasswordVisibility) Icons.Rounded.Visibility
                         else Icons.Rounded.VisibilityOff,
                         contentDescription = "",
-                        tint = Color.White
+                        tint = MaterialTheme.colors.secondary
                     )
                 }
             },
             visualTransformation = if (confirmNewPasswordVisibility) VisualTransformation.None
             else PasswordVisualTransformation(),
-            focusColor = colorResource(id = R.color.azulClaroInstitucional),
-            unFocusedColor = Color.White,
-            textColor = Color.White
+            focusColor = MaterialTheme.colors.primaryVariant,
+            unFocusedColor = MaterialTheme.colors.secondary,
+            textColor = MaterialTheme.colors.secondary
         )
 
         Column(
@@ -415,8 +422,8 @@ fun Contrasena(
                 height = 40.dp,
                 fontSize = 15.sp,
                 displayProgressBar = progressBarState.value,
-                progressIndicatorColor = colorResource(id = R.color.azulClaroInstitucional),
-                color = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.azulClaroInstitucional)),
+                progressIndicatorColor = MaterialTheme.colors.secondary,
+                color = ButtonDefaults.buttonColors(backgroundColor = secondaryColorCustom),
                 onClick = {
                     corutineScope.launch {
                         progressBarState.value = true
@@ -482,20 +489,20 @@ fun SalirDeCuenta(viewModel: LoginViewModel, onSignOut : () -> Unit, userDataVie
 
         if (exit.value){
             AlertDialog(modifier = Modifier
-                .background(Color.White)
+                .background(Color.Transparent)
                 .padding((16.dp)),
                         onDismissRequest = {},
                         title = {
                             Text(text = "Salir de la cuenta",
                                  style = TextStyle(
-                                     color = MaterialTheme.colors.onSurface,
+                                     color = MaterialTheme.colors.primary,
                                      fontSize = 20.sp,
                                      fontWeight = FontWeight.Bold)
                             )
                         },
                         text =  {
                             Text(text = "¿Seguro que desea salir de su cuenta?",
-                                 style = TextStyle(color = MaterialTheme.colors.onSurface,
+                                 style = TextStyle(color = MaterialTheme.colors.primaryVariant,
                                                    fontSize = 16.sp)
                             )
                         },
@@ -517,7 +524,7 @@ fun SalirDeCuenta(viewModel: LoginViewModel, onSignOut : () -> Unit, userDataVie
                                     exit.value = false
                                 }
                                 ) {
-                                    Text(text = "Cancelar", style = MaterialTheme.typography.button.copy(color = colorResource(id = R.color.azulOscuroInstitucional)))
+                                    Text(text = "Cancelar", style = MaterialTheme.typography.button.copy(color = MaterialTheme.colors.primaryVariant))
                                 }
                             }
                         }
@@ -537,7 +544,7 @@ fun CambiarImagen(
     val coroutineScope = rememberCoroutineScope()
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly)
     {
@@ -548,8 +555,8 @@ fun CambiarImagen(
                 Surface(
                     modifier = Modifier.size(130.dp),
                     shape = CircleShape,
-                    color = colorResource(id = R.color.BlancoTransparente),
-                    border = BorderStroke(width = 1.dp, color = Color.White)
+                    color = MaterialTheme.colors.background.copy(alpha = 0.7f),
+                    border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.secondary)
                 ) {
                     IconButton(onClick = {
                         SelectImage(activity)
@@ -559,11 +566,11 @@ fun CambiarImagen(
                             modifier = Modifier.size(80.dp),
                             imageVector = Icons.Rounded.Add,
                             contentDescription = "",
-                            tint = Color.White
+                            tint = MaterialTheme.colors.secondary
                         )
                     }
                 }
-                Text(text = "La imagen debe pesar menos de 1MB", color = Color.White, fontSize = 10.sp)
+                Text(text = "La imagen debe pesar menos de 1MB", color = MaterialTheme.colors.primary, fontSize = 10.sp)
             }
         } else{
             Column(verticalArrangement = Arrangement.spacedBy(15.dp), horizontalAlignment = Alignment.CenterHorizontally
@@ -580,7 +587,7 @@ fun CambiarImagen(
                 RoundedButton(
                     text = "Elegir Imagen",
                     fontSize = 10.sp,
-                    color = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.azulClaroInstitucional)),
+                    color = ButtonDefaults.buttonColors(backgroundColor = secondaryColorCustom),
                     width = 120.dp,
                     height = 30.dp,
                     onClick = {
@@ -597,8 +604,8 @@ fun CambiarImagen(
             width = 200.dp,
             height = 40.dp,
             displayProgressBar = progressBarState.value,
-            progressIndicatorColor = colorResource(id = R.color.azulClaroInstitucional),
-            color = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.azulClaroInstitucional)),
+            progressIndicatorColor = MaterialTheme.colors.secondary,
+            color = ButtonDefaults.buttonColors(backgroundColor = secondaryColorCustom),
             fontSize = 15.sp,
             onClick = {
                 coroutineScope.launch {

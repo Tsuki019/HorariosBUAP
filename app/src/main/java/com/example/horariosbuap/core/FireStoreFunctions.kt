@@ -22,7 +22,12 @@ fun setNuevoUsuario(
     correo : String,
     provider : String
 ){
-    val user  = UserDB(numHorarios = 0, correo = correo, provider = provider)
+    val user  = UserDB(
+        numHorarios = 0,
+        correo = correo,
+        provider = provider,
+        darkTheme = false
+    )
     var tempData : UserDB? = UserDB()
 
     if (provider == "GOOGLE"){

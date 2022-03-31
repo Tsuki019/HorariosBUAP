@@ -5,6 +5,7 @@ import android.nfc.Tag
 import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.colorResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -57,6 +58,7 @@ object NavArguments{
     const val NOMBRE_HORARIO = "nomHorario"
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addNews(
     navController: NavHostController,
@@ -92,6 +94,7 @@ fun NavGraphBuilder.addSinglePostView(
     }
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addSearch(
     navController: NavHostController,
@@ -119,6 +122,7 @@ fun NavGraphBuilder.addSearch(
     }
 }
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addSchedule(
     navController: NavHostController,
@@ -187,11 +191,12 @@ fun NavGraphBuilder.addAccountOpt(
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addSettingsOpt(
     navController: NavHostController,
-    titulos: MutableState<String>
+    titulos: MutableState<String>,
+    userDataViewModel: UserDataViewModel
 ){
     composable(route = MainDestinations.SETTINGS_ROUTE)
     {
-        AjustesOption()
+        AjustesOption(userDataViewModel = userDataViewModel)
         titulos.value = "Ajustes"
     }
 }
@@ -388,6 +393,7 @@ fun NavGraphBuilder.addSearchResultScreen(
 
 }
 
+@ExperimentalMaterialApi
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addScheduleDetails(

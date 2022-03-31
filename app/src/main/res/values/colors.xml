@@ -13,4 +13,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blanco_fondo">#FFF0F0F0</color>
+
+
+    <color name="background_Color_Custom">#FFF0F0F0</color>
+    <color name="primary_Color_Custom">#FF0B375D</color>
+    <color name="secundary_Color_Custom">#FF00B6E7</color>
+    <color name="dark_background_Color_Custom">#FF3c4043</color>
+    <color name="dark_primary_Color_Custom">#FF002245</color>
 </resources>

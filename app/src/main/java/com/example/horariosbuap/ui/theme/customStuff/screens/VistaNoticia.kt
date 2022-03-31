@@ -1,48 +1,36 @@
 package com.example.horariosbuap.ui.theme.customStuff.screens.ui.theme
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Card
 import androidx.compose.material.Divider
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
-import com.example.horariosbuap.R
 import com.example.horariosbuap.model.News
-import com.example.horariosbuap.model.loadNews
 import com.example.horariosbuap.ui.theme.backgroundColorCustom
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.example.horariosbuap.ui.theme.primaryColorCustom
-import com.example.horariosbuap.ui.theme.secundaryColorCustom
+import com.example.horariosbuap.ui.theme.secondaryColorCustom
 import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
-import java.nio.file.WatchEvent
 
 @Composable
 fun VistaNoticia(
@@ -132,7 +120,7 @@ fun Noticia( noticia : News) {
                     append(noticia.link)
                     addStyle(
                         style = SpanStyle(
-                            color = secundaryColorCustom,
+                            color = secondaryColorCustom,
                             fontSize = 15.sp,
                             fontFamily = sansPro,
                             textDecoration = TextDecoration.Underline,
@@ -167,7 +155,7 @@ fun Noticia( noticia : News) {
                     append(noticia.link2)
                     addStyle(
                         style = SpanStyle(
-                            color = secundaryColorCustom,
+                            color = secondaryColorCustom,
                             fontSize = 15.sp,
                             fontFamily = sansPro,
                             textDecoration = TextDecoration.Underline,

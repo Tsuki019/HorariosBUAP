@@ -5,7 +5,6 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -38,7 +37,7 @@ import com.example.horariosbuap.ui.theme.customStuff.components.TabMenu
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.example.horariosbuap.ui.theme.dataBase.*
 import com.example.horariosbuap.ui.theme.primaryColorCustom
-import com.example.horariosbuap.ui.theme.secundaryColorCustom
+import com.example.horariosbuap.ui.theme.secondaryColorCustom
 import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.accompanist.insets.LocalWindowInsets
@@ -324,9 +323,9 @@ private fun CardMateriasInscritas(
                     TableCell(text = "Materia", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 16.sp)
                 }
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    TableCell(text = materia.nrc, weight = 0.2f, textColor = secundaryColorCustom)
-                    TableCell(text = materia.secc, weight = 0.2f, textColor = secundaryColorCustom)
-                    TableCell(text = materia.clave, weight = 0.2f, textColor = secundaryColorCustom)
+                    TableCell(text = materia.nrc, weight = 0.2f, textColor = secondaryColorCustom)
+                    TableCell(text = materia.secc, weight = 0.2f, textColor = secondaryColorCustom)
+                    TableCell(text = materia.clave, weight = 0.2f, textColor = secondaryColorCustom)
                 }
             }
             Divider(
@@ -362,10 +361,10 @@ private fun CardMateriasInscritas(
                                 TableCell(text = "Edificio", weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp)
                             }
                             Row(modifier = Modifier.fillMaxWidth()) {
-                                TableCell(text = horario.entrada, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = secundaryColorCustom)
-                                TableCell(text = horario.salida, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = secundaryColorCustom)
-                                TableCell(text = horario.salon, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = secundaryColorCustom)
-                                TableCell(text = horario.edificio, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = secundaryColorCustom)
+                                TableCell(text = horario.entrada, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = secondaryColorCustom)
+                                TableCell(text = horario.salida, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = secondaryColorCustom)
+                                TableCell(text = horario.salon, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = secondaryColorCustom)
+                                TableCell(text = horario.edificio, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = secondaryColorCustom)
                             }
                             Divider(
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),

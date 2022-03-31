@@ -1,13 +1,11 @@
 package com.example.horariosbuap.ui.theme.customStuff
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -15,17 +13,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.horariosbuap.R
-import kotlinx.coroutines.CoroutineScope
+import com.example.horariosbuap.ui.theme.dark_blue2
+import com.example.horariosbuap.ui.theme.dark_primaryColorCustom
+import com.example.horariosbuap.ui.theme.light_blue1
 
 @Composable
-fun CustomToolBar(backgroundColor: Color = MaterialTheme.colors.background,
-                  elevation: Dp = 6.dp,
-                  modifier: Modifier = Modifier,
-                  title: String,
-                  scaffoldState: ScaffoldState,
-                  icon: @Composable (() -> Unit)? = null){
+fun CustomToolBar(
+backgroundColor: Color = dark_blue2,
+elevation: Dp = 6.dp,
+modifier: Modifier = Modifier,
+title: String,
+scaffoldState: ScaffoldState,
+icon: @Composable (() -> Unit)? = null)
+{
 
-    Surface(color = backgroundColor,
+    Surface(
             elevation = elevation,
             modifier = modifier,
     ) {
@@ -37,14 +39,14 @@ fun CustomToolBar(backgroundColor: Color = MaterialTheme.colors.background,
                     ,verticalAlignment = Alignment.CenterVertically ) {
                     Text(modifier= Modifier.fillMaxWidth(),
                          text = title,
-                         fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                         fontFamily = sansPro,
                          textAlign= TextAlign.Center
                     )
                 }
             },
             navigationIcon = icon,
-            backgroundColor = colorResource(id = R.color.azulOscuroInstitucional),
-            contentColor = colorResource(id = R.color.azulClaroInstitucional),
+            backgroundColor = backgroundColor,
+            contentColor = light_blue1,
             elevation = 12.dp,
         )
 

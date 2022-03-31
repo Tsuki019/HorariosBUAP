@@ -14,15 +14,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberImagePainter
-import com.example.horariosbuap.ui.theme.HorariosBUAPTheme
 import com.example.horariosbuap.ui.theme.customStuff.CustomBottomNav
 import com.example.horariosbuap.ui.theme.customStuff.CustomToolBar
 import com.example.horariosbuap.ui.theme.customStuff.screens.*
-import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.ApiException
@@ -31,12 +28,12 @@ import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import androidx.lifecycle.Observer
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.core.AppDataBase
 import com.example.horariosbuap.core.MateriaTabla
-import com.example.horariosbuap.ui.theme.backgroundColorCustom
+import com.example.horariosbuap.ui.theme.*
+import com.example.horariosbuap.ui.theme.dataBase.getUserData
 import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.example.horariosbuap.viewmodel.LoginViewModel
 import com.example.horariosbuap.viewmodel.RegisterViewModel
@@ -47,12 +44,16 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestoreSettings
 
 
+@ExperimentalMaterialApi
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val viewModel : LoginViewModel by viewModels()
+        val userDataViewModel : UserDataViewModel by viewModels()
 
         try {
             val db = FirebaseFirestore.getInstance()
@@ -66,19 +67,42 @@ class MainActivity : ComponentActivity() {
             db.firestoreSettings = settings
         }catch (e : IllegalStateException){}
 
+        //Revisa si ya ha entrado con un correo
+        val auth = Firebase.auth
+        val currentUser = auth.currentUser
+
+        if(currentUser != null && currentUser.isEmailVerified){
+
+            viewModel.LlenarDatosUsuario(currentUser, viewModel.state)
+
+            if (!userDataViewModel.isUserDataLoaded.value){     //Llena los datos y preferencias del usuario logueado
+                getUserData(userDataViewModel = userDataViewModel, currentUser.uid)
+            }
+        }
+
+        var listaMaterias = emptyList<MateriaTabla>()
+        val database = AppDataBase.getDatabase(this)
+
+        database.materias().getAll().observe(this, Observer {
+            listaMaterias = it
+        })
+
 
         setContent {
 
-            HorariosBUAPTheme {
+            AppTheme(
+                darkTheme = userDataViewModel.userData.value.darkTheme
+            ) {
 
-                val viewModel : LoginViewModel by viewModels()
+
                 val registerViewModel : RegisterViewModel by viewModels()
                 val datosViewModel : DatosViewModel by viewModels()
-                val userDataViewModel : UserDataViewModel by viewModels()
+
 
                 val systemUiController = rememberSystemUiController()
-                val navBarColor = colorResource(id = R.color.azulOscuroInstitucional)
+                val navBarColor = dark_system_color
                 SideEffect {
+                    systemUiController.setStatusBarColor(navBarColor, darkIcons = false)
                     systemUiController.setNavigationBarColor(navBarColor, darkIcons = false)
                 }
 
@@ -89,22 +113,6 @@ class MainActivity : ComponentActivity() {
                 val coroutineScope = rememberCoroutineScope()
                 val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
                 val titulos = rememberSaveable{ mutableStateOf("Empty") }
-
-                //Revisa si ya ha entrado con un correo
-                val auth = Firebase.auth
-                val currentUser = auth.currentUser
-
-                if(currentUser != null && currentUser.isEmailVerified){
-
-                    viewModel.LlenarDatosUsuario(currentUser, viewModel.state)
-                }
-
-                var listaMaterias = emptyList<MateriaTabla>()
-                val database = AppDataBase.getDatabase(this)
-
-                database.materias().getAll().observe(this, Observer {
-                    listaMaterias = it
-                })
 
 
                 BoxWithConstraints {
@@ -150,8 +158,7 @@ class MainActivity : ComponentActivity() {
                                 }
                                 else->{}
                             }
-                        },
-                        backgroundColor = backgroundColorCustom
+                        }
                     ) {
                         NavHost(
                             navController = navController,
@@ -183,8 +190,10 @@ class MainActivity : ComponentActivity() {
                                 titulos = titulos,
                                 activity = this@MainActivity,
                                 userDataViewModel = userDataViewModel)
-                            addSettingsOpt(navController = navController,
-                                           titulos = titulos)
+                            addSettingsOpt(
+                                navController = navController,
+                                titulos = titulos,
+                                userDataViewModel = userDataViewModel)
                             addAboutOpt(navController = navController,
                                         titulos = titulos)
                             addShareOpt(navController = navController,

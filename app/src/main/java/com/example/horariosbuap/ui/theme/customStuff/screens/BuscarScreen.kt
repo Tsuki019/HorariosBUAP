@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.horariosbuap.R
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 
@@ -42,7 +43,7 @@ fun BuscarScreen(
     Box (
         modifier = Modifier
             .fillMaxSize()
-            .background(color = colorResource(id = R.color.blanco_fondo))
+            .background(color = MaterialTheme.colors.background)
     ) {
         Column(
             modifier = Modifier
@@ -56,7 +57,7 @@ fun BuscarScreen(
                     .padding(vertical = 20.dp)
                     .fillMaxWidth(),
                 style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    color = MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily(Font(R.font.source_sans_pro)),
                     fontSize = 30.sp
@@ -111,9 +112,9 @@ fun SeccionBusqueda(
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .height(130.dp)
             .fillMaxWidth(),
-        border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+        border = BorderStroke(width = 2.dp, color = MaterialTheme.colors.primaryVariant),
         elevation = 5.dp,
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(
             bottomEndPercent = 8,
             bottomStartPercent = 8,
@@ -141,8 +142,9 @@ fun SeccionBusqueda(
                     .padding(horizontal = 10.dp),
                 text = campo,
                 style = MaterialTheme.typography.h5.copy(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
-                    fontWeight = FontWeight.Bold)
+                    color = MaterialTheme.colors.primary,
+                    fontWeight = FontWeight.Bold),
+                    fontFamily = sansPro
             )
         }
     }

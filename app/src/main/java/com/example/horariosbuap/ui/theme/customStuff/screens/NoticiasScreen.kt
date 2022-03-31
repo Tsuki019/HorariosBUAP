@@ -61,6 +61,7 @@ import com.example.horariosbuap.ui.theme.customStuff.components.LoadingIndicator
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.example.horariosbuap.ui.theme.dataBase.getNoticias
 import com.example.horariosbuap.ui.theme.primaryColorCustom
+import com.example.horariosbuap.ui.theme.dark_backgroundColorCustom
 import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
@@ -76,7 +77,7 @@ fun NoticiasScreen(
     datosViewModel: DatosViewModel
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val currentScreen = remember{ mutableStateOf<BottomNavScreens>(BottomNavScreens.Noticias)}
+    //val currentScreen = remember{ mutableStateOf<BottomNavScreens>(BottomNavScreens.Noticias)}
     val context = LocalContext.current
     val imagenView = remember { mutableStateOf(false) }
     val selectedImage = remember { mutableStateOf(R.drawable.profesional_semestral2022)}
@@ -91,7 +92,7 @@ fun NoticiasScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.blanco_fondo))
+            .background(MaterialTheme.colors.background)
     ) {
         if (!datosViewModel.isNewsFill.value){
             coroutineScope.launch {
@@ -115,7 +116,7 @@ fun NoticiasScreen(
             Box(modifier = Modifier
                 .fillMaxSize()
                 .padding(8.dp)
-                .background(backgroundColorCustom.copy(alpha = 0.8f))
+                .background(MaterialTheme.colors.background.copy(alpha = 0.8f))
                 .clip(CircleShape.copy(all = CornerSize(8)))
             ){
                 Row(modifier = Modifier
@@ -164,7 +165,7 @@ fun NoticiasScreen(
                                 .width(50.dp),
                             imageVector = Icons.Rounded.Close,
                             contentDescription = "",
-                            tint = primaryColorCustom)
+                            tint = MaterialTheme.colors.primary)
                     }
                 }
             }
@@ -195,7 +196,7 @@ private fun NewsContent(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
             text = "Calendarios",
             style = TextStyle(
-                color= colorResource(id = R.color.azulOscuroInstitucional),
+                color= MaterialTheme.colors.primary,
                 fontFamily = FontFamily(Font(R.font.source_sans_pro)),
                 fontWeight = FontWeight.Bold),
                 fontSize = 20.sp
@@ -217,7 +218,7 @@ private fun PostListDivider(
 ) {
     Divider(
         modifier = modifier.padding(horizontal = 14.dp),
-        color = colorResource(id = R.color.azulOscuroInstitucional),
+        color = MaterialTheme.colors.primaryVariant,
         thickness = 1.dp
     )
 }
@@ -238,7 +239,7 @@ fun NewsCard(
             topStartPercent = 8
         ),
         modifier = modifier.size(280.dp, 240.dp),
-        border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+        border = BorderStroke(width = 2.dp, color = MaterialTheme.colors.primaryVariant),
         onClick = { navigateToArticle(idNoticia) }
     ) {
         Box(contentAlignment = BottomStart) {
@@ -255,7 +256,7 @@ fun NewsCard(
                     .fillMaxSize()
                     .background(
                         brush = Brush.verticalGradient(
-                            listOf(Color.Transparent, Color.White),
+                            listOf(Color.Transparent, MaterialTheme.colors.background),
                             startY = 0f,
                             endY = Float.POSITIVE_INFINITY * 0.4f
                         )
@@ -265,7 +266,7 @@ fun NewsCard(
                 Text(
                     text = news.titulo,
                     style = TextStyle(
-                        color = primaryColorCustom,
+                        color = MaterialTheme.colors.primary,
                         fontFamily = sansPro,
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp
@@ -277,7 +278,7 @@ fun NewsCard(
                 Text(
                     text = news.fecha,
                     style = TextStyle(
-                        color = primaryColorCustom,
+                        color = MaterialTheme.colors.primary,
                         fontFamily = sansPro,
                         fontSize = 15.sp
                     ),
@@ -304,10 +305,13 @@ private fun Noticias(
             Text(
                 modifier = Modifier.padding(16.dp),
                 text = "Últimas Noticias",
-                style = MaterialTheme.typography.h5.copy(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                style = TextStyle(
                     fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily(Font(R.font.source_sans_pro))))
+                    fontFamily = sansPro,
+                    color = MaterialTheme.colors.primary,
+                    fontSize = 20.sp
+                )
+            )
 
             LazyRow(modifier = Modifier.padding(horizontal = 3.dp)) {
                 items(newsItems){ newsItem ->
@@ -348,9 +352,10 @@ private fun Calendars(image : Int, description : String, selectedImage: MutableS
                 topEndPercent = 8,
                 topStartPercent = 8
             ),
-            border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+            border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.primaryVariant),
             elevation = 6.dp,
-            onClick = {expanded.value = !expanded.value}
+            onClick = {expanded.value = !expanded.value},
+            backgroundColor = MaterialTheme.colors.surface
         ){
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -360,8 +365,8 @@ private fun Calendars(image : Int, description : String, selectedImage: MutableS
                     modifier = Modifier.padding(top = 5.dp, bottom = 10.dp),
                     text = description,
                     style = TextStyle(
-                        color = colorResource(id = R.color.azulOscuroInstitucional),
-                        fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                        color = MaterialTheme.colors.primary,
+                        fontFamily = sansPro,
                         fontSize = 18.sp
                     )
                 )
@@ -383,7 +388,7 @@ private fun Calendars(image : Int, description : String, selectedImage: MutableS
                             .padding(vertical = 3.dp),
                             text = "Click en la imagen para ampliar",
                             style = TextStyle(
-                                color = primaryColorCustom,
+                                color = MaterialTheme.colors.primary,
                                 fontFamily = sansPro,
                                 fontSize = 14.sp,
                                 textAlign = TextAlign.Center,
@@ -393,9 +398,14 @@ private fun Calendars(image : Int, description : String, selectedImage: MutableS
 
                 }
                 if (expanded.value){
-                    Icon(imageVector = Icons.Rounded.ExpandLess, contentDescription = "")
+                    Icon(
+                        imageVector = Icons.Rounded.ExpandLess, contentDescription = "",
+                        tint = MaterialTheme.colors.primaryVariant
+                    )
                 }else{
-                    Icon(imageVector = Icons.Rounded.ExpandMore, contentDescription = "")
+                    Icon(imageVector = Icons.Rounded.ExpandMore, contentDescription = "",
+                        tint = MaterialTheme.colors.primaryVariant
+                    )
                 }
             }
         }

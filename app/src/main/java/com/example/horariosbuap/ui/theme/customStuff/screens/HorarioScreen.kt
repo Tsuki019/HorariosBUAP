@@ -73,7 +73,7 @@ fun HorarioScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.blanco_fondo)))
+            .background(MaterialTheme.colors.background))
     {
         if(currentUser != null && currentUser.isEmailVerified){
 
@@ -121,8 +121,8 @@ fun VerHorariosScreen(
 ) {
     val isDeleting = remember { mutableStateOf(false)}
     val isAnimationVisible = remember { mutableStateOf(false)}
-    val colorEnabeButton = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.azulOscuroInstitucional))
-    val colorDisableButton = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.azulOscuroInstitucional).copy(0.4f))
+    val colorEnabeButton = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
+    val colorDisableButton = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary.copy(0.4f))
     val isAlertVisible = remember { mutableStateOf(false)}
     val nombreHorarioActual = remember { mutableStateOf("")}
     val context = LocalContext.current
@@ -147,8 +147,8 @@ fun VerHorariosScreen(
                     .wrapContentSize(align = Alignment.CenterStart),
                 text = if (userDataViewModel.userData.value.numHorarios == 0) "Agrega un nuevo horario" else "Elige un horario",
                 style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
-                    fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                    color = MaterialTheme.colors.primary,
+                    fontFamily = sansPro,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Medium,
                     textAlign = TextAlign.Center
@@ -236,18 +236,14 @@ fun NoLoginScreen(
         Text(
             modifier = modifier.padding(top = 20.dp),
             text = "Ingresa a una cuenta para poder acceder a esta función",
-            style = MaterialTheme.typography.h6.copy(
-                color = colorResource(
-                    id = R.color.azulOscuroInstitucional
-                )
-            ),
+            style = MaterialTheme.typography.h6.copy(color = MaterialTheme.colors.primary),
             textAlign = TextAlign.Center
         )
         ClickableText(
             modifier = modifier.padding(top = 10.dp),
-            style = TextStyle(color = colorResource(id = R.color.azulOscuroInstitucional)),
+            style = TextStyle(color = MaterialTheme.colors.primaryVariant),
             text = buildAnnotatedString { append("Ya tengo una cuenta. ")
-            withStyle(style = SpanStyle(color= colorResource(id = R.color.azulClaroInstitucional),
+            withStyle(style = SpanStyle(color= MaterialTheme.colors.secondary,
                                         fontWeight = FontWeight.Bold)
             )
             {
@@ -259,10 +255,10 @@ fun NoLoginScreen(
         )
         ClickableText(
             modifier = modifier.padding(top = 10.dp),
-            style = TextStyle(color = colorResource(id = R.color.azulOscuroInstitucional)),
+            style = TextStyle(color = MaterialTheme.colors.primaryVariant),
             text = buildAnnotatedString {
             append("Aun no tengo una cuenta. ")
-            withStyle(style = SpanStyle(color= colorResource(id = R.color.azulClaroInstitucional),
+            withStyle(style = SpanStyle(color= MaterialTheme.colors.secondary,
                                         fontWeight = FontWeight.Bold)
             )
             {
@@ -305,8 +301,8 @@ private fun AgregarHorario (
             modifier = Modifier.fillMaxWidth(),
             text = "Ingresa un nombre para tu horario:",
             style = TextStyle(
-                color = colorResource(id = R.color.azulOscuroInstitucional),
-                fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                color = MaterialTheme.colors.primary,
+                fontFamily = sansPro,
                 fontSize = 20.sp
             )
         )
@@ -317,6 +313,9 @@ private fun AgregarHorario (
             keyboardType = KeyboardType.Text,
             keyboardActions = KeyboardActions(onDone = {focusManager.clearFocus()}),
             imeAction = ImeAction.Done,
+            focusColor = MaterialTheme.colors.primaryVariant,
+            unFocusedColor = MaterialTheme.colors.secondary,
+            textColor = MaterialTheme.colors.secondary
         )
         Row(
             modifier = Modifier
@@ -327,7 +326,7 @@ private fun AgregarHorario (
             OutlinedMediaButton(
                 text = "Cancelar",
                 onClick = { visibility.value = false }, 
-                buttonColor = colorResource(id = R.color.azulOscuroInstitucional),
+                buttonColor = MaterialTheme.colors.primary,
                 width = 150.dp,
                 heigth = 40.dp,
                 textStyle = TextStyle(fontSize = 12.sp)
@@ -355,7 +354,7 @@ private fun AgregarHorario (
                         isErrorVisible.value = true
                     }
                 },
-                buttonColor = colorResource(id = R.color.azulOscuroInstitucional),
+                buttonColor = MaterialTheme.colors.primary,
                 width = 150.dp,
                 heigth = 40.dp,
                 textStyle = TextStyle(fontSize = 12.sp)
@@ -391,10 +390,10 @@ private fun AlertaConformacion(
             Text(
                 text = "Borrar Horario",
                 style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    color = MaterialTheme.colors.primary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                    fontFamily = sansPro,
                     textAlign = TextAlign.Center
                 )
             )
@@ -403,7 +402,7 @@ private fun AlertaConformacion(
             Text(
                 text = "¿Seguro que desea borrar el horario '$nombreHorario'?",
                 style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    color = MaterialTheme.colors.primaryVariant,
                     fontSize = 16.sp,
                     fontFamily = FontFamily(Font(R.font.source_sans_pro)),
                 )
@@ -435,7 +434,7 @@ private fun AlertaConformacion(
                     Text(
                         text = "Cancelar",
                         style = TextStyle(
-                            color = primaryColorCustom,
+                            color = MaterialTheme.colors.primary,
                             fontSize = 20.sp,
                             fontFamily = sansPro,
                         )
@@ -462,9 +461,9 @@ private fun BotonHorario(
             .fillMaxWidth()
             .height(80.dp)
             .padding(10.dp),
-        border = BorderStroke(width = 1.dp, color = primaryColorCustom),
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.primaryVariant),
         shape = RoundedCornerShape(10),
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.surface,
         elevation = 4.dp,
         onClick = { onNavToHorario(nombre) }
     ) {
@@ -501,7 +500,7 @@ private fun BotonHorario(
                         .wrapContentSize(align = Alignment.CenterStart),
                     text = nombre,
                     style = TextStyle(
-                        color = colorResource(id = R.color.azulOscuroInstitucional),
+                        color = MaterialTheme.colors.primary,
                         fontFamily = FontFamily(Font(R.font.source_sans_pro)),
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
@@ -514,7 +513,7 @@ private fun BotonHorario(
                         .size(40.dp),
                     imageVector = Icons.Rounded.ChevronRight ,
                     contentDescription = "",
-                    tint = colorResource(id = R.color.azulOscuroInstitucional),
+                    tint = MaterialTheme.colors.primary,
                 )
             }
         }

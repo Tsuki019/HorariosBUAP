@@ -57,13 +57,11 @@ fun CustomBottomNav(
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun CustomBottomNavItem(item:BottomNavScreens, isSelected:Boolean, onClick:()->Unit) {
-    val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
-    val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
 
-    val background = if (isSelected) azulOscuro
-    else azulClaro
-    val contentColor = if (isSelected) azulClaro
-    else azulOscuro
+    val background = if (isSelected) MaterialTheme.colors.primaryVariant
+    else MaterialTheme.colors.secondary
+    val contentColor = if (isSelected) MaterialTheme.colors.secondary
+    else MaterialTheme.colors.primaryVariant
 
 
     Surface(color = Color.Transparent) {
