@@ -5,6 +5,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,6 +25,7 @@ import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.components.BackArrowButtonn
 import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
@@ -46,7 +48,7 @@ fun ReestablecerContrasena(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = colorResource(id = R.color.blanco_fondo)),
+            .background(color = MaterialTheme.colors.background),
     ) {
         Column(
             modifier = Modifier
@@ -64,7 +66,7 @@ fun ReestablecerContrasena(
             Text(
                 text ="Ingrese el correo electronico que resgistró con su cuenta para mandarle el correo de reestablecimiento de su contraseña:",
                 style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    color = MaterialTheme.colors.primary,
                     fontSize = 18.sp,
                     fontFamily = FontFamily(Font(R.font.source_sans_pro)),
                     textAlign = TextAlign.Justify
@@ -99,11 +101,11 @@ fun ReestablecerContrasena(
                     text = mensaje.value,
                     style = TextStyle(
                         color = if (!error.value){
-                            colorResource(id = R.color.azulOscuroInstitucional)
+                            MaterialTheme.colors.primary
                         }else{
-                            Color.Red},
+                            MaterialTheme.colors.error},
                         fontSize = 15.sp,
-                        fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                        fontFamily = sansPro
                     )
                 )
             }

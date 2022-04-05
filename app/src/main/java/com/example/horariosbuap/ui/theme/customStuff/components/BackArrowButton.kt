@@ -2,6 +2,7 @@ package com.example.horariosbuap.ui.theme.customStuff.components
 
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.Composable
@@ -14,7 +15,7 @@ import com.example.horariosbuap.R
 fun BackArrowButtonn(
     modifier : Modifier = Modifier,
     onBack : () -> Unit,
-    tint : Color = colorResource(id = R.color.azulOscuroInstitucional)
+    tint : Color = MaterialTheme.colors.primary
 ) {
     IconButton(
         modifier = modifier,

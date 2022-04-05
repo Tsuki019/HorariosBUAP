@@ -114,10 +114,10 @@ fun NoticiasScreen(
             val dragY = remember { mutableStateOf( 0f)}
 
             Box(modifier = Modifier
-                .fillMaxSize()
                 .padding(8.dp)
                 .background(MaterialTheme.colors.background.copy(alpha = 0.8f))
                 .clip(CircleShape.copy(all = CornerSize(8)))
+                .fillMaxSize()
             ){
                 Row(modifier = Modifier
                     .fillMaxSize()
@@ -156,7 +156,9 @@ fun NoticiasScreen(
                         contentScale = ContentScale.Inside
                     )
                 }
-                Box(modifier = Modifier.padding(5.dp).fillMaxWidth(),contentAlignment = TopEnd) {
+                Box(modifier = Modifier
+                    .padding(5.dp)
+                    .fillMaxWidth(),contentAlignment = TopEnd) {
                     IconButton(onClick = { imagenView.value = !imagenView.value }) {
                         Icon(
                             modifier = Modifier
@@ -195,12 +197,8 @@ private fun NewsContent(
         item { Text(
             modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp),
             text = "Calendarios",
-            style = TextStyle(
-                color= MaterialTheme.colors.primary,
-                fontFamily = FontFamily(Font(R.font.source_sans_pro)),
-                fontWeight = FontWeight.Bold),
-                fontSize = 20.sp
-            )
+            style = MaterialTheme.typography.h5,
+            color = MaterialTheme.colors.primary)
         }
         item { Calendars(image = R.drawable.profesional_semestral2022, description = "Semestre 2022", selectedImage = selectedImage, imagenView = imagenView)}
         item { Calendars(image = R.drawable.profesional_cuatrimestral2022, description = "Cuatrimestre 2022", selectedImage = selectedImage, imagenView = imagenView) }
@@ -214,11 +212,12 @@ private fun NewsContent(
 
 @Composable
 private fun PostListDivider(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colors.onSurface
 ) {
     Divider(
         modifier = modifier.padding(horizontal = 14.dp),
-        color = MaterialTheme.colors.primaryVariant,
+        color = color,
         thickness = 1.dp
     )
 }
@@ -239,7 +238,7 @@ fun NewsCard(
             topStartPercent = 8
         ),
         modifier = modifier.size(280.dp, 240.dp),
-        border = BorderStroke(width = 2.dp, color = MaterialTheme.colors.primaryVariant),
+        border = BorderStroke(width = 2.dp, color = MaterialTheme.colors.onSurface),
         onClick = { navigateToArticle(idNoticia) }
     ) {
         Box(contentAlignment = BottomStart) {
@@ -305,12 +304,8 @@ private fun Noticias(
             Text(
                 modifier = Modifier.padding(16.dp),
                 text = "Últimas Noticias",
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = sansPro,
-                    color = MaterialTheme.colors.primary,
-                    fontSize = 20.sp
-                )
+                style = MaterialTheme.typography.h5,
+                color = MaterialTheme.colors.primary
             )
 
             LazyRow(modifier = Modifier.padding(horizontal = 3.dp)) {
@@ -352,7 +347,7 @@ private fun Calendars(image : Int, description : String, selectedImage: MutableS
                 topEndPercent = 8,
                 topStartPercent = 8
             ),
-            border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.primaryVariant),
+            border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.onSurface),
             elevation = 6.dp,
             onClick = {expanded.value = !expanded.value},
             backgroundColor = MaterialTheme.colors.surface
@@ -370,7 +365,7 @@ private fun Calendars(image : Int, description : String, selectedImage: MutableS
                         fontSize = 18.sp
                     )
                 )
-                PostListDivider()
+                PostListDivider(color = MaterialTheme.colors.primary)
                 AnimatedVisibility(visible = expanded.value) {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Image(
@@ -384,7 +379,8 @@ private fun Calendars(image : Int, description : String, selectedImage: MutableS
                             contentDescription = null,
                             contentScale = ContentScale.Inside
                         )
-                        Text(modifier = Modifier.fillMaxWidth()
+                        Text(modifier = Modifier
+                            .fillMaxWidth()
                             .padding(vertical = 3.dp),
                             text = "Click en la imagen para ampliar",
                             style = TextStyle(
@@ -400,11 +396,11 @@ private fun Calendars(image : Int, description : String, selectedImage: MutableS
                 if (expanded.value){
                     Icon(
                         imageVector = Icons.Rounded.ExpandLess, contentDescription = "",
-                        tint = MaterialTheme.colors.primaryVariant
+                        tint = MaterialTheme.colors.primary
                     )
                 }else{
                     Icon(imageVector = Icons.Rounded.ExpandMore, contentDescription = "",
-                        tint = MaterialTheme.colors.primaryVariant
+                        tint = MaterialTheme.colors.primary
                     )
                 }
             }
@@ -412,8 +408,6 @@ private fun Calendars(image : Int, description : String, selectedImage: MutableS
 
     }
 }
-
-
 
 //@ExperimentalAnimationApi
 //@Preview

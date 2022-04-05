@@ -16,11 +16,11 @@ sealed class BottomNavScreens(
     object Noticias:BottomNavScreens("noticias", "Noticias", Icons.Rounded.Try, MainDestinations.NEWS_ROUTE)
     object Buscar:BottomNavScreens("buscar", "Buscar", Icons.Rounded.Search, MainDestinations.SEARCH_ROUTE)
     object Horario:BottomNavScreens("horarios", "Mi Horario", Icons.Rounded.CalendarToday, MainDestinations.SCHEDULE_ROUTE)
-    object Libre:BottomNavScreens("libre", "Libre", Icons.Rounded.Star, MainDestinations.FREE_ROUTE)
+    //object Libre:BottomNavScreens("libre", "Libre", Icons.Rounded.Star, MainDestinations.FREE_ROUTE)
 
     object Items{
         val list = listOf(
-            Noticias, Buscar, Horario, Libre
+            Noticias, Buscar, Horario
         )
     }
 }

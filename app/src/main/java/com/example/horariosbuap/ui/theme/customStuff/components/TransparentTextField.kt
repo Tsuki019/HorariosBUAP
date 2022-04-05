@@ -4,6 +4,7 @@ import android.graphics.ColorSpace
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -17,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import com.example.horariosbuap.R
+import com.example.horariosbuap.ui.theme.light_blue2
 
 @Composable
 fun TransparentTextField(
@@ -53,12 +55,12 @@ fun TransparentTextField(
         visualTransformation = visualTransformation,
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.Transparent,
-            cursorColor = focusColor,
-            focusedIndicatorColor = focusColor,
-            focusedLabelColor = focusColor,
-            unfocusedIndicatorColor = unFocusedColor,
-            unfocusedLabelColor = unFocusedColor,
-            textColor = textColor
+            cursorColor = light_blue2,
+            focusedIndicatorColor = light_blue2,
+            focusedLabelColor = light_blue2,
+            unfocusedLabelColor = MaterialTheme.colors.primaryVariant,
+            unfocusedIndicatorColor = MaterialTheme.colors.primaryVariant,
+            textColor = MaterialTheme.colors.onBackground
         )
     )
 }

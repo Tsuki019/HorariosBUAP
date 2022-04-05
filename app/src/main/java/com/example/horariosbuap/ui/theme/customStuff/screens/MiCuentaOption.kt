@@ -35,12 +35,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.horariosbuap.R
+import com.example.horariosbuap.ui.theme.*
 import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.example.horariosbuap.ui.theme.dataBase.*
-import com.example.horariosbuap.ui.theme.primaryColorCustom
-import com.example.horariosbuap.ui.theme.secondaryColorCustom
 import com.example.horariosbuap.viewmodel.LoginViewModel
 import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.accompanist.insets.LocalWindowInsets
@@ -105,7 +104,7 @@ fun TituloSeccion(text : String) {
         style = TextStyle(
             fontSize = 20.sp,
             fontFamily = sansPro,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.Bold,
             color = MaterialTheme.colors.primary
         )
     )
@@ -194,12 +193,12 @@ fun NombrePublico(
                     ),
                     colors = TextFieldDefaults.textFieldColors(
                         backgroundColor = Color.Transparent,
-                        cursorColor = MaterialTheme.colors.primaryVariant,
-                        focusedIndicatorColor = MaterialTheme.colors.primaryVariant,
-                        focusedLabelColor = MaterialTheme.colors.primaryVariant,
-                        unfocusedLabelColor = MaterialTheme.colors.secondary,
-                        unfocusedIndicatorColor = MaterialTheme.colors.secondary,
-                        textColor = MaterialTheme.colors.secondary
+                        cursorColor = light_blue2,
+                        focusedIndicatorColor = light_blue2,
+                        focusedLabelColor = light_blue2,
+                        unfocusedLabelColor = MaterialTheme.colors.background,
+                        unfocusedIndicatorColor = MaterialTheme.colors.background,
+                        textColor = MaterialTheme.colors.primary
                     )
                 )
                 RoundedButton(
@@ -213,7 +212,7 @@ fun NombrePublico(
                     displayProgressBar = progressBarState.value,
                     onClick = {
                         if (nameValue.value != viewModel.state.value.name){
-                            if ( nameValue.value.length >= 4){
+                            if (nameValue.value.length in 4..15){
                                 corutineScope.launch {
                                     progressBarState.value = true
                                     UpdateUserName(
@@ -225,7 +224,7 @@ fun NombrePublico(
                                     progressBarState.value = false
                                 }
                             }else{
-                                Toast.makeText(activity, "El nombre debe tener al menos 4 caracteres", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(activity, "El nombre debe tener de 4 a 15 caracteres", Toast.LENGTH_SHORT).show()
                             }
                         }else{
                             Toast.makeText(activity, "Ya tiene ese nombre", Toast.LENGTH_SHORT).show()
@@ -340,15 +339,15 @@ fun Contrasena(
                         imageVector = if (currentPasswordVisibility) Icons.Rounded.Visibility
                         else Icons.Rounded.VisibilityOff,
                         contentDescription = "",
-                        tint = MaterialTheme.colors.secondary
+                        tint = light_blue1
                     )
                 }
             },
             visualTransformation = if (currentPasswordVisibility) VisualTransformation.None
             else PasswordVisualTransformation(),
-            focusColor = MaterialTheme.colors.primaryVariant,
-            unFocusedColor = MaterialTheme.colors.secondary,
-            textColor = MaterialTheme.colors.secondary
+            focusColor = light_blue2,
+            unFocusedColor = MaterialTheme.colors.primaryVariant,
+            textColor = MaterialTheme.colors.primary
         )
 
         TransparentTextField(
@@ -370,15 +369,15 @@ fun Contrasena(
                         imageVector = if (newPasswordVisibility) Icons.Rounded.Visibility
                         else Icons.Rounded.VisibilityOff,
                         contentDescription = "",
-                        tint = MaterialTheme.colors.secondary
+                        tint = light_blue1
                     )
                 }
             },
             visualTransformation = if (newPasswordVisibility) VisualTransformation.None
             else PasswordVisualTransformation(),
-            focusColor = MaterialTheme.colors.primaryVariant,
-            unFocusedColor = MaterialTheme.colors.secondary,
-            textColor = MaterialTheme.colors.secondary
+            focusColor = light_blue2,
+            unFocusedColor = MaterialTheme.colors.primaryVariant,
+            textColor = MaterialTheme.colors.primary
         )
 
         TransparentTextField(
@@ -399,15 +398,15 @@ fun Contrasena(
                         imageVector = if (confirmNewPasswordVisibility) Icons.Rounded.Visibility
                         else Icons.Rounded.VisibilityOff,
                         contentDescription = "",
-                        tint = MaterialTheme.colors.secondary
+                        tint = light_blue1
                     )
                 }
             },
             visualTransformation = if (confirmNewPasswordVisibility) VisualTransformation.None
             else PasswordVisualTransformation(),
-            focusColor = MaterialTheme.colors.primaryVariant,
-            unFocusedColor = MaterialTheme.colors.secondary,
-            textColor = MaterialTheme.colors.secondary
+            focusColor = light_blue2,
+            unFocusedColor = MaterialTheme.colors.primaryVariant,
+            textColor = MaterialTheme.colors.primary
         )
 
         Column(

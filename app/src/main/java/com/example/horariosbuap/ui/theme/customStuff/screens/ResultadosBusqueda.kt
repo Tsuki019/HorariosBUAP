@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.example.horariosbuap.ui.theme.customStuff.components.LoadingIndicator
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -49,7 +50,11 @@ import com.example.horariosbuap.model.Profesores
 import com.example.horariosbuap.model.Salones
 import com.example.horariosbuap.ui.theme.customStuff.components.ButtonToggleGroup
 import com.example.horariosbuap.ui.theme.customStuff.components.pageNavigator
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.example.horariosbuap.ui.theme.dataBase.*
+import com.example.horariosbuap.ui.theme.light_blue1
+import com.example.horariosbuap.ui.theme.light_blue2
+import com.example.horariosbuap.ui.theme.secondaryColorCustom
 import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
@@ -87,8 +92,8 @@ private fun VistaProfesores(
     datosViewModel: DatosViewModel
 ) {
 
-    val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
-    val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
+    //val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
+    //val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
     val focusManager = LocalFocusManager.current
     val textBusq = remember {mutableStateOf("")}
     val busquedaOpc = rememberSaveable{ mutableStateOf("Nombre")}
@@ -101,7 +106,7 @@ private fun VistaProfesores(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = colorResource(id = R.color.blanco_fondo))
+            .background(color = MaterialTheme.colors.background)
     ){
         Column(modifier = Modifier
             .fillMaxWidth()
@@ -110,10 +115,10 @@ private fun VistaProfesores(
                 modifier = Modifier.padding(end = 5.dp),
                 text = "Buscar salon por:",
                 style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    color = MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold),
-                fontSize = 15.sp,
-                fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                fontSize = 16.sp,
+                fontFamily = sansPro
             )
             ButtonToggleGroup(
                 options = listOf("Nombre", "Puesto"),
@@ -153,8 +158,7 @@ private fun VistaProfesores(
                 }) {
                     Icon(imageVector = Icons.Rounded.Search,
                          contentDescription = "",
-                         tint = colorResource(
-                             id = R.color.azulOscuroInstitucional)
+                         tint = MaterialTheme.colors.secondary
                     )
                 }
             },
@@ -170,12 +174,12 @@ private fun VistaProfesores(
             ),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
-                cursorColor = azulClaro,
-                focusedIndicatorColor = azulClaro,
-                focusedLabelColor = azulClaro,
-                unfocusedIndicatorColor = azulOscuro,
-                unfocusedLabelColor = azulOscuro,
-                textColor = azulOscuro
+                cursorColor = light_blue2,
+                focusedIndicatorColor = light_blue2,
+                focusedLabelColor = light_blue2,
+                unfocusedLabelColor = MaterialTheme.colors.primaryVariant,
+                unfocusedIndicatorColor = MaterialTheme.colors.primaryVariant,
+                textColor = MaterialTheme.colors.primary
             )
         )
 
@@ -205,15 +209,7 @@ private fun VistaProfesores(
                             CardProfesor(datos = datosViewModel.profesores[cont])
                             cont++
                         }
-
-                        Divider(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 15.dp)
-                                .padding(top = 30.dp, bottom = 20.dp),
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
-                            thickness = 1.dp
-                        )
+                        ListaDivider()
                     }
                     item {
                         pageNavigator(pagina = pagina, datosViewModel = datosViewModel, ultimo = ultimo, listState =  listState, coroutineScope = coroutineScope)
@@ -227,34 +223,20 @@ private fun VistaProfesores(
                         for (item in datosViewModel.resultProfesores){
                             CardProfesor(datos = item)
                         }
-                        Divider(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 15.dp)
-                                .padding(top = 30.dp, bottom = 20.dp),
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
-                            thickness = 1.dp
-                        )
+                        ListaDivider()
                     }else{
                         if (textBusq.value.length > 1){
                             Column(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Divider(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(horizontal = 20.dp)
-                                        .padding(top = 30.dp),
-                                    color = colorResource(id = R.color.azulOscuroInstitucional),
-                                    thickness = 1.dp
-                                )
+                                ListaDivider()
                                 Text(
                                     text = "Sin coincidencias.",
                                     style = TextStyle(
-                                        color = colorResource(id = R.color.azulOscuroInstitucional),
+                                        color = MaterialTheme.colors.primary,
                                         fontSize = 25.sp,
-                                        fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                                        fontFamily = sansPro
                                     )
                                 )
                             }
@@ -268,14 +250,14 @@ private fun VistaProfesores(
     }
 }
 
+
+
 @ExperimentalAnimationApi
 @Composable
 fun VistaEdificios(
     datosViewModel: DatosViewModel,
     onNavToClassRooms: (String) -> Unit)
 {
-    val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
-    val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
     val focusManager = LocalFocusManager.current
     val textBusq = remember {mutableStateOf("")}
     val busquedaOpc = rememberSaveable{ mutableStateOf("Salon")}
@@ -288,7 +270,7 @@ fun VistaEdificios(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = colorResource(id = R.color.blanco_fondo))
+            .background(color = MaterialTheme.colors.background)
     ){
         Column(modifier = Modifier
             .fillMaxWidth()
@@ -297,7 +279,7 @@ fun VistaEdificios(
                 modifier = Modifier.padding(end = 5.dp),
                 text = "Buscar salon por:",
                 style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    color = MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold),
                 fontSize = 15.sp,
                 fontFamily = FontFamily(Font(R.font.source_sans_pro))
@@ -330,8 +312,7 @@ fun VistaEdificios(
                 }) {
                     Icon(imageVector = Icons.Rounded.Search,
                          contentDescription = "",
-                         tint = colorResource(
-                             id = R.color.azulOscuroInstitucional)
+                         tint = MaterialTheme.colors.secondary
                     )
                 }
             },
@@ -347,12 +328,12 @@ fun VistaEdificios(
             ),
             colors = TextFieldDefaults.textFieldColors(
                 backgroundColor = Color.Transparent,
-                cursorColor = azulClaro,
-                focusedIndicatorColor = azulClaro,
-                focusedLabelColor = azulClaro,
-                unfocusedIndicatorColor = azulOscuro,
-                unfocusedLabelColor = azulOscuro,
-                textColor = azulOscuro
+                cursorColor = light_blue2,
+                focusedIndicatorColor = light_blue2,
+                focusedLabelColor = light_blue2,
+                unfocusedLabelColor = MaterialTheme.colors.primaryVariant,
+                unfocusedIndicatorColor = MaterialTheme.colors.primaryVariant,
+                textColor = MaterialTheme.colors.primary
             )
         )
 
@@ -377,7 +358,7 @@ fun VistaEdificios(
                                 .fillMaxWidth()
                                 .padding(horizontal = 15.dp)
                                 .padding(top = 30.dp, bottom = 20.dp),
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            color = MaterialTheme.colors.onSurface,
                             thickness = 1.dp
                         )
                     }else{
@@ -397,7 +378,7 @@ fun VistaEdificios(
                                 .fillMaxWidth()
                                 .padding(horizontal = 15.dp)
                                 .padding(top = 30.dp, bottom = 20.dp),
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            color = MaterialTheme.colors.onSurface,
                             thickness = 1.dp
                         )
                     }else{
@@ -411,15 +392,15 @@ fun VistaEdificios(
                                         .fillMaxWidth()
                                         .padding(horizontal = 20.dp)
                                         .padding(top = 30.dp),
-                                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                                    color = MaterialTheme.colors.onSurface,
                                     thickness = 1.dp
                                 )
                                 Text(
                                     text = "Sin coincidencias.",
                                     style = TextStyle(
-                                        color = colorResource(id = R.color.azulOscuroInstitucional),
+                                        color = MaterialTheme.colors.secondaryVariant,
                                         fontSize = 25.sp,
-                                        fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                                        fontFamily = sansPro
                                     )
                                 )
                             }
@@ -439,9 +420,6 @@ private fun VistaMaterias(
     datosViewModel: DatosViewModel,
     onNavToSubject: (String, String) -> Unit
 ) {
-
-    val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
-    val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
     val focusManager = LocalFocusManager.current
     val textBusq = remember {mutableStateOf("")}
     val busquedaOpc = rememberSaveable{ mutableStateOf("Nombre")}
@@ -453,7 +431,7 @@ private fun VistaMaterias(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = colorResource(id = R.color.blanco_fondo))
+                .background(color = MaterialTheme.colors.background)
         ){
             Column(modifier = Modifier
                 .fillMaxWidth()
@@ -462,10 +440,10 @@ private fun VistaMaterias(
                     modifier = Modifier.padding(end = 5.dp),
                     text = "Buscar Materia por:",
                     style = TextStyle(
-                        color = colorResource(id = R.color.azulOscuroInstitucional),
+                        color = MaterialTheme.colors.primary,
                         fontWeight = FontWeight.Bold),
                     fontSize = 15.sp,
-                    fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                    fontFamily = sansPro
                 )
                 ButtonToggleGroup(
                     options = listOf("Nombre", "Profesor", "NRC"),
@@ -513,8 +491,7 @@ private fun VistaMaterias(
                     }) {
                         Icon(imageVector = Icons.Rounded.Search,
                              contentDescription = "",
-                             tint = colorResource(
-                                 id = R.color.azulOscuroInstitucional)
+                             tint = MaterialTheme.colors.secondary
                         )
                     }
                 },
@@ -530,12 +507,12 @@ private fun VistaMaterias(
                 ),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.Transparent,
-                    cursorColor = azulClaro,
-                    focusedIndicatorColor = azulClaro,
-                    focusedLabelColor = azulClaro,
-                    unfocusedIndicatorColor = azulOscuro,
-                    unfocusedLabelColor = azulOscuro,
-                    textColor = azulOscuro
+                    cursorColor = light_blue2,
+                    focusedIndicatorColor = light_blue2,
+                    focusedLabelColor = light_blue2,
+                    unfocusedLabelColor = MaterialTheme.colors.primaryVariant,
+                    unfocusedIndicatorColor = MaterialTheme.colors.primaryVariant,
+                    textColor = MaterialTheme.colors.primary
                 )
             )
 
@@ -585,7 +562,7 @@ private fun VistaMaterias(
                                     .fillMaxWidth()
                                     .padding(horizontal = 15.dp)
                                     .padding(top = 30.dp, bottom = 20.dp),
-                                color = colorResource(id = R.color.azulOscuroInstitucional),
+                                color = MaterialTheme.colors.onSurface,
                                 thickness = 1.dp
                             )
                         }
@@ -606,7 +583,7 @@ private fun VistaMaterias(
                                     .fillMaxWidth()
                                     .padding(horizontal = 15.dp)
                                     .padding(top = 30.dp, bottom = 20.dp),
-                                color = colorResource(id = R.color.azulOscuroInstitucional),
+                                color = MaterialTheme.colors.onSurface,
                                 thickness = 1.dp
                             )
                         }else{
@@ -620,15 +597,15 @@ private fun VistaMaterias(
                                             .fillMaxWidth()
                                             .padding(horizontal = 20.dp)
                                             .padding(top = 30.dp),
-                                        color = colorResource(id = R.color.azulOscuroInstitucional),
+                                        color = MaterialTheme.colors.onSurface,
                                         thickness = 1.dp
                                     )
                                     Text(
                                         text = "Sin coincidencias.",
                                         style = TextStyle(
-                                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                                            color = MaterialTheme.colors.primary,
                                             fontSize = 25.sp,
-                                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                                            fontFamily = sansPro
                                         )
                                     )
                                 }
@@ -660,14 +637,14 @@ fun FloatingInfoBottom() {
     val datosTextStyle  = SpanStyle(
         color = Color.White,
         fontSize = 13.sp,
-        fontFamily = FontFamily(Font(R.font.source_sans_pro))
+        fontFamily = sansPro
     )
 
     Row(
         modifier = Modifier
             .clip(CircleShape)
             .clickable { stateButtom.value = !stateButtom.value }
-            .background(color = colorResource(id = R.color.azulOscuroInstitucional))
+            .background(color = MaterialTheme.colors.onSurface)
             .padding(5.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
@@ -704,16 +681,13 @@ private fun CardSalones(
     salon : Salones
 ) {
 
-    val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
-    val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
-
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp),
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.surface,
         elevation = 5.dp,
-        border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.onSurface),
         shape = RoundedCornerShape(
             bottomEndPercent = 8,
             bottomStartPercent = 8,
@@ -729,7 +703,7 @@ private fun CardSalones(
                 modifier = Modifier.fillMaxWidth(),
                 text = salon.data,
                 style = TextStyle(
-                    color = azulOscuro,
+                    color = MaterialTheme.colors.primary,
                     fontFamily = FontFamily(Font(R.font.source_sans_pro)),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
@@ -738,10 +712,10 @@ private fun CardSalones(
             )
             Divider(modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 15.dp), color = azulOscuro)
+                .padding(horizontal = 15.dp), color = MaterialTheme.colors.onSurface)
             Row(modifier = Modifier.fillMaxWidth()) {
-                TableCell(text = "Edificio", weight = 0.5f, textColor = azulOscuro, fontWeight = FontWeight.Bold)
-                TableCell(text = "Piso", weight = 0.5f, textColor = azulOscuro, fontWeight = FontWeight.Bold)
+                TableCell(text = "Edificio", weight = 0.5f, textColor = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
+                TableCell(text = "Piso", weight = 0.5f, textColor = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
             }
             Row(modifier = Modifier.fillMaxWidth()) {
                 TableCell(text = salon.edificio, weight = 0.5f)
@@ -756,21 +730,21 @@ private fun CardSalones(
 private fun RowScope.TableCell(
     text: String,
     weight: Float,
-    textColor : Color = colorResource(id = R.color.azulClaroInstitucional),
+    textColor : Color = MaterialTheme.colors.secondary,
     textSize : TextUnit = 16.sp,
     fontWeight: FontWeight = FontWeight.Normal
 ) {
     Text(
         text = text,
         Modifier
-//            .border(1.dp, color = colorResource(id = R.color.azulOscuroInstitucional))
+//          .border(1.dp, color = colorResource(id = R.color.azulOscuroInstitucional))
             .weight(weight)
             .padding(8.dp),
         textAlign = TextAlign.Center,
         style = TextStyle(
             color = textColor,
             fontSize = textSize,
-            fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+            fontFamily = sansPro,
             fontWeight = fontWeight
         )
     )
@@ -782,19 +756,19 @@ private fun CardProfesor(
 ) {
 
     val datosTextStyle  = SpanStyle(
-        color = colorResource(id = R.color.azulClaroInstitucional),
-        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colors.secondary,
+        fontWeight = FontWeight.Medium,
         fontSize = 15.sp,
-        fontFamily = FontFamily(Font(R.font.source_sans_pro))
+        fontFamily = sansPro
     )
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp),
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.surface,
         elevation = 5.dp,
-        border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.onSurface),
         shape = RoundedCornerShape(
             bottomEndPercent = 8,
             bottomStartPercent = 8,
@@ -809,49 +783,37 @@ private fun CardProfesor(
                 modifier = modifier.padding(top = 3.dp),
                 text = datos!!.nombre,
                 style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    color = MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold),
                 fontSize = 20.sp,
-                fontFamily = FontFamily(Font(R.font.source_sans_pro)
-                )
+                fontFamily = sansPro
             )
             Divider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 3.dp),
                 thickness = 1.dp,
-                color = colorResource(id = R.color.azulOscuroInstitucional)
+                color = MaterialTheme.colors.onSurface
             )
-            if (datos.puesto != ""){
-                Text(
-                    modifier = modifier,
-                    text = datos.puesto,
-                    style = TextStyle(
-                        color = colorResource(id = R.color.azulOscuroInstitucional),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
-                        fontFamily = FontFamily(Font(R.font.source_sans_pro))
-                    )
-                )
-            }else{
-                Text(
-                    modifier = modifier,
-                    text = "Profesor",
-                    style = TextStyle(
-                        color = colorResource(id = R.color.azulOscuroInstitucional),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
-                        fontFamily = FontFamily(Font(R.font.source_sans_pro))
-                    )
-                )
-            }
+            Text(
+                modifier = modifier,
+                text = if (datos.puesto != "") datos.puesto else "Profesor",
+                style = TextStyle(
+                    color = MaterialTheme.colors.primary,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    fontFamily = sansPro
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
             SelectionContainer(modifier = modifier) {
                 Column() {
                     if (datos.ext != ""){
                         Text(
                             buildAnnotatedString {
-                                withStyle(style = datosTextStyle.copy(color= colorResource(id = R.color.azulOscuroInstitucional))){
+                                withStyle(style = datosTextStyle.copy(color= MaterialTheme.colors.primary)){
                                     append("Ext: ")
                                 }
                                 withStyle(style = datosTextStyle){
@@ -863,7 +825,7 @@ private fun CardProfesor(
                     if (datos.cubiculo != ""){
                         Text(
                             buildAnnotatedString {
-                                withStyle(style = datosTextStyle.copy(color= colorResource(id = R.color.azulOscuroInstitucional))){
+                                withStyle(style = datosTextStyle.copy(color= MaterialTheme.colors.primary)){
                                     append("Cubiculo: ")
                                 }
                                 withStyle(style = datosTextStyle){
@@ -872,26 +834,20 @@ private fun CardProfesor(
                             }
                         )
                     }
-                }
-            }
-            if (datos.correo2 != ""){
-                SelectionContainer (
-                    modifier = modifier
-                ) {
-                    Column() {
-                        Text(
-                            buildAnnotatedString {
-                                withStyle(style = datosTextStyle.copy(color= colorResource(id = R.color.azulOscuroInstitucional))){
-                                    append("Correo: ")
-                                }
-                                withStyle(style = datosTextStyle){
-                                    append(datos.correo)
-                                }
+                    Text(
+                        buildAnnotatedString {
+                            withStyle(style = datosTextStyle.copy(color= MaterialTheme.colors.primary)){
+                                append("Correo: ")
                             }
-                        )
+                            withStyle(style = datosTextStyle){
+                                append(datos.correo)
+                            }
+                        }
+                    )
+                    if (datos.correo2 != ""){
                         Text(
                             buildAnnotatedString {
-                                withStyle(style = datosTextStyle.copy(color= colorResource(id = R.color.azulOscuroInstitucional))){
+                                withStyle(style = datosTextStyle.copy(color= MaterialTheme.colors.primary)){
                                     append("Correo: ")
                                 }
                                 withStyle(style = datosTextStyle){
@@ -900,23 +856,8 @@ private fun CardProfesor(
                             }
                         )
                     }
-                }
-            }else{
-                SelectionContainer(
-                    modifier = modifier.padding(bottom = 5.dp),
-                ) {
-                    Text(
-                        buildAnnotatedString {
-                            withStyle(style = datosTextStyle.copy(color= colorResource(id = R.color.azulOscuroInstitucional))){
-                                append("Correo: ")
-                            }
-                            withStyle(style = datosTextStyle){
-                                append(datos.correo)
-                            }
-                        }
-                    )
-                }
 
+                }
             }
         }
     }
@@ -936,9 +877,9 @@ private fun CardEdicios(
             .fillMaxWidth()
             .height(200.dp)
             .padding(horizontal = 10.dp, vertical = 5.dp),
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.surface,
         elevation = 5.dp,
-        border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.onSurface),
         shape = RoundedCornerShape(
             bottomEndPercent = 8,
             bottomStartPercent = 8,
@@ -963,7 +904,7 @@ private fun CardEdicios(
                         .fillMaxSize()
                         .background(
                             brush = Brush.horizontalGradient(
-                                listOf(Color.Transparent, Color.White),
+                                listOf(Color.Transparent, MaterialTheme.colors.surface),
                                 startX = 0f,
                                 endX = Float.POSITIVE_INFINITY * 0.4f
                             )
@@ -981,7 +922,7 @@ private fun CardEdicios(
                             .padding(top = 3.dp),
                         text = "Edificio: ${datos.nombre}",
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            color = MaterialTheme.colors.primary,
                             fontWeight = FontWeight.Bold),
                         fontSize = 23.sp,
                         fontFamily = FontFamily(Font(R.font.source_sans_pro)
@@ -992,7 +933,7 @@ private fun CardEdicios(
                             .padding(horizontal = 3.dp, vertical = 2.dp)
                             .fillMaxWidth(0.4f),
                         thickness = 1.dp,
-                        color = colorResource(id = R.color.azulOscuroInstitucional)
+                        color = MaterialTheme.colors.onSurface
                     )
                     ClickableText(
                         modifier = Modifier
@@ -1002,7 +943,7 @@ private fun CardEdicios(
                             spanStyle = SpanStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = colorResource(id = R.color.azulOscuroInstitucional),
+                                color = MaterialTheme.colors.primary,
                                 fontFamily = FontFamily(Font(R.font.source_sans_pro)
                                 )
                             ),
@@ -1028,9 +969,9 @@ private fun CardMaterias(
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .clickable { onNavToSubject(datos!!.nrc, " ") },
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.background,
         elevation = 5.dp,
-        border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.onSurface),
         shape = RoundedCornerShape(
             bottomEndPercent = 8,
             bottomStartPercent = 8,
@@ -1042,103 +983,116 @@ private fun CardMaterias(
 
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
-                modifier = modifier.padding(top = 3.dp), text = datos!!.nombre, style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
-                    fontWeight = FontWeight.Bold
-                ), fontSize = 20.sp, fontFamily = FontFamily(
-                    Font(R.font.source_sans_pro)
-                )
+                modifier = modifier.padding(top = 3.dp),
+                text = datos!!.nombre,
+                style = TextStyle(
+                    color = MaterialTheme.colors.primary,
+                    fontWeight = FontWeight.Bold),
+                fontSize = 20.sp,
+                fontFamily = sansPro
             )
             Divider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 3.dp),
                 thickness = 1.dp,
-                color = colorResource(id = R.color.azulOscuroInstitucional)
+                color = MaterialTheme.colors.onSurface
             )
             Text(
                 modifier = modifier,
                 text = "Porfesor(a): " + datos.profesor,
                 style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    color = MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 15.sp,
-                    fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                    fontSize = 16.sp,
+                    fontFamily = sansPro
                 )
             )
             Row(
-                Modifier.fillMaxWidth(),
+                Modifier.fillMaxWidth().padding(top = 10.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Column(modifier = Modifier.padding(end = 5.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.padding(horizontal = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         modifier = modifier,
                         text = "NRC",
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            color = MaterialTheme.colors.primary,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontSize = 16.sp,
+                            fontFamily = sansPro
                         )
                     )
                         Text(
                         modifier = Modifier.padding(bottom = 5.dp),
                         text = datos.nrc,
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulClaroInstitucional),
-                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colors.secondary,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontFamily = sansPro
                         )
                     )
                 }
-                Column(modifier = Modifier.padding(end = 5.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.padding(horizontal = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         modifier = modifier,
                         text = "Sección",
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            color = MaterialTheme.colors.primary,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontSize = 16.sp,
+                            fontFamily = sansPro
                         )
                     )
                     Text(
                         modifier = Modifier.padding(bottom = 5.dp),
                         text = datos.secc,
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulClaroInstitucional),
-                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colors.secondary,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontFamily = sansPro
                         )
                     )
                 }
-                Column(modifier = Modifier.padding(end = 2.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.padding(horizontal = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         modifier = modifier,
                         text = "Clave",
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            color = MaterialTheme.colors.primary,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontSize = 16.sp,
+                            fontFamily = sansPro
                         )
                     )
                     Text(
                         modifier = Modifier.padding(bottom = 5.dp),
                         text = datos.clave,
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulClaroInstitucional),
-                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colors.secondary,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontFamily = sansPro
                         )
                     )
                 }
             }
         }
     }
+}
+
+@Composable
+private fun ListaDivider () {
+    Divider(    //Divider del fondo de la lista
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 15.dp)
+            .padding(top = 30.dp, bottom = 20.dp),
+        color = MaterialTheme.colors.onSurface,
+        thickness = 1.dp
+    )
 }
 
 @ExperimentalAnimationApi

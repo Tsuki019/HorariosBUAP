@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -37,6 +38,8 @@ import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
 import com.example.horariosbuap.viewmodel.LoginViewModel
 import com.example.horariosbuap.model.RegisterState
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
+import com.example.horariosbuap.ui.theme.dark_blue1
 
 
 @Composable
@@ -61,7 +64,7 @@ fun RegistrationScreen(
 
     Box(modifier = Modifier
         .fillMaxWidth()
-        .background(color = colorResource(id = R.color.azulOscuroInstitucional)))
+        .background(color = dark_blue1))
     {
         Box(modifier = Modifier.fillMaxWidth(),
             contentAlignment = Alignment.BottomCenter)
@@ -69,7 +72,7 @@ fun RegistrationScreen(
             Surface(modifier = Modifier
                 .fillMaxSize()
                 .padding(15.dp),
-            color = colorResource(id = R.color.BlancoTransparente),
+            color = MaterialTheme.colors.surface.copy(alpha = 0.7f),
             shape = RoundedCornerShape(
                 topStartPercent = 8,
                 topEndPercent = 8,
@@ -87,13 +90,13 @@ fun RegistrationScreen(
                         {
                             Icon(imageVector = Icons.Rounded.ArrowBack,
                                  contentDescription = "back icon",
-                                 tint = colorResource(id = R.color.azulOscuroInstitucional))
+                                 tint = MaterialTheme.colors.primary)
                         }
 
                         Text(modifier = Modifier.padding(start = 15.dp),
                              text = "Crea una cuenta",
                              style = MaterialTheme.typography.h5.copy(
-                                 color = colorResource(id = R.color.azulOscuroInstitucional))
+                                 color = MaterialTheme.colors.primary)
                         )
                     }
 
@@ -204,9 +207,17 @@ fun RegistrationScreen(
                                           )
                                       })
 
-                        ClickableText(text = buildAnnotatedString {append("¿Ya tienes una cuenta?")
-                            withStyle(style = SpanStyle(color= colorResource(id = R.color.azulClaroInstitucional),
-                                                        fontWeight = FontWeight.Bold))
+                        ClickableText(
+                            modifier = Modifier.padding(top = 10.dp),
+                            style = TextStyle(
+                                color = MaterialTheme.colors.primary,
+                                fontFamily = sansPro
+                            ),
+                            text = buildAnnotatedString {append("¿Ya tienes una cuenta? ")
+                            withStyle(style = SpanStyle(
+                                color= MaterialTheme.colors.onPrimary,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = sansPro))
                             {
                                 append("Inicia Sesion")
                             } },
@@ -216,48 +227,48 @@ fun RegistrationScreen(
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Row(modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Divider(modifier = Modifier.width(24.dp),
-                            thickness = 1.dp,
-                            color = Color.Gray)
-
-                            Text(modifier = Modifier.padding(8.dp),
-                                 text = "O",
-                            style = MaterialTheme.typography.h6.copy(
-                                fontWeight = FontWeight.Black
-                            ))
-
-                            Divider(modifier = Modifier.width(24.dp),
-                                    thickness = 1.dp,
-                                    color = Color.Gray)
-                        }
-
-                        Text(modifier = Modifier.fillMaxWidth(),
-                             text = "Ingresar con",
-                             style = MaterialTheme.typography.body1.copy(
-                                 color = colorResource(id = R.color.azulOscuroInstitucional)
-                             ),
-                            textAlign = TextAlign.Center)
-                    }
-                    
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Column(modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally)
-                    {
-                        OutlinedMediaButton(text = "Ingresar con Google",
-                                            onClick = {
-                                                onLoginWithGoogle(activity)
-                                            },
-                                            buttonColor = colorResource(id = R.color.RojoGoogle))
-                    }
+//                    Spacer(modifier = Modifier.height(16.dp))
+//
+//                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+//                        Row(modifier = Modifier.fillMaxWidth(),
+//                        verticalAlignment = Alignment.CenterVertically,
+//                            horizontalArrangement = Arrangement.Center
+//                        ) {
+//                            Divider(modifier = Modifier.width(24.dp),
+//                            thickness = 1.dp,
+//                            color = Color.Gray)
+//
+//                            Text(modifier = Modifier.padding(8.dp),
+//                                 text = "O",
+//                            style = MaterialTheme.typography.h6.copy(
+//                                fontWeight = FontWeight.Black
+//                            ))
+//
+//                            Divider(modifier = Modifier.width(24.dp),
+//                                    thickness = 1.dp,
+//                                    color = Color.Gray)
+//                        }
+//
+//                        Text(modifier = Modifier.fillMaxWidth(),
+//                             text = "Ingresar con",
+//                             style = MaterialTheme.typography.body1.copy(
+//                                 color = colorResource(id = R.color.azulOscuroInstitucional)
+//                             ),
+//                            textAlign = TextAlign.Center)
+//                    }
+//
+//                    Spacer(modifier = Modifier.height(16.dp))
+//
+//                    Column(modifier = Modifier.fillMaxWidth(),
+//                    verticalArrangement = Arrangement.spacedBy(8.dp),
+//                    horizontalAlignment = Alignment.CenterHorizontally)
+//                    {
+//                        OutlinedMediaButton(text = "Ingresar con Google",
+//                                            onClick = {
+//                                                onLoginWithGoogle(activity)
+//                                            },
+//                                            buttonColor = colorResource(id = R.color.RojoGoogle))
+//                    }
                 }
                 
 

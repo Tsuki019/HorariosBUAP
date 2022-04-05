@@ -6,9 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.Divider
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,12 +26,15 @@ import com.example.horariosbuap.model.Salones
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Icon
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ExpandLess
 import androidx.compose.material.icons.rounded.ExpandMore
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
+import com.example.horariosbuap.ui.theme.dark_blue3
+import com.example.horariosbuap.ui.theme.light_blue1
 
 @ExperimentalAnimationApi
 @Composable
@@ -51,7 +51,7 @@ fun SalonesPorEdificio(
         Box(
             Modifier
                 .fillMaxSize()
-                .background(color = colorResource(id = R.color.blanco_fondo))
+                .background(color = MaterialTheme.colors.background)
         ) {
             Column(
                 modifier = Modifier
@@ -69,11 +69,10 @@ fun SalonesPorEdificio(
                             .padding(top = 3.dp),
                         text = "Salones en: $edificio",
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            color = MaterialTheme.colors.primary,
                             fontWeight = FontWeight.Bold),
-                        fontSize = 23.sp,
-                        fontFamily = FontFamily(Font(R.font.source_sans_pro)
-                        )
+                        fontSize = 24.sp,
+                        fontFamily = sansPro
                     )
                 }
 
@@ -129,7 +128,7 @@ private fun MostrarSalones(
                 modifier = Modifier.padding(top = 15.dp),
                 text = piso,
                 style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    color = MaterialTheme.colors.primary,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Medium
                 )
@@ -138,16 +137,18 @@ private fun MostrarSalones(
                 modifier = Modifier
                     .width(300.dp)
                     .padding(horizontal = 20.dp),
-                color = colorResource(id = R.color.azulOscuroInstitucional)
+                color = MaterialTheme.colors.primaryVariant
             )
             IconButton(
                 modifier = Modifier.padding(vertical = 1.dp),
                 onClick = {  if (mostrador.value == indexPiso) mostrador.value = -1 else mostrador.value = indexPiso }
             ) {
                 if (mostrador.value != indexPiso)
-                    Icon(imageVector = Icons.Rounded.ExpandMore, contentDescription = "")
+                    Icon(imageVector = Icons.Rounded.ExpandMore, contentDescription = "",
+                        tint = MaterialTheme.colors.primaryVariant )
                 else
-                    Icon(imageVector = Icons.Rounded.ExpandLess, contentDescription = "")
+                    Icon(imageVector = Icons.Rounded.ExpandLess, contentDescription = "",
+                        tint = MaterialTheme.colors.primaryVariant)
             }
 
             AnimatedVisibility(visible = mostrador.value == indexPiso) {
@@ -155,13 +156,13 @@ private fun MostrarSalones(
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            color = colorResource(id = R.color.azulOscuroInstitucional).copy(
+                            color = MaterialTheme.colors.onSurface.copy(
                                 0.8f
                             )
                         )
                     ) {
-                        TableCell(text = "Salon", weight = 0.3f, textColor = Color.White, textSize = 15.sp, fontWeight = FontWeight.Medium)
-                        TableCell(text = "Tipo", weight = 0.7f, textColor = Color.White, textSize = 15.sp, fontWeight = FontWeight.Medium)
+                        TableCell(text = "Salon", weight = 0.3f, textColor = Color.White, textSize = 16.sp, fontWeight = FontWeight.Medium)
+                        TableCell(text = "Tipo", weight = 0.7f, textColor = Color.White, textSize = 16.sp, fontWeight = FontWeight.Medium)
                     }
                     for (salon in salonesPiso){
                         Row() {
@@ -179,14 +180,14 @@ private fun MostrarSalones(
 private fun RowScope.TableCell(
     text: String,
     weight: Float,
-    textColor : Color = colorResource(id = R.color.azulClaroInstitucional),
+    textColor : Color = MaterialTheme.colors.primary,
     textSize : TextUnit = 13.sp,
     fontWeight: FontWeight = FontWeight.Normal
 ) {
     Text(
         text = text,
         Modifier
-            .border(1.dp, color = colorResource(id = R.color.azulOscuroInstitucional))
+            .border(1.dp, color = MaterialTheme.colors.onSurface)
             .weight(weight)
             .padding(8.dp),
         textAlign = TextAlign.Center,

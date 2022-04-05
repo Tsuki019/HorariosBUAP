@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +16,8 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.horariosbuap.R
+import com.example.horariosbuap.ui.theme.light_blue1
+import com.example.horariosbuap.ui.theme.light_blue2
 
 @Composable
 fun ButtonToggleGroup(
@@ -31,10 +34,10 @@ fun ButtonToggleGroup(
             val border =
                     if (selected) BorderStroke(
                         width = 2.dp,
-                        color = colorResource(id = R.color.azulOscuroInstitucional)
+                        color = MaterialTheme.colors.primary
                     ) else BorderStroke(
                         width = 1.dp,
-                        color = colorResource(id = R.color.azulClaroInstitucional)
+                        color = MaterialTheme.colors.primaryVariant
                     )
 
 
@@ -66,9 +69,9 @@ fun ButtonToggleGroup(
             }
 
             val colors = ButtonDefaults.outlinedButtonColors(
-                backgroundColor = if (selected) colorResource(id = R.color.azulOscuroInstitucional).copy(alpha = 0.12f)
-                else Color.White,
-                contentColor = if (selected) colorResource(id = R.color.azulOscuroInstitucional) else Color.DarkGray
+                backgroundColor = if (selected) MaterialTheme.colors.onPrimary.copy(alpha = 0.12f)
+                else MaterialTheme.colors.onBackground,
+                contentColor = if (selected) MaterialTheme.colors.primary else MaterialTheme.colors.primaryVariant
             )
             OutlinedButton(
                 onClick = { onOptionSelect(option) },

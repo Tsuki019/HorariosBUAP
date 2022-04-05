@@ -58,9 +58,9 @@ fun CustomBottomNav(
 @Composable
 fun CustomBottomNavItem(item:BottomNavScreens, isSelected:Boolean, onClick:()->Unit) {
 
-    val background = if (isSelected) MaterialTheme.colors.primaryVariant
-    else MaterialTheme.colors.secondary
-    val contentColor = if (isSelected) MaterialTheme.colors.secondary
+    val background = if (isSelected) MaterialTheme.colors.onPrimary
+    else MaterialTheme.colors.onSecondary
+    val contentColor = if (isSelected) MaterialTheme.colors.secondaryVariant
     else MaterialTheme.colors.primaryVariant
 
 

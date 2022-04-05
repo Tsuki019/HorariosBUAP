@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,7 +54,7 @@ fun VistaNoticia(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(color = backgroundColorCustom)
+            .background(color = MaterialTheme.colors.background)
     ) {
         LazyColumn(
             contentPadding = rememberInsetsPaddingValues(
@@ -80,7 +82,7 @@ fun Noticia( noticia : News) {
                 text = noticia.titulo,
                 textAlign = TextAlign.Center,
                 style = TextStyle(
-                    color= primaryColorCustom,
+                    color= MaterialTheme.colors.primary,
                     fontFamily = sansPro,
                     fontWeight = FontWeight.Bold),
                 fontSize = 24.sp
@@ -100,6 +102,7 @@ fun Noticia( noticia : News) {
                 textAlign = TextAlign.Justify,
                 style = TextStyle(
                     fontFamily = sansPro,
+                    color = MaterialTheme.colors.primary
                 ),
                 fontSize = 18.sp
             )
@@ -112,7 +115,8 @@ fun Noticia( noticia : News) {
                     style = TextStyle(
                         fontFamily = sansPro,
                         fontWeight = FontWeight.Bold),
-                    fontSize = 15.sp
+                        color = MaterialTheme.colors.primary,
+                        fontSize = 15.sp
                 )
 
                 val uriHandler = LocalUriHandler.current
@@ -120,7 +124,7 @@ fun Noticia( noticia : News) {
                     append(noticia.link)
                     addStyle(
                         style = SpanStyle(
-                            color = secondaryColorCustom,
+                            color = MaterialTheme.colors.secondary,
                             fontSize = 15.sp,
                             fontFamily = sansPro,
                             textDecoration = TextDecoration.Underline,
@@ -140,6 +144,7 @@ fun Noticia( noticia : News) {
                         .fillMaxWidth(),
                     text = linkNoticia,
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     onClick = {
                         linkNoticia
                             .getStringAnnotations("URL", it, it)
@@ -155,7 +160,7 @@ fun Noticia( noticia : News) {
                     append(noticia.link2)
                     addStyle(
                         style = SpanStyle(
-                            color = secondaryColorCustom,
+                            color = MaterialTheme.colors.secondary,
                             fontSize = 15.sp,
                             fontFamily = sansPro,
                             textDecoration = TextDecoration.Underline,
@@ -175,6 +180,7 @@ fun Noticia( noticia : News) {
                         .fillMaxWidth().padding(top = 10.dp),
                     text = linkNoticia,
                     maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     onClick = {
                         linkNoticia
                             .getStringAnnotations("URL", it, it)
@@ -191,7 +197,8 @@ fun Noticia( noticia : News) {
                 style = TextStyle(
                     fontFamily = sansPro,
                     fontWeight = FontWeight.Bold),
-                fontSize = 15.sp
+                fontSize = 15.sp,
+                color = MaterialTheme.colors.primary
             )
         }
     }
@@ -200,7 +207,7 @@ fun Noticia( noticia : News) {
 
 @Composable
 private fun NoticiaDivider(
-    color : Color = primaryColorCustom,
+    color : Color = MaterialTheme.colors.primary,
     thickness : Dp = 2.dp,
     verticalPadding : Dp = 6.dp
     ) {

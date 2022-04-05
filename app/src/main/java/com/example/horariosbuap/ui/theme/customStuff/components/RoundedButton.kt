@@ -23,14 +23,14 @@ import kotlin.text.Typography
 
 @Composable
 fun RoundedButton(
-    color: ButtonColors = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.azulOscuroInstitucional)),
+    color: ButtonColors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSurface),
     modifier: Modifier = Modifier,
     text: String,
     width : Dp = 280.dp,
     height : Dp = 50.dp,
     fontSize : TextUnit = 20.sp,
     displayProgressBar : Boolean = false,
-    progressIndicatorColor : Color = colorResource(id = R.color.azulOscuroInstitucional),
+    progressIndicatorColor : Color = MaterialTheme.colors.secondary,
     onClick: () -> Unit
 ) {
 

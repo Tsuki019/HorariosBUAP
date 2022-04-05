@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
 
 
                 val systemUiController = rememberSystemUiController()
-                val navBarColor = dark_system_color
+                val navBarColor = dark_blue3
                 SideEffect {
                     systemUiController.setStatusBarColor(navBarColor, darkIcons = false)
                     systemUiController.setNavigationBarColor(navBarColor, darkIcons = false)
@@ -145,7 +145,8 @@ class MainActivity : ComponentActivity() {
                                             "Usuario invitado"
                                         }else{
                                             viewModel.state.value.name
-                                        }
+                                        },
+                                userDataViewModel = userDataViewModel
                             )
                         },
                         bottomBar = {

@@ -2,6 +2,7 @@ package com.example.horariosbuap.ui.theme.customStuff.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -13,6 +14,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.horariosbuap.R
+import com.example.horariosbuap.ui.theme.light_blue2
 import com.example.horariosbuap.viewmodel.DatosViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -83,13 +85,13 @@ fun PageButton(
                     listState.animateScrollToItem(scrollOffset = 0, index = 0)
                 }
             },
-            buttonColor = if (text == pagina.value.toString()) colorResource(id = R.color.azulOscuroInstitucional)
-            else colorResource(id = R.color.azulClaroInstitucional),
+            buttonColor = if (text == pagina.value.toString()) MaterialTheme.colors.primary
+            else MaterialTheme.colors.onSecondary,
             width = 45.dp,
             heigth = 45.dp,
             textStyle = TextStyle(
-                fontSize= 10.sp,
-                color = colorResource(id = R.color.azulOscuroInstitucional),
+                fontSize= 11.sp,
+                color = MaterialTheme.colors.primary,
                 fontFamily = FontFamily(Font(R.font.source_sans_pro))
             )
         )

@@ -4,5 +4,5 @@ data class UserDB(
     val numHorarios : Int = 0,
     val correo : String = "",
     val provider : String = "",
-    val darkTheme : Boolean = false
+    val darkTheme : Boolean = true
 )

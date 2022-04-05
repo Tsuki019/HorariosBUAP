@@ -59,7 +59,7 @@ fun BuscarScreen(
                 style = TextStyle(
                     color = MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                    fontFamily = sansPro,
                     fontSize = 30.sp
                 ),
                 textAlign = TextAlign.Center,
@@ -112,7 +112,7 @@ fun SeccionBusqueda(
             .padding(horizontal = 10.dp, vertical = 5.dp)
             .height(130.dp)
             .fillMaxWidth(),
-        border = BorderStroke(width = 2.dp, color = MaterialTheme.colors.primaryVariant),
+        border = BorderStroke(width = 2.dp, color = MaterialTheme.colors.onSurface),
         elevation = 5.dp,
         backgroundColor = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(

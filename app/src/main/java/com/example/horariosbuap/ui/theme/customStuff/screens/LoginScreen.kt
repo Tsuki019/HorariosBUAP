@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -36,6 +37,8 @@ import com.example.horariosbuap.ui.theme.customStuff.components.OutlinedMediaBut
 import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
 import com.example.horariosbuap.model.LoginState
+import com.example.horariosbuap.ui.theme.*
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.example.horariosbuap.viewmodel.RegisterViewModel
 
 
@@ -59,7 +62,7 @@ fun LoginScreen(
 
     Box(modifier = Modifier
         .fillMaxSize()
-        .background(colorResource(id = R.color.azulOscuroInstitucional)),
+        .background(color = dark_blue1),
         contentAlignment = Alignment.TopCenter)
     {
 
@@ -77,7 +80,7 @@ fun LoginScreen(
                         .constrainAs(surface) {
                             bottom.linkTo(parent.bottom)
                         },
-                    color = colorResource(id = R.color.BlancoTransparente),
+                    color = MaterialTheme.colors.surface.copy(0.7f),
                     
                     shape = RoundedCornerShape(
                         topEndPercent = 8,
@@ -95,12 +98,14 @@ fun LoginScreen(
                         Text(
                             text = "Bienvenido",
                             style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Medium),
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            fontFamily = sansPro,
+                            color = MaterialTheme.colors.primary,
                         )
-
                         Text(text = "Ingresa a tu cuenta",
                              style = MaterialTheme.typography.h5.copy(fontWeight = FontWeight.Medium),
-                             color = colorResource(id = R.color.azulOscuroInstitucional))
+                             fontFamily = sansPro,
+                             color = MaterialTheme.colors.primary
+                        )
                         Column(modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
@@ -136,10 +141,11 @@ fun LoginScreen(
                                     IconButton(onClick = {
                                         passwordVisibility = !passwordVisibility}
                                     ){
-                                        Icon(imageVector =
-                                             if(passwordVisibility){ Icons.Rounded.Visibility}
-                                             else{Icons.Rounded.VisibilityOff},
-                                             contentDescription = "")
+                                        Icon(
+                                            imageVector = if(passwordVisibility){ Icons.Rounded.Visibility}
+                                            else{Icons.Rounded.VisibilityOff},
+                                            contentDescription = "",
+                                            tint = MaterialTheme.colors.secondary)
                                     }
                                 },
                                 visualTransformation =
@@ -151,7 +157,7 @@ fun LoginScreen(
                                 text = buildAnnotatedString {
                                     withStyle(
                                         style = SpanStyle(
-                                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                                            color = MaterialTheme.colors.onPrimary,
                                             fontSize = 16.sp
                                         ),
                                     ){
@@ -166,7 +172,7 @@ fun LoginScreen(
                         Column (
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 20.dp),
+                                .padding(top = 10.dp),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
@@ -185,25 +191,30 @@ fun LoginScreen(
                             ) {
                                 Divider(modifier = Modifier.width(24.dp),
                                         thickness = 1.dp,
-                                        color = Color.Gray)
+                                        color = MaterialTheme.colors.primary)
 
                                 Text(modifier = Modifier.padding(8.dp),
                                      text = "O",
                                      style = MaterialTheme.typography.h6.copy(
                                          fontWeight = FontWeight.Black
-                                     ))
-
+                                     ),
+                                    color = MaterialTheme.colors.primary,
+                                    fontFamily = sansPro
+                                )
                                 Divider(modifier = Modifier.width(24.dp),
                                         thickness = 1.dp,
-                                        color = Color.Gray)
+                                        color = MaterialTheme.colors.primary
+                                )
                             }
 
                             Text(modifier = Modifier.fillMaxWidth(),
                                  text = "Ingresar con",
                                  style = MaterialTheme.typography.body1.copy(
-                                     color = colorResource(id = R.color.azulOscuroInstitucional)
+                                     color = MaterialTheme.colors.primary
                                  ),
-                                 textAlign = TextAlign.Center)
+                                 textAlign = TextAlign.Center,
+                                fontFamily = sansPro
+                            )
 
                             Spacer(modifier = Modifier.height(16.dp))
 
@@ -215,13 +226,18 @@ fun LoginScreen(
                                                     onClick = {
                                                             onLoginWithGoogle(activity)
                                                     },
-                                                    buttonColor = colorResource(id = R.color.RojoGoogle))
-
+                                                    buttonColor = RedGoogle
+                                )
                                 ClickableText(
+                                    modifier = Modifier.padding(top = 10.dp),
+                                    style = TextStyle(
+                                        color = MaterialTheme.colors.primary,
+                                        fontFamily = sansPro
+                                    ),
                                     text = buildAnnotatedString { append("¿No tienes una cuenta? ")
                                         withStyle(
                                             style = SpanStyle(
-                                                color = colorResource(id = R.color.azulOscuroInstitucional),
+                                                color = MaterialTheme.colors.onPrimary,
                                                 fontWeight = FontWeight.Bold
                                             )
                                         ){

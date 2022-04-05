@@ -3,10 +3,7 @@ package com.example.horariosbuap.ui.theme.customStuff.components
 import android.app.Activity
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Divider
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,15 +46,16 @@ fun AlertaConformacion(
     }else{
         AlertDialog(
             modifier = Modifier.clip(RoundedCornerShape(8)),
+            backgroundColor = MaterialTheme.colors.background,
             onDismissRequest = {},
             title = {
                 Text(
                     text = "Confirmar materia",
                     style = TextStyle(
-                        color = colorResource(id = R.color.azulOscuroInstitucional),
+                        color = MaterialTheme.colors.primary,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                        fontFamily = sansPro,
                         textAlign = TextAlign.Center
                     )
                 )
@@ -66,9 +64,9 @@ fun AlertaConformacion(
                 Text(
                     text = "¿Agregar '${materiaElegida.value.nombre}' con NRC: '${materiaElegida.value.nrc}' a tu horario?",
                     style = TextStyle(
-                        color = colorResource(id = R.color.azulOscuroInstitucional),
+                        color = MaterialTheme.colors.primary,
                         fontSize = 16.sp,
-                        fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                        fontFamily = sansPro,
                     )
                 )
             },
@@ -104,7 +102,7 @@ fun AlertaConformacion(
                         Text(
                             text = "Agregar",
                             style = TextStyle(
-                                color = primaryColorCustom,
+                                color = MaterialTheme.colors.primary,
                                 fontSize = 20.sp,
                                 fontFamily = sansPro,
                             )
@@ -114,7 +112,7 @@ fun AlertaConformacion(
                         Text(
                             text = "Cancelar",
                             style = TextStyle(
-                                color = primaryColorCustom,
+                                color = MaterialTheme.colors.error,
                                 fontSize = 20.sp,
                                 fontFamily = sansPro,
                             )
@@ -141,7 +139,7 @@ private fun ErrorAgregarMateria(
             Text(
                 text = "Error al agregar",
                 style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    color = MaterialTheme.colors.error,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily(Font(R.font.source_sans_pro)),
@@ -153,14 +151,17 @@ private fun ErrorAgregarMateria(
             Text(
                 text = stringResource(id = R.string.error_match_schedule_subjects),
                 style = TextStyle(
-                    color = primaryColorCustom,
+                    color = MaterialTheme.colors.primary,
                     fontSize = 16.sp,
                     fontFamily = sansPro,
                 )
             )
         },
         buttons = {
-            Box(modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp), contentAlignment = Alignment.CenterEnd) {
+            Box(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp),
+                contentAlignment = Alignment.CenterEnd)
+            {
                 TextButton(onClick = {
                     errorVisibility.value = false
                     materiaElegida.value = Materias() }
@@ -168,7 +169,7 @@ private fun ErrorAgregarMateria(
                     Text(
                         text = "Aceptar",
                         style = TextStyle(
-                            color = primaryColorCustom,
+                            color = MaterialTheme.colors.primary,
                             fontSize = 20.sp,
                             fontFamily = sansPro,
                         )

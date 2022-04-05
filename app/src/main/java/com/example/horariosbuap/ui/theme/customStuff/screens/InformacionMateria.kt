@@ -29,6 +29,7 @@ import com.example.horariosbuap.ui.theme.dataBase.getMateriasHorario
 import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.example.horariosbuap.ui.theme.customStuff.components.AlertaConformacion
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
 
 private val materiaElegida = mutableStateOf(Materias())
 
@@ -50,16 +51,13 @@ fun InformacionMateria(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.blanco_fondo))
+            .background(MaterialTheme.colors.background)
     ){
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 5.dp)
         ) {
-//            IconButton(onClick = { onBack() }) {
-//                Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = "", tint = Color.Black)
-//            }
             item {
                 Text(
                     modifier = Modifier
@@ -68,7 +66,7 @@ fun InformacionMateria(
                     text = "Datos Principales",
                     textAlign = TextAlign.Center,
                     style = TextStyle(
-                        color = colorResource(id = R.color.azulOscuroInstitucional),
+                        color = MaterialTheme.colors.primary,
                         fontSize = 20.sp,
                         fontFamily = FontFamily(Font(R.font.source_sans_pro)),
                         fontWeight = FontWeight.Bold
@@ -80,7 +78,8 @@ fun InformacionMateria(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
                     .padding(bottom = 8.dp),
-                color = colorResource(id = R.color.azulOscuroInstitucional)) }
+                color = MaterialTheme.colors.onSurface)
+            }
             item { TablaPrincipal(materia = materiaInfo) }
             item {
                 Text(
@@ -90,7 +89,7 @@ fun InformacionMateria(
                     text = "Horario por semana",
                     textAlign = TextAlign.Center,
                     style = TextStyle(
-                        color = colorResource(id = R.color.azulOscuroInstitucional),
+                        color = MaterialTheme.colors.primary,
                         fontSize = 20.sp,
                         fontFamily = FontFamily(Font(R.font.source_sans_pro)),
                         fontWeight = FontWeight.Bold
@@ -102,7 +101,8 @@ fun InformacionMateria(
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
                     .padding(bottom = 8.dp),
-                color = colorResource(id = R.color.azulOscuroInstitucional)) }
+                color = MaterialTheme.colors.onSurface)
+            }
             item { TablasHorario(materiaHorario = materiasHorario) }
             item {
                 if (nombreHorario != " "){
@@ -115,13 +115,13 @@ fun InformacionMateria(
                         OutlinedMediaButton(
                             text = "Agregar a Mi Horario",
                             onClick = { materiaElegida.value= materiaInfo },
-                            buttonColor = colorResource(id = R.color.azulOscuroInstitucional),
+                            buttonColor = MaterialTheme.colors.primary,
                             width = 170.dp,
                             heigth = 40.dp,
                             textStyle = TextStyle(
                                 fontSize= 15.sp,
-                                color = colorResource(id = R.color.azulOscuroInstitucional),
-                                fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                                color = MaterialTheme.colors.primary,
+                                fontFamily = sansPro
                             )
                         )
                     }
@@ -144,57 +144,37 @@ fun InformacionMateria(
 private fun TablaPrincipal(
     materia: Materias
 ){
-    val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
-    val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
-    val datos = listOf("NRC", "Sección", "Clave")
-    
-//    LazyColumn(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(5.dp),
-//               contentPadding = rememberInsetsPaddingValues(
-//                   insets = LocalWindowInsets.current.systemBars,
-//                   applyTop = false)
-//    ){
-//        item {
-            Row(
-                modifier = Modifier.background(color = azulOscuro.copy(alpha = 0.8f))
-            ) {
-                TableCell(text = "Materia", weight = 1f, textColor = Color.White, textSize = 17.sp, fontWeight = FontWeight.Bold)
-            }
-            Row(
-                
-            ) {
-                TableCell(text = materia.nombre, weight = 1f, textColor = azulClaro, textSize = 15.sp, fontWeight = FontWeight.Bold)
-            }
-//        }
-//        item {
-            Row(
-                modifier = Modifier.background(color = azulOscuro.copy(alpha = 0.8f))
-            ) {
-                TableCell(text = "Docente", weight = 1f, textColor = Color.White, textSize = 17.sp, fontWeight = FontWeight.Bold)
-            }
-            Row{
-                TableCell(text = materia.profesor, weight = 1f, textColor = azulClaro, textSize = 15.sp, fontWeight = FontWeight.Bold)
-            }
-//        }
-//        item {
-            Row(
-                modifier = Modifier.background(color = azulClaro)
-            ) {
-                for (item in datos)
-                    TableCell(text = item, weight = 0.33f, textColor = Color.White, textSize = 14.sp, fontWeight = FontWeight.Bold)
-            }
-//        }
-//        item {
-            Row() {
-                TableCell(text = materia.nrc, weight = 0.33f, textColor = azulClaro, textSize = 15.sp, fontWeight = FontWeight.Bold)
-                TableCell(text = materia.secc, weight = 0.33f, textColor = azulClaro, textSize = 15.sp, fontWeight = FontWeight.Bold)
-                TableCell(text = materia.clave, weight = 0.33f, textColor = azulClaro, textSize = 15.sp, fontWeight = FontWeight.Bold)
 
-            }
-//        }
-//    }
+    val datos = listOf("NRC", "Sección", "Clave")
+
+    Row(
+        modifier = Modifier.background(color = MaterialTheme.colors.onSurface.copy(alpha = 0.8f))
+    ) {
+        TableCell(text = "Materia", weight = 1f, textColor = Color.White, textSize = 17.sp, fontWeight = FontWeight.Bold)
+    }
+    Row {
+        TableCell(text = materia.nombre, weight = 1f, textColor = MaterialTheme.colors.secondary, textSize = 15.sp, fontWeight = FontWeight.Bold)
+    }
+    Row(
+        modifier = Modifier.background(color = MaterialTheme.colors.onSurface.copy(alpha = 0.8f))
+    ) {
+        TableCell(text = "Docente", weight = 1f, textColor = Color.White, textSize = 17.sp, fontWeight = FontWeight.Bold)
+    }
+    Row{
+        TableCell(text = materia.profesor, weight = 1f, textColor = MaterialTheme.colors.secondary, textSize = 15.sp, fontWeight = FontWeight.Bold)
+    }
+    Row(
+        modifier = Modifier.background(color = MaterialTheme.colors.secondary.copy(alpha = 0.7f))
+    ) {
+        for (item in datos)
+            TableCell(text = item, weight = 0.33f, textColor = Color.White, textSize = 14.sp, fontWeight = FontWeight.Bold)
+    }
+    Row() {
+        TableCell(text = materia.nrc, weight = 0.33f, textColor = MaterialTheme.colors.secondary, textSize = 15.sp, fontWeight = FontWeight.Bold)
+        TableCell(text = materia.secc, weight = 0.33f, textColor = MaterialTheme.colors.secondary, textSize = 15.sp, fontWeight = FontWeight.Bold)
+        TableCell(text = materia.clave, weight = 0.33f, textColor = MaterialTheme.colors.secondary, textSize = 15.sp, fontWeight = FontWeight.Bold)
+
+    }
 }
 
 @Composable
@@ -212,8 +192,6 @@ private fun TablasHorario(
 private fun CrearTablaDia(
     datosMateria : MateriasHorario
 ) {
-    val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
-    val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
     val encabezados = listOf("Entrada", "Salida", "Salon", "Edificio")
     val weight = 0.25f
     var dia = ""
@@ -228,21 +206,21 @@ private fun CrearTablaDia(
     }
 
     Row(
-        modifier = Modifier.background(color = azulOscuro.copy(alpha = 0.8f))
+        modifier = Modifier.background(color = MaterialTheme.colors.onSurface.copy(alpha = 0.8f))
     ) {
         TableCell(text = dia, weight = 1f, textColor = Color.White, textSize = 17.sp, fontWeight = FontWeight.Bold)
     }
     Row(
-        modifier = Modifier.background(color = azulClaro)
+        modifier = Modifier.background(color = MaterialTheme.colors.secondary.copy(alpha = 0.7f))
     ) {
         for (item in encabezados)
             TableCell(text = item, weight = weight, textColor = Color.White, textSize = 14.sp, fontWeight = FontWeight.Bold)
     }
     Row {
-        TableCell(text = datosMateria.entrada, weight = weight, textColor = azulClaro, textSize = 14.sp)
-        TableCell(text = datosMateria.salida, weight = weight, textColor = azulClaro, textSize = 14.sp)
-        TableCell(text = datosMateria.salon, weight = weight, textColor = azulClaro, textSize = 14.sp)
-        TableCell(text = datosMateria.edificio, weight = weight, textColor = azulClaro, textSize = 14.sp)
+        TableCell(text = datosMateria.entrada, weight = weight, textColor = MaterialTheme.colors.secondary, textSize = 14.sp)
+        TableCell(text = datosMateria.salida, weight = weight, textColor = MaterialTheme.colors.secondary, textSize = 14.sp)
+        TableCell(text = datosMateria.salon, weight = weight, textColor = MaterialTheme.colors.secondary, textSize = 14.sp)
+        TableCell(text = datosMateria.edificio, weight = weight, textColor = MaterialTheme.colors.secondary, textSize = 14.sp)
     }
 }
 
@@ -257,14 +235,14 @@ private fun RowScope.TableCell(
     Text(
         text = text,
         Modifier
-            .border(1.dp, color = colorResource(id = R.color.azulOscuroInstitucional))
+            .border(1.dp, color = MaterialTheme.colors.onSurface)
             .weight(weight)
             .padding(8.dp),
         textAlign = TextAlign.Center,
         style = TextStyle(
             color = textColor,
             fontSize = textSize,
-            fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+            fontFamily = sansPro,
             fontWeight = fontWeight
         )
     )

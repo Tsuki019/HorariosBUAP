@@ -10,7 +10,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.example.horariosbuap.ui.theme.HorariosBUAPTheme
 
 @Composable
 fun CompartirOption() {
@@ -19,11 +18,9 @@ fun CompartirOption() {
     val scope = rememberCoroutineScope()
 
 
-    HorariosBUAPTheme() {
         Scaffold(modifier= Modifier
             .fillMaxSize(),
         ) {
             Text(text = "Ventana de Compartir")
         }
-    }
 }

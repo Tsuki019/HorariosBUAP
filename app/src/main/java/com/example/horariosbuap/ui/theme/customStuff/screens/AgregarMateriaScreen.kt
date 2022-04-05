@@ -46,6 +46,8 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.firebase.auth.FirebaseAuth
 import com.example.horariosbuap.ui.theme.customStuff.components.AlertaConformacion
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
+import com.example.horariosbuap.ui.theme.light_blue2
 
 private val materiaElegida = mutableStateOf(Materias())
 
@@ -60,8 +62,6 @@ fun AgregarMateriasScreen(
 ) {
 
     val userId = FirebaseAuth.getInstance().currentUser!!.uid
-    val azulClaro = colorResource(id = R.color.azulClaroInstitucional)
-    val azulOscuro = colorResource(id = R.color.azulOscuroInstitucional)
     val focusManager = LocalFocusManager.current
     val textBusq = remember {mutableStateOf("")}
     val busquedaOpc = rememberSaveable{ mutableStateOf("Nombre")}
@@ -73,7 +73,7 @@ fun AgregarMateriasScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = colorResource(id = R.color.blanco_fondo))
+                .background(color = MaterialTheme.colors.background)
         ){
             Column(modifier = Modifier
                 .fillMaxWidth()
@@ -82,10 +82,10 @@ fun AgregarMateriasScreen(
                     modifier = Modifier.padding(end = 5.dp),
                     text = "Buscar Materia por:",
                     style = TextStyle(
-                        color = colorResource(id = R.color.azulOscuroInstitucional),
+                        color = MaterialTheme.colors.primary,
                         fontWeight = FontWeight.Bold),
                     fontSize = 15.sp,
-                    fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                    fontFamily = sansPro
                 )
                 ButtonToggleGroup(
                     options = listOf("Nombre", "Profesor", "NRC"),
@@ -133,8 +133,7 @@ fun AgregarMateriasScreen(
                     }) {
                         Icon(imageVector = Icons.Rounded.Search,
                             contentDescription = "",
-                            tint = colorResource(
-                                id = R.color.azulOscuroInstitucional)
+                            tint = MaterialTheme.colors.secondary
                         )
                     }
                 },
@@ -150,12 +149,12 @@ fun AgregarMateriasScreen(
                 ),
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.Transparent,
-                    cursorColor = azulClaro,
-                    focusedIndicatorColor = azulClaro,
-                    focusedLabelColor = azulClaro,
-                    unfocusedIndicatorColor = azulOscuro,
-                    unfocusedLabelColor = azulOscuro,
-                    textColor = azulOscuro
+                    cursorColor = light_blue2,
+                    focusedIndicatorColor = light_blue2,
+                    focusedLabelColor = light_blue2,
+                    unfocusedLabelColor = MaterialTheme.colors.primaryVariant,
+                    unfocusedIndicatorColor = MaterialTheme.colors.primaryVariant,
+                    textColor = MaterialTheme.colors.primary
                 )
             )
 
@@ -205,7 +204,7 @@ fun AgregarMateriasScreen(
                                     .fillMaxWidth()
                                     .padding(horizontal = 15.dp)
                                     .padding(top = 30.dp, bottom = 20.dp),
-                                color = colorResource(id = R.color.azulOscuroInstitucional),
+                                color = MaterialTheme.colors.onSurface,
                                 thickness = 1.dp
                             )
                         }
@@ -226,7 +225,7 @@ fun AgregarMateriasScreen(
                                     .fillMaxWidth()
                                     .padding(horizontal = 15.dp)
                                     .padding(top = 30.dp, bottom = 20.dp),
-                                color = colorResource(id = R.color.azulOscuroInstitucional),
+                                color = MaterialTheme.colors.onSurface,
                                 thickness = 1.dp
                             )
                         }else{
@@ -240,15 +239,15 @@ fun AgregarMateriasScreen(
                                             .fillMaxWidth()
                                             .padding(horizontal = 20.dp)
                                             .padding(top = 30.dp),
-                                        color = colorResource(id = R.color.azulOscuroInstitucional),
+                                        color = MaterialTheme.colors.onSurface,
                                         thickness = 1.dp
                                     )
                                     Text(
                                         text = "Sin coincidencias.",
                                         style = TextStyle(
-                                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                                            color = MaterialTheme.colors.primary,
                                             fontSize = 25.sp,
-                                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                                            fontFamily = sansPro
                                         )
                                     )
                                 }
@@ -295,9 +294,9 @@ private fun CardMaterias(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 5.dp),
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.surface,
         elevation = 5.dp,
-        border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.onSurface),
         shape = RoundedCornerShape(
             bottomEndPercent = 8,
             bottomStartPercent = 8,
@@ -309,8 +308,10 @@ private fun CardMaterias(
 
         Column(modifier = Modifier.fillMaxWidth()) {
             Text(
-                modifier = modifier.padding(top = 3.dp), text = datos!!.nombre, style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                modifier = modifier.padding(top = 3.dp),
+                text = datos!!.nombre,
+                style = TextStyle(
+                    color = MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold
                 ), fontSize = 20.sp, fontFamily = FontFamily(
                     Font(R.font.source_sans_pro)
@@ -321,85 +322,85 @@ private fun CardMaterias(
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 3.dp),
                 thickness = 1.dp,
-                color = colorResource(id = R.color.azulOscuroInstitucional)
+                color = MaterialTheme.colors.onSurface
             )
             Text(
                 modifier = modifier,
                 text = "Porfesor(a): " + datos.profesor,
                 style = TextStyle(
-                    color = colorResource(id = R.color.azulOscuroInstitucional),
+                    color = MaterialTheme.colors.primary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 15.sp,
-                    fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                    fontFamily = sansPro
                 )
             )
             Row(
-                Modifier.fillMaxWidth(),
+                Modifier.fillMaxWidth().padding(top = 10.dp),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Column(modifier = Modifier.padding(end = 5.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.padding(horizontal = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         modifier = modifier,
                         text = "NRC",
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            color = MaterialTheme.colors.primary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontFamily = sansPro
                         )
                     )
                     Text(
                         modifier = Modifier.padding(bottom = 5.dp),
                         text = datos.nrc,
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulClaroInstitucional),
-                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colors.secondary,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontFamily = sansPro
                         )
                     )
                 }
-                Column(modifier = Modifier.padding(end = 5.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.padding(horizontal = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         modifier = modifier,
                         text = "Sección",
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            color = MaterialTheme.colors.primary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontFamily = sansPro
                         )
                     )
                     Text(
                         modifier = Modifier.padding(bottom = 5.dp),
                         text = datos.secc,
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulClaroInstitucional),
-                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colors.secondary,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontFamily = sansPro
                         )
                     )
                 }
-                Column(modifier = Modifier.padding(end = 2.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.padding(horizontal = 8.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
                         modifier = modifier,
                         text = "Clave",
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            color = MaterialTheme.colors.primary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontFamily = sansPro
                         )
                     )
                     Text(
                         modifier = Modifier.padding(bottom = 5.dp),
                         text = datos.clave,
                         style = TextStyle(
-                            color = colorResource(id = R.color.azulClaroInstitucional),
-                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colors.secondary,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 15.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontFamily = sansPro
                         )
                     )
                 }
@@ -409,7 +410,7 @@ private fun CardMaterias(
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp, vertical = 3.dp),
                 thickness = 1.dp,
-                color = colorResource(id = R.color.azulOscuroInstitucional)
+                color = MaterialTheme.colors.onSurface
             )
             Row(
                 modifier = modifier
@@ -424,10 +425,10 @@ private fun CardMaterias(
                     text = AnnotatedString(
                         text = "Ver Horario",
                         spanStyle = SpanStyle(
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            color = MaterialTheme.colors.primary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 22.sp,
-                            fontFamily = FontFamily(Font(R.font.source_sans_pro))
+                            fontFamily = sansPro
                         )
                     ),
                     onClick = {onNavToInfo(datos.nrc, nombreHorario)}
@@ -435,14 +436,14 @@ private fun CardMaterias(
                 Divider(modifier = Modifier
                     .padding(horizontal = 5.dp, vertical = 10.dp)
                     .rotate(90f)
-                    .width(20.dp), color = colorResource(id = R.color.azulOscuroInstitucional))
+                    .width(20.dp), color = MaterialTheme.colors.onSurface)
                 ClickableText(
                     modifier = modifier
                         .padding(bottom = 5.dp),
                     text = AnnotatedString(
                         text = "Agregar",
                         spanStyle = SpanStyle(
-                            color = colorResource(id = R.color.azulOscuroInstitucional),
+                            color = MaterialTheme.colors.primary,
                             fontWeight = FontWeight.Bold,
                             fontSize = 22.sp,
                             fontFamily = FontFamily(Font(R.font.source_sans_pro))

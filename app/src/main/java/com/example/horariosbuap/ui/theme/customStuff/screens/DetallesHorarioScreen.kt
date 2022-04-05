@@ -149,7 +149,7 @@ fun DetallesHorarioScreen(
                 Box(modifier = Modifier.align(alignment = Alignment.Center)){
                     Text(
                         text = "Aún no haz agregado materias a este horario. Agregalas en el menú que está abajo a la izquirda.",
-                        color = primaryColorCustom.copy(alpha = 0.5f),
+                        color = MaterialTheme.colors.primary.copy(alpha = 0.5f),
                         fontFamily = sansPro,
                         fontSize = 20.sp,
                         textAlign = TextAlign.Center
@@ -222,8 +222,8 @@ private fun CardMateriasPorDia(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 15.dp),
-        backgroundColor = Color.White,
-        border = BorderStroke(width = 1.dp, color = primaryColorCustom),
+        backgroundColor = MaterialTheme.colors.surface,
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.onSurface),
         shape = RoundedCornerShape(CornerSize(10.dp)),
         elevation = 5.dp,
         onClick = { expanded.value = !expanded.value }
@@ -238,7 +238,7 @@ private fun CardMateriasPorDia(
                 modifier = Modifier.fillMaxWidth(),
                 text = dia,
                 style = TextStyle(
-                    color = primaryColorCustom,
+                    color = MaterialTheme.colors.primary,
                     fontFamily = sansPro,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
@@ -256,7 +256,7 @@ private fun CardMateriasPorDia(
                 imageVector = if(!expanded.value) Icons.Rounded.ExpandMore
                 else Icons.Rounded.ExpandLess,
                 contentDescription = "",
-                tint = primaryColorCustom
+                tint = MaterialTheme.colors.primary
             )
         }
     }
@@ -274,9 +274,9 @@ private fun CardMateriasInscritas(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp, vertical = 10.dp),
-        backgroundColor = Color.White,
+        backgroundColor = MaterialTheme.colors.surface,
         elevation = 5.dp,
-        border = BorderStroke(width = 1.dp, color = colorResource(id = R.color.azulOscuroInstitucional)),
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.onSurface),
         shape = RoundedCornerShape(
             bottomEndPercent = 8,
             bottomStartPercent = 8,
@@ -292,7 +292,7 @@ private fun CardMateriasInscritas(
                     .padding(top = 3.dp)
                     .fillMaxWidth(),
                 text = materia.nombre,
-                color = primaryColorCustom,
+                color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp, fontFamily = sansPro,
                 textAlign = TextAlign.Center
@@ -302,12 +302,12 @@ private fun CardMateriasInscritas(
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp, vertical = 3.dp),
                 thickness = 2.dp,
-                color = primaryColorCustom
+                color = MaterialTheme.colors.onSurface
             )
             Text(
                 modifier = modifier.padding(vertical = 5.dp),
                 text = "Porfesor(a): " + materia.profesor,
-                color = primaryColorCustom,
+                color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 15.sp,
                 fontFamily = sansPro
@@ -318,14 +318,14 @@ private fun CardMateriasInscritas(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    TableCell(text = "Materia", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 16.sp)
-                    TableCell(text = "Materia", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 16.sp)
-                    TableCell(text = "Materia", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 16.sp)
+                    TableCell(text = "NRC", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 16.sp)
+                    TableCell(text = "Sección", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 16.sp)
+                    TableCell(text = "Clave", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 16.sp)
                 }
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    TableCell(text = materia.nrc, weight = 0.2f, textColor = secondaryColorCustom)
-                    TableCell(text = materia.secc, weight = 0.2f, textColor = secondaryColorCustom)
-                    TableCell(text = materia.clave, weight = 0.2f, textColor = secondaryColorCustom)
+                    TableCell(text = materia.nrc, weight = 0.2f, textColor = MaterialTheme.colors.secondary)
+                    TableCell(text = materia.secc, weight = 0.2f, textColor = MaterialTheme.colors.secondary)
+                    TableCell(text = materia.clave, weight = 0.2f, textColor = MaterialTheme.colors.secondary)
                 }
             }
             Divider(
@@ -333,7 +333,7 @@ private fun CardMateriasInscritas(
                     .fillMaxWidth()
                     .padding(horizontal = 4.dp, vertical = 3.dp),
                 thickness = 1.dp,
-                color = primaryColorCustom
+                color = MaterialTheme.colors.onSurface
             )
             AnimatedVisibility(visible = infoVisibility.value) {
                 var dia = ""
@@ -361,10 +361,10 @@ private fun CardMateriasInscritas(
                                 TableCell(text = "Edificio", weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp)
                             }
                             Row(modifier = Modifier.fillMaxWidth()) {
-                                TableCell(text = horario.entrada, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = secondaryColorCustom)
-                                TableCell(text = horario.salida, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = secondaryColorCustom)
-                                TableCell(text = horario.salon, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = secondaryColorCustom)
-                                TableCell(text = horario.edificio, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = secondaryColorCustom)
+                                TableCell(text = horario.entrada, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = MaterialTheme.colors.secondary)
+                                TableCell(text = horario.salida, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = MaterialTheme.colors.secondary)
+                                TableCell(text = horario.salon, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = MaterialTheme.colors.secondary)
+                                TableCell(text = horario.edificio, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = MaterialTheme.colors.secondary)
                             }
                             Divider(
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
@@ -382,7 +382,7 @@ private fun CardMateriasInscritas(
                 IconButton(onClick = { infoVisibility.value = !infoVisibility.value }) {
                     Icon(imageVector = if (infoVisibility.value) Icons.Rounded.ExpandLess else Icons.Rounded.ExpandMore,
                         contentDescription = "",
-                        tint = primaryColorCustom
+                        tint = MaterialTheme.colors.primary
                     )
                 }
             }
@@ -501,7 +501,7 @@ private fun HorarioPorDia(
             TableCell(text = "Horario", weight = 0.3f, fontWeight = FontWeight.Bold, textSize = 16.sp)
             TableCell(text = "Salón", weight = 0.3f, fontWeight = FontWeight.Bold, textSize = 16.sp)
         }
-        Divider(modifier = Modifier.padding(horizontal = 5.dp), color = primaryColorCustom, thickness = 2.dp)
+        Divider(modifier = Modifier.padding(horizontal = 5.dp), color = MaterialTheme.colors.onSurface, thickness = 2.dp)
         for (horario in horarios){
             clase = materiasUnicas.find { materia -> materia.nrc == horario.nrc }
             Row(modifier = Modifier.fillMaxWidth()) {
@@ -509,7 +509,7 @@ private fun HorarioPorDia(
                 TableCell(text = horario.entrada + " - " + horario.salida, weight = 0.3f)
                 TableCell(text = horario.salon +" - "+horario.edificio, weight = 0.3f)
             }
-            Divider(modifier = Modifier.padding(horizontal = 5.dp), color = primaryColorCustom, thickness = 1.dp)
+            Divider(modifier = Modifier.padding(horizontal = 5.dp), color = MaterialTheme.colors.onSurface, thickness = 1.dp)
         }
     }
 }
@@ -529,7 +529,7 @@ private fun FloatingMenu(
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
-            .background(color = primaryColorCustom)
+            .background(color = MaterialTheme.colors.onSurface)
             .padding(5.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
@@ -585,7 +585,7 @@ private fun FloatingMenu(
                         Icon(imageVector = Icons.Rounded.Delete, contentDescription = "", tint = Color.White, )
                         ClickableText(
                             text= AnnotatedString(
-                                text = materia.nombre + " > NRC: "+ materia.nrc,
+                                text = materia.nombre + " -> NRC: "+ materia.nrc,
                                 spanStyle = SpanStyle(color = Color.White, fontFamily = sansPro, fontSize = 12.sp)
                             ),
                             modifier = Modifier.padding(8.dp),
@@ -623,13 +623,14 @@ private fun AlertaBorrarMateria(
 ) {
     AlertDialog(
         modifier = Modifier.clip(RoundedCornerShape(8)),
+        backgroundColor = MaterialTheme.colors.background,
         onDismissRequest = { materiaEliminar.value = Materias() },
         title = { Text(
             modifier = Modifier.fillMaxWidth(),
             text = "Eliminar Materia",
             fontFamily = sansPro,
             textAlign = TextAlign.Center,
-            color = primaryColorCustom,
+            color = MaterialTheme.colors.primary,
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold
         ) },
@@ -638,7 +639,7 @@ private fun AlertaBorrarMateria(
             text = "¿Borrar la materia ${materiaEliminar.value.nombre} de su horario?",
             fontFamily = sansPro,
             textAlign = TextAlign.Center,
-            color = primaryColorCustom,
+            color = MaterialTheme.colors.primary,
             fontSize = 15.sp
         ) },
         buttons = {
@@ -651,7 +652,7 @@ private fun AlertaBorrarMateria(
                 ClickableText(
                     text= AnnotatedString(
                         text = "Borrar",
-                        spanStyle = SpanStyle(color = Color.Red, fontFamily = sansPro, fontSize = 18.sp)
+                        spanStyle = SpanStyle(color = MaterialTheme.colors.error, fontFamily = sansPro, fontSize = 18.sp)
                     ),
                     modifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp),
                     onClick = {
@@ -662,7 +663,7 @@ private fun AlertaBorrarMateria(
                 ClickableText(
                     text= AnnotatedString(
                         text = "Cancelar",
-                        spanStyle = SpanStyle(color = primaryColorCustom, fontFamily = sansPro, fontSize = 18.sp)
+                        spanStyle = SpanStyle(color = MaterialTheme.colors.primary, fontFamily = sansPro, fontSize = 18.sp)
                     ),
                     modifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp),
                     onClick = {
@@ -679,7 +680,7 @@ private fun AlertaBorrarMateria(
 private fun RowScope.TableCell(
     text: String,
     weight: Float,
-    textColor : Color = primaryColorCustom,
+    textColor : Color = MaterialTheme.colors.primary,
     textSize : TextUnit = 13.sp,
     fontWeight: FontWeight = FontWeight.Normal,
     borderColor : Color = Color.Transparent

@@ -45,10 +45,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.*
 import com.example.horariosbuap.model.MateriasHorario
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
+import com.example.horariosbuap.ui.theme.light_blue2
 import com.example.horariosbuap.ui.theme.primaryColorCustom
 import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.example.horariosbuap.viewmodel.UserDataViewModel
@@ -78,8 +80,6 @@ fun HorarioScreen(
         if(currentUser != null && currentUser.isEmailVerified){
 
             if (userDataViewModel.isUserDataLoaded.value){
-//                println(">>>>>>"+userDataViewModel.isMateriasUnicasFill)
-//                if (!userDataViewModel.isMateriasUnicasFill.value){
                     VerHorariosScreen(
                         modifier = modifier,
                         datosViewModel = datosViewModel,
@@ -88,7 +88,6 @@ fun HorarioScreen(
                         userId = auth.currentUser!!.uid,
                         onNavToHorario = onNavToHorario
                     )
-//                }
             }else{
                 if (isAnimationsOver.value){
                     coroutinScope.launch {
@@ -121,8 +120,6 @@ fun VerHorariosScreen(
 ) {
     val isDeleting = remember { mutableStateOf(false)}
     val isAnimationVisible = remember { mutableStateOf(false)}
-    val colorEnabeButton = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
-    val colorDisableButton = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary.copy(0.4f))
     val isAlertVisible = remember { mutableStateOf(false)}
     val nombreHorarioActual = remember { mutableStateOf("")}
     val context = LocalContext.current
@@ -174,8 +171,8 @@ fun VerHorariosScreen(
                         RoundedButton(
                             modifier = modifier.padding(vertical = 12.dp, horizontal = 5.dp),
                             text = "Agregar Horario",
-                            color = if (userDataViewModel.userData.value.numHorarios < 3) colorEnabeButton
-                                else colorDisableButton,
+                            color = if (userDataViewModel.userData.value.numHorarios < 3) ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSurface)
+                                else ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.onSurface.copy(0.4f)),
                             width = 130.dp,
                             height = 40.dp,
                             fontSize = 13.sp,
@@ -192,8 +189,8 @@ fun VerHorariosScreen(
                         RoundedButton(
                             modifier = modifier.padding(vertical = 12.dp, horizontal = 5.dp),
                             text = if (isDeleting.value && userDataViewModel.userData.value.numHorarios > 0) "Cancelar" else "Eliminar Horario",
-                            color = if (userDataViewModel.userData.value.numHorarios > 0) ButtonDefaults.buttonColors(Color.Red)
-                            else ButtonDefaults.buttonColors(Color.Red.copy(0.4f)),
+                            color = if (userDataViewModel.userData.value.numHorarios > 0) ButtonDefaults.buttonColors(MaterialTheme.colors.error)
+                            else ButtonDefaults.buttonColors(MaterialTheme.colors.error.copy(0.4f)),
                             width = 130.dp,
                             height = 40.dp,
                             fontSize = 13.sp,
@@ -232,7 +229,11 @@ fun NoLoginScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Image(painter = painterResource(id = R.drawable.default_image), contentDescription = "")
+        Image(
+            modifier = Modifier.heightIn(min = 100.dp, max = 250.dp).widthIn(min = 100.dp, max = 250.dp),
+            contentScale = ContentScale.Inside,
+            painter = painterResource(id = R.drawable.escudo_buappositivo2),
+            contentDescription = "")
         Text(
             modifier = modifier.padding(top = 20.dp),
             text = "Ingresa a una cuenta para poder acceder a esta función",
@@ -241,12 +242,13 @@ fun NoLoginScreen(
         )
         ClickableText(
             modifier = modifier.padding(top = 10.dp),
-            style = TextStyle(color = MaterialTheme.colors.primaryVariant),
+            style = TextStyle(color = MaterialTheme.colors.primary),
             text = buildAnnotatedString { append("Ya tengo una cuenta. ")
-            withStyle(style = SpanStyle(color= MaterialTheme.colors.secondary,
-                                        fontWeight = FontWeight.Bold)
-            )
-            {
+            withStyle(
+                style = SpanStyle(
+                    color= MaterialTheme.colors.secondary,
+                    fontWeight = FontWeight.Bold)
+            ) {
                 append("Inicia Sesion")
             } },
             onClick = {
@@ -255,13 +257,14 @@ fun NoLoginScreen(
         )
         ClickableText(
             modifier = modifier.padding(top = 10.dp),
-            style = TextStyle(color = MaterialTheme.colors.primaryVariant),
+            style = TextStyle(color = MaterialTheme.colors.primary),
             text = buildAnnotatedString {
             append("Aun no tengo una cuenta. ")
-            withStyle(style = SpanStyle(color= MaterialTheme.colors.secondary,
-                                        fontWeight = FontWeight.Bold)
-            )
-            {
+            withStyle(
+                style = SpanStyle(
+                    color= MaterialTheme.colors.secondary,
+                    fontWeight = FontWeight.Bold)
+            ) {
                 append("Crear una cuenta")
             } },
                       onClick = {
@@ -313,9 +316,9 @@ private fun AgregarHorario (
             keyboardType = KeyboardType.Text,
             keyboardActions = KeyboardActions(onDone = {focusManager.clearFocus()}),
             imeAction = ImeAction.Done,
-            focusColor = MaterialTheme.colors.primaryVariant,
-            unFocusedColor = MaterialTheme.colors.secondary,
-            textColor = MaterialTheme.colors.secondary
+            focusColor = light_blue2,
+            unFocusedColor = MaterialTheme.colors.primaryVariant,
+            textColor = MaterialTheme.colors.primary
         )
         Row(
             modifier = Modifier
@@ -368,7 +371,7 @@ private fun AgregarHorario (
                     .wrapContentSize(align = Alignment.Center),
                 text = errorText.value,
                 style = TextStyle(
-                    color = Color.Red,
+                    color = MaterialTheme.colors.error,
                     fontFamily = FontFamily(Font(R.font.source_sans_pro)),
                     fontSize = 15.sp
                 )
@@ -402,9 +405,9 @@ private fun AlertaConformacion(
             Text(
                 text = "¿Seguro que desea borrar el horario '$nombreHorario'?",
                 style = TextStyle(
-                    color = MaterialTheme.colors.primaryVariant,
+                    color = MaterialTheme.colors.primary,
                     fontSize = 16.sp,
-                    fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                    fontFamily = sansPro,
                 )
             )
         },
@@ -423,7 +426,7 @@ private fun AlertaConformacion(
                     Text(
                         text = "Borrar",
                         style = TextStyle(
-                            color = Color.Red,
+                            color = MaterialTheme.colors.error,
                             fontSize = 20.sp,
                             fontFamily = sansPro,
                         )
@@ -461,7 +464,7 @@ private fun BotonHorario(
             .fillMaxWidth()
             .height(80.dp)
             .padding(10.dp),
-        border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.primaryVariant),
+        border = BorderStroke(width = 1.dp, color = MaterialTheme.colors.onSurface),
         shape = RoundedCornerShape(10),
         backgroundColor = MaterialTheme.colors.surface,
         elevation = 4.dp,
@@ -486,7 +489,7 @@ private fun BotonHorario(
                         modifier = Modifier.size(30.dp),
                         imageVector = Icons.Rounded.HighlightOff,
                         contentDescription = "",
-                        tint = Color.Red
+                        tint = MaterialTheme.colors.error
                     )
                 }
             }
@@ -501,7 +504,7 @@ private fun BotonHorario(
                     text = nombre,
                     style = TextStyle(
                         color = MaterialTheme.colors.primary,
-                        fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                        fontFamily = sansPro,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     )

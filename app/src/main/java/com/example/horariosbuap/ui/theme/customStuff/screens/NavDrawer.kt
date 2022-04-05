@@ -20,6 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,14 +30,17 @@ import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.MainDestinations
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.navDrawerOptions
+import com.example.horariosbuap.viewmodel.UserDataViewModel
 
 @Composable
 fun NavDrawer(
-              closeDrawer: () -> Unit,
-              currentRoute : String,
-              navController: NavHostController,
-              avatar: Painter,
-              email: String) {
+    closeDrawer: () -> Unit,
+    currentRoute : String,
+    navController: NavHostController,
+    avatar: Painter,
+    email: String,
+    userDataViewModel : UserDataViewModel
+) {
 
     val items = navDrawerOptions.Items.list
 
@@ -60,6 +64,31 @@ fun NavDrawer(
                          })
             Divider(color= Color.Transparent)
         }
+
+
+        //Boton temporal para el cambio de tema, para un acceso rapido en las pruebas
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 5.dp),
+            contentAlignment = Alignment.TopCenter,
+        ){
+            Button(
+                modifier = Modifier.padding(vertical = 10.dp),
+                onClick = {
+                    userDataViewModel.userData.value =
+                        userDataViewModel.userData.value.copy(
+                            darkTheme = !userDataViewModel.userData.value.darkTheme)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MaterialTheme.colors.secondaryVariant,
+                    contentColor = MaterialTheme.colors.primary
+                )
+            )
+            {
+                Text(text = "CAMBIAR DE TEMA")
+            }
+        }
     }
 }
 
@@ -79,13 +108,16 @@ fun DrawerHead(email: String, avatar: Painter) {
               contentDescription = "",
               contentScale = ContentScale.FillBounds
         )
-        Spacer(modifier = Modifier.width(20.dp))
         Text(
+            modifier = Modifier.padding(start = 12.dp),
             textAlign= TextAlign.Right,
             text = email,
             fontFamily = FontFamily(Font(R.font.source_sans_pro)),
             fontSize = 20.sp,
-            color = Color.White)
+            color = Color.White,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1
+        )
 
     }
 }
@@ -98,7 +130,6 @@ private fun DrawerButton(
     action: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val colors = MaterialTheme.colors
     val imageAlpha = if (isSelected) {
         1f
     } else {
@@ -151,18 +182,18 @@ private fun DrawerButton(
     }
 }
 
-@Preview
-@Composable
-fun prev1() {
-    val navController = rememberNavController()
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.NEWS_ROUTE
-
-    NavDrawer(
-        closeDrawer = {},
-        currentRoute = currentRoute,
-        navController = navController,
-        avatar = painterResource(id = R.drawable.default_image),
-        email = "mi_emailTest@testmail.com"
-    )
-}
+//@Preview
+//@Composable
+//fun prev1() {
+//    val navController = rememberNavController()
+//    val navBackStackEntry by navController.currentBackStackEntryAsState()
+//    val currentRoute = navBackStackEntry?.destination?.route ?: MainDestinations.NEWS_ROUTE
+//
+//    NavDrawer(
+//        closeDrawer = {},
+//        currentRoute = currentRoute,
+//        navController = navController,
+//        avatar = painterResource(id = R.drawable.default_image),
+//        email = "mi_emailTest@testmail.com"
+//    )
+//}

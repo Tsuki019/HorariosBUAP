@@ -1,68 +1,58 @@
 package com.example.horariosbuap.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import android.annotation.SuppressLint
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.fontResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import com.example.horariosbuap.ui.theme.customStuff.sansPro
 
-private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200
-)
-
-private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
-
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
-)
-
-@Composable
-fun HorariosBUAPTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
-
-    MaterialTheme(
-        colors = colors,
-        typography = Typography,
-        shapes = Shapes,
-        content = content
-    )
-}
+/**
+ * primary => Titulos y textos
+ * primaryVariant => focused textfield
+ * secondary => links y botones
+ * secondaryVariant => iconos del bottomNav
+ * background => Fondos
+ * surface => background de Carts
+ * onSurface => Bordes, dividers y tablas
+ **/
 
 private val DarkColorsTheme = darkColors(
-    primary = light_blue1,
-    primaryVariant = light_blue2,
-    secondary = grey1,
-    //secondaryVariant = dark_blue4,
+    primary = Color.White,
+    primaryVariant = grey2,
+    secondary = light_blue1,
+    secondaryVariant = grey1,
     background = dark_blue1,
     surface = dark_blue3,
-    onSurface = dark_blue2
+    error = Color.Red,
+    onPrimary = light_blue1,
+    onSecondary = light_blue2,
+    onSurface = light_blue2,
+    onBackground = dark_blue2
 )
 
+@SuppressLint("ConflictingOnColor")
 private val LightColorsTheme = lightColors(
     primary = dark_blue1,
     primaryVariant = dark_blue2,
     secondary = light_blue1,
-    //secondaryVariant = dark_blue2,
+    secondaryVariant = light_blue1,
     background = grey1,
     surface = Color.White,
-    onSurface = dark_blue2
+    error = Color.Red,
+    onPrimary = dark_blue1,
+    onSecondary = light_blue1,
+    onSurface = dark_blue1,
+    onBackground = Color.White
 )
+
+private val TextTypography = androidx.compose.material.Typography(defaultFontFamily = sansPro)
 
 @Composable
 fun AppTheme(
@@ -77,6 +67,7 @@ fun AppTheme(
 
     MaterialTheme(
         colors = colors,
-        content = content
+        content = content,
+        typography = TextTypography
     )
 }
