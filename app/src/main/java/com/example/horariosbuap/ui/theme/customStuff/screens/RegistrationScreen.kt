@@ -49,7 +49,6 @@ fun RegistrationScreen(
     onRegister: (String, String, String, String, Activity, LoginViewModel) -> Unit,
     onBack: () -> Unit,
     activity: Activity,
-    onLoginWithGoogle : (Activity) -> Unit,
     onDismissDialog: () -> Unit
 ) {
 
@@ -226,49 +225,6 @@ fun RegistrationScreen(
                                       }
                         )
                     }
-
-//                    Spacer(modifier = Modifier.height(16.dp))
-//
-//                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-//                        Row(modifier = Modifier.fillMaxWidth(),
-//                        verticalAlignment = Alignment.CenterVertically,
-//                            horizontalArrangement = Arrangement.Center
-//                        ) {
-//                            Divider(modifier = Modifier.width(24.dp),
-//                            thickness = 1.dp,
-//                            color = Color.Gray)
-//
-//                            Text(modifier = Modifier.padding(8.dp),
-//                                 text = "O",
-//                            style = MaterialTheme.typography.h6.copy(
-//                                fontWeight = FontWeight.Black
-//                            ))
-//
-//                            Divider(modifier = Modifier.width(24.dp),
-//                                    thickness = 1.dp,
-//                                    color = Color.Gray)
-//                        }
-//
-//                        Text(modifier = Modifier.fillMaxWidth(),
-//                             text = "Ingresar con",
-//                             style = MaterialTheme.typography.body1.copy(
-//                                 color = colorResource(id = R.color.azulOscuroInstitucional)
-//                             ),
-//                            textAlign = TextAlign.Center)
-//                    }
-//
-//                    Spacer(modifier = Modifier.height(16.dp))
-//
-//                    Column(modifier = Modifier.fillMaxWidth(),
-//                    verticalArrangement = Arrangement.spacedBy(8.dp),
-//                    horizontalAlignment = Alignment.CenterHorizontally)
-//                    {
-//                        OutlinedMediaButton(text = "Ingresar con Google",
-//                                            onClick = {
-//                                                onLoginWithGoogle(activity)
-//                                            },
-//                                            buttonColor = colorResource(id = R.color.RojoGoogle))
-//                    }
                 }
                 
 
@@ -280,19 +236,4 @@ fun RegistrationScreen(
         }
 
     }
-
 }
-
-
-//@Preview
-//@Composable
-//fun TestRegistrationScreen() {
-//
-//    val viewModel: RegisterViewModel = hiltViewModel()
-//    RegistrationScreen(
-//        state = viewModel.state.value,
-//        onRegister = viewModel::register,
-//        onBack = { },
-//        onDismissDialog = viewModel::hideErrorDialog
-//    )
-//}

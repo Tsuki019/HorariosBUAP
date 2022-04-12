@@ -1,5 +1,7 @@
 package com.example.horariosbuap.ui.theme.customStuff.screens
 
+import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,6 +17,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -30,6 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.MainDestinations
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.customStuff.navDrawerOptions
+import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.example.horariosbuap.viewmodel.UserDataViewModel
 
 @Composable
@@ -39,10 +43,20 @@ fun NavDrawer(
     navController: NavHostController,
     avatar: Painter,
     email: String,
-    userDataViewModel : UserDataViewModel
+    userDataViewModel : UserDataViewModel,
+    datosViewModel: DatosViewModel
 ) {
 
     val items = navDrawerOptions.Items.list
+
+    //Variables para compartir
+    val context = LocalContext.current
+    val sendIntent : Intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT, "https://www.buap.mx/ Busca tus materias, tus maestros, salones y forma tus horarios de la Facultad de Ciencias de la Copmutación BUAP.")
+        type = "text/plain"
+    }
+    val shareIntent = Intent.createChooser(sendIntent, null)
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -58,8 +72,15 @@ fun NavDrawer(
                          isSelected = currentRoute == it.destination,
                          action = {
                              closeDrawer()
-                             navController.navigate(route = it.destination){
-                                 popUpTo(MainDestinations.NEWS_ROUTE)
+                             if (it.destination == "Salir") {
+                                 datosViewModel.salirAplicacion.value = true
+
+                             }else if (it.destination == "Compartir"){
+                                 context.startActivity(shareIntent)
+                             }else{
+                                 navController.navigate(route = it.destination){
+                                     popUpTo(MainDestinations.NEWS_ROUTE)
+                                 }
                              }
                          })
             Divider(color= Color.Transparent)
@@ -67,28 +88,26 @@ fun NavDrawer(
 
 
         //Boton temporal para el cambio de tema, para un acceso rapido en las pruebas
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 5.dp),
-            contentAlignment = Alignment.TopCenter,
-        ){
-            Button(
-                modifier = Modifier.padding(vertical = 10.dp),
-                onClick = {
-                    userDataViewModel.userData.value =
-                        userDataViewModel.userData.value.copy(
-                            darkTheme = !userDataViewModel.userData.value.darkTheme)
-                },
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = MaterialTheme.colors.secondaryVariant,
-                    contentColor = MaterialTheme.colors.primary
-                )
-            )
-            {
-                Text(text = "CAMBIAR DE TEMA")
-            }
-        }
+//        Box(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(horizontal = 5.dp),
+//            contentAlignment = Alignment.TopCenter,
+//        ){
+//            Button(
+//                modifier = Modifier.padding(vertical = 10.dp),
+//                onClick = {
+//                    userDataViewModel.setTheme(!userDataViewModel.isDarkTheme.value)
+//                },
+//                colors = ButtonDefaults.buttonColors(
+//                    backgroundColor = MaterialTheme.colors.secondaryVariant,
+//                    contentColor = MaterialTheme.colors.primary
+//                )
+//            )
+//            {
+//                Text(text = "CAMBIAR DE TEMA")
+//            }
+//        }
     }
 }
 
@@ -180,6 +199,11 @@ private fun DrawerButton(
             }
         }
     }
+}
+
+@Composable
+fun AlertaSalir(){
+
 }
 
 //@Preview

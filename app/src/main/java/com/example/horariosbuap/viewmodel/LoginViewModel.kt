@@ -1,6 +1,5 @@
 package com.example.horariosbuap.viewmodel
 
-//import com.example.horariosbuap.R
 import android.app.Activity
 import android.net.Uri
 import android.util.Patterns

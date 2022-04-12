@@ -20,6 +20,8 @@ class UserDataViewModel : ViewModel()
 
     var userData : MutableState<UserDB> = mutableStateOf(UserDB())
 
+    val isDarkTheme = mutableStateOf(false)     //Guarda la variable que indica que tema esta ulizando el usuario
+
     val datosFromCache = mutableStateOf(false)
 
     fun fillNombresHorarios(
@@ -175,5 +177,9 @@ class UserDataViewModel : ViewModel()
             }
         }
         return horarioLibre
+    }
+
+    fun setTheme(isDarkTheme : Boolean){
+        this.isDarkTheme.value = isDarkTheme
     }
 }

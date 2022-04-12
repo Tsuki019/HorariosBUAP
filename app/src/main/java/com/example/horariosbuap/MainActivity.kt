@@ -1,6 +1,9 @@
 package com.example.horariosbuap
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
@@ -8,13 +11,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberImagePainter
 import com.example.horariosbuap.ui.theme.customStuff.CustomBottomNav
@@ -31,8 +39,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.core.AppDataBase
+import com.example.horariosbuap.core.ConnectionLiveData
 import com.example.horariosbuap.core.MateriaTabla
+import com.example.horariosbuap.core.Preferences
 import com.example.horariosbuap.ui.theme.*
+import com.example.horariosbuap.ui.theme.customStuff.components.AvisoInternet
+import com.example.horariosbuap.ui.theme.customStuff.components.SalirAlerta
 import com.example.horariosbuap.ui.theme.dataBase.getUserData
 import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.example.horariosbuap.viewmodel.LoginViewModel
@@ -42,19 +54,24 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestoreSettings
-
+import kotlinx.coroutines.delay
 
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    lateinit var connectionLiveData: ConnectionLiveData
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        connectionLiveData = ConnectionLiveData(this)   //Variable para revisar conexion a internet
         super.onCreate(savedInstanceState)
 
         val viewModel : LoginViewModel by viewModels()
         val userDataViewModel : UserDataViewModel by viewModels()
 
+        //Configuracion de datos permanentes de fireStore
         try {
             val db = FirebaseFirestore.getInstance()
             var settings = FirebaseFirestoreSettings.Builder()
@@ -75,23 +92,24 @@ class MainActivity : ComponentActivity() {
 
             viewModel.LlenarDatosUsuario(currentUser, viewModel.state)
 
-            if (!userDataViewModel.isUserDataLoaded.value){     //Llena los datos y preferencias del usuario logueado
+            if (!userDataViewModel.isUserDataLoaded.value){     //Llena los datos del usuario logueado
                 getUserData(userDataViewModel = userDataViewModel, currentUser.uid)
             }
         }
 
-        var listaMaterias = emptyList<MateriaTabla>()
-        val database = AppDataBase.getDatabase(this)
+        //Llenar preferencias del usuario
+        val prefs = Preferences(context = applicationContext)
 
-        database.materias().getAll().observe(this, Observer {
-            listaMaterias = it
-        })
+        userDataViewModel.setTheme(
+            prefs.getTheme()
+        )
+
 
 
         setContent {
 
             AppTheme(
-                darkTheme = userDataViewModel.userData.value.darkTheme
+                darkTheme = userDataViewModel.isDarkTheme.value
             ) {
 
 
@@ -113,6 +131,8 @@ class MainActivity : ComponentActivity() {
                 val coroutineScope = rememberCoroutineScope()
                 val openDrawer: () -> Unit = { coroutineScope.launch { scaffoldState.drawerState.open() } }
                 val titulos = rememberSaveable{ mutableStateOf("Empty") }
+                val avisoVisible = remember { mutableStateOf(true)}
+                val tieneInternet = connectionLiveData.observeAsState(false).value  //Variable para revisar conexion a internet
 
 
                 BoxWithConstraints {
@@ -146,7 +166,8 @@ class MainActivity : ComponentActivity() {
                                         }else{
                                             viewModel.state.value.name
                                         },
-                                userDataViewModel = userDataViewModel
+                                userDataViewModel = userDataViewModel,
+                                datosViewModel = datosViewModel
                             )
                         },
                         bottomBar = {
@@ -161,6 +182,11 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     ) {
+                        if (datosViewModel.salirAplicacion.value){      //Alerta de salir de la aplicacion
+                            SalirAlerta(
+                                datosViewModel = datosViewModel
+                            )
+                        }
                         NavHost(
                             navController = navController,
                             startDestination = MainDestinations.NEWS_ROUTE,
@@ -244,6 +270,12 @@ class MainActivity : ComponentActivity() {
                                 datosViewModel = datosViewModel
                             )
                         }
+                        //Muestra una advertencia cuando no se tienen acceso a internet
+                        if (!tieneInternet && avisoVisible.value){
+                            AvisoInternet(avisoVisible = avisoVisible)
+                        }else if (tieneInternet && !avisoVisible.value){
+                            avisoVisible.value = true
+                        }
                     }
                 }
             }
@@ -281,5 +313,19 @@ class MainActivity : ComponentActivity() {
         }else{
             viewModel.state.value = viewModel.state.value.copy(errorMessage = R.string.error_login_google)
         }
+    }
+
+    private fun isInternetAvailable(context: Context): Boolean {
+        var result = false
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkCapabilities = connectivityManager.activeNetwork ?: return false
+        val actNw = connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+        result = when {
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
+        return result
     }
 }

@@ -297,7 +297,6 @@ fun NavGraphBuilder.addRegister(
                 state = viewModel.state.value,
                 onRegister = viewModel::register,
                 onBack = {navController.popBackStack()},
-                onLoginWithGoogle = viewModelLogin::loginWithGoogle,
                 activity = activity,
                 onDismissDialog = viewModel::hideErrorDialog,
                 loginViewModel = viewModelLogin

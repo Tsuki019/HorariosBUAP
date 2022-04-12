@@ -38,6 +38,8 @@ class DatosViewModel @Inject constructor() : ViewModel() {
     var noticias : ArrayList<News?> = ArrayList()
     val isNewsFill = mutableStateOf(false)
 
+    val salirAplicacion = mutableStateOf(false)     //Activador de la alerta "salir de la aplicacion"
+
     fun llenarProfesores(value : ArrayList<Profesores?>){
         profesores = value
         profesoresState.value = !profesores.isEmpty()

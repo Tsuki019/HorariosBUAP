@@ -11,8 +11,12 @@ import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+
+private val DATABASE = FirebaseFirestore.getInstance().collection("Users")
 
 fun UpdateUserAvatar(
     viewModel: LoginViewModel,
@@ -81,10 +85,14 @@ fun UpdateUserName(
         user.updateProfile(profileUpdates)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    viewModel.state.value = viewModel.state.value.copy(
-                        name = user.displayName!!,
-                    )
-                    Toast.makeText(activity, "Nombre guardado", Toast.LENGTH_SHORT).show()
+
+                    DATABASE.document(user.uid).update("fechaCambioNombre", obternerFechaActual()).addOnCompleteListener{
+                        viewModel.state.value = viewModel.state.value.copy(
+                            name = user.displayName!!,
+                        )
+                        Toast.makeText(activity, "Nombre guardado", Toast.LENGTH_SHORT).show()
+                    }
+
                 }
             }.addOnFailureListener{
                 viewModel.state.value = viewModel.state.value.copy(errorMessage = R.string.error_update_user_data)
@@ -133,4 +141,8 @@ fun LogOutUser(viewModel: LoginViewModel, userDataViewModel: UserDataViewModel){
             errorMessage = null
         )
     }
+}
+
+private fun obternerFechaActual(): com.google.firebase.Timestamp{
+    return com.google.firebase.Timestamp.now()
 }

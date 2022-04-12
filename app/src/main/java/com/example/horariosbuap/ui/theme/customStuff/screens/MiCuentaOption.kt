@@ -31,10 +31,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.*
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.example.horariosbuap.R
+import com.example.horariosbuap.core.TimeDifferences
 import com.example.horariosbuap.ui.theme.*
 import com.example.horariosbuap.ui.theme.customStuff.components.RoundedButton
 import com.example.horariosbuap.ui.theme.customStuff.components.TransparentTextField
@@ -60,6 +62,7 @@ fun MiCuentaOption(
 
     val cambiarImagenState = remember { mutableStateOf(false)}
     val progressBarState = remember {mutableStateOf(false)}
+    val tiempos = TimeDifferences
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -85,7 +88,7 @@ fun MiCuentaOption(
              }
          }
          item { Divisor() }
-         item { NombrePublico(viewModel = viewModel, activity = activity) }
+         item { NombrePublico(viewModel = viewModel, userDataViewModel = userDataViewModel, activity = activity, tiempos) }
          item { Divisor()}
          item { Correo(viewModel = viewModel) }
          item { Divisor() }
@@ -129,7 +132,9 @@ fun FotoPerfil(
 ) {
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
         horizontalAlignment = Alignment.CenterHorizontally)
     {
         Image(modifier= Modifier
@@ -163,12 +168,15 @@ fun FotoPerfil(
 @Composable
 fun NombrePublico(
     viewModel: LoginViewModel,
-    activity: Activity
+    userDataViewModel: UserDataViewModel,
+    activity: Activity,
+    tiempos : TimeDifferences
 ) {
     val maxChar: Int? = null
     val nameValue = remember { mutableStateOf(viewModel.state.value.name)}
     val progressBarState = remember { mutableStateOf(false)}
     val corutineScope = rememberCoroutineScope()
+
 
     Box(modifier = Modifier.fillMaxWidth())
     {
@@ -182,7 +190,7 @@ fun NombrePublico(
                     .padding(vertical = 10.dp, horizontal = 2.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
+            ) {
                 TextField(
                     modifier = Modifier.width(240.dp),
                     value = nameValue.value.take(maxChar?: 40),
@@ -196,8 +204,8 @@ fun NombrePublico(
                         cursorColor = light_blue2,
                         focusedIndicatorColor = light_blue2,
                         focusedLabelColor = light_blue2,
-                        unfocusedLabelColor = MaterialTheme.colors.background,
-                        unfocusedIndicatorColor = MaterialTheme.colors.background,
+                        unfocusedLabelColor = MaterialTheme.colors.primaryVariant,
+                        unfocusedIndicatorColor = MaterialTheme.colors.primaryVariant,
                         textColor = MaterialTheme.colors.primary
                     )
                 )
@@ -211,17 +219,28 @@ fun NombrePublico(
                     progressIndicatorColor = secondaryColorCustom,
                     displayProgressBar = progressBarState.value,
                     onClick = {
+
                         if (nameValue.value != viewModel.state.value.name){
                             if (nameValue.value.length in 4..15){
-                                corutineScope.launch {
-                                    progressBarState.value = true
-                                    UpdateUserName(
-                                        newName = nameValue.value,
-                                        viewModel = viewModel,
-                                        activity = activity
-                                    )
-                                    delay(1000)
-                                    progressBarState.value = false
+
+                                val cambiadoEn = userDataViewModel.userData.value.fechaCambioNombre!!.time.div(1000L).let {
+                                    tiempos.getTimeLimitDays(it.toInt()) }
+
+                                if (cambiadoEn == -1000){
+                                    Toast.makeText(activity, "Error al comprobar las fechas, compruebe su conexión a internet", Toast.LENGTH_SHORT).show()
+                                }else if (cambiadoEn - 30 >= 0){
+                                    corutineScope.launch {
+                                        progressBarState.value = true
+                                        UpdateUserName(
+                                            newName = nameValue.value,
+                                            viewModel = viewModel,
+                                            activity = activity
+                                        )
+                                        delay(1000)
+                                        progressBarState.value = false
+                                    }
+                                }else{
+                                    Toast.makeText(activity, "Solo puedes cambiar tu nombre cada 30 días. Faltan: ${-(cambiadoEn - 30)} días", Toast.LENGTH_SHORT).show()
                                 }
                             }else{
                                 Toast.makeText(activity, "El nombre debe tener de 4 a 15 caracteres", Toast.LENGTH_SHORT).show()
@@ -232,16 +251,23 @@ fun NombrePublico(
                     }
                 )
             }
+            Text(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp),
+                text = "Solo puedes cambiar tu nombre cada 30 días y debe de tener entre 4 y 15 caracteres",
+                style = TextStyle(
+                    color = MaterialTheme.colors.secondary,
+                    textAlign = TextAlign.Justify,
+                    fontSize = 12.sp,
+                    fontFamily = sansPro,
+                    fontWeight = FontWeight.Normal
+                )
+            )
         }
     }
 }
 
 @Composable
 fun Correo(viewModel: LoginViewModel) {
-
-//    val focusManager = LocalFocusManager.current
-//    val email = rememberSaveable{ mutableStateOf("")}
-//    val confirmationEmail = rememberSaveable{ mutableStateOf("")}
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -262,37 +288,6 @@ fun Correo(viewModel: LoginViewModel) {
                 color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold)
         }
-
-//        TransparentTextField(
-//            textFieldValue = email,
-//            textLabel = "Nuevo correo",
-//            keyboardType = KeyboardType.Email,
-//            keyboardActions = KeyboardActions(
-//                onDone = {
-//                    focusManager.clearFocus(
-//                        //(proceso para cambiar email)
-//                    )
-//                }
-//            ),
-//            imeAction = ImeAction.Done,
-//            focusColor = colorResource(id = R.color.azulClaroInstitucional),
-//            unFocusedColor = Color.White,
-//            textColor = Color.White
-//        )
-
-//        Column(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalAlignment = Alignment.CenterHorizontally)
-//        {
-//            RoundedButton(
-//                text = "Confirmar cambio",
-//                width = 250.dp,
-//                height = 40.dp,
-//                fontSize = 15.sp,
-//                color = ButtonDefaults.buttonColors(backgroundColor = colorResource(id = R.color.azulClaroInstitucional)),
-//                onClick = {}
-//            )
-//        }
     }
 
 }
@@ -344,10 +339,7 @@ fun Contrasena(
                 }
             },
             visualTransformation = if (currentPasswordVisibility) VisualTransformation.None
-            else PasswordVisualTransformation(),
-            focusColor = light_blue2,
-            unFocusedColor = MaterialTheme.colors.primaryVariant,
-            textColor = MaterialTheme.colors.primary
+            else PasswordVisualTransformation()
         )
 
         TransparentTextField(
@@ -374,10 +366,7 @@ fun Contrasena(
                 }
             },
             visualTransformation = if (newPasswordVisibility) VisualTransformation.None
-            else PasswordVisualTransformation(),
-            focusColor = light_blue2,
-            unFocusedColor = MaterialTheme.colors.primaryVariant,
-            textColor = MaterialTheme.colors.primary
+            else PasswordVisualTransformation()
         )
 
         TransparentTextField(
@@ -403,10 +392,7 @@ fun Contrasena(
                 }
             },
             visualTransformation = if (confirmNewPasswordVisibility) VisualTransformation.None
-            else PasswordVisualTransformation(),
-            focusColor = light_blue2,
-            unFocusedColor = MaterialTheme.colors.primaryVariant,
-            textColor = MaterialTheme.colors.primary
+            else PasswordVisualTransformation()
         )
 
         Column(
@@ -428,37 +414,41 @@ fun Contrasena(
                         progressBarState.value = true
                         val user =Firebase.auth.currentUser
                         if (user != null){
-                            val credential = EmailAuthProvider
-                                .getCredential(user.email!!, currentPassword.value)
-                            user.reauthenticate(credential)
-                                .addOnSuccessListener {
-
-                                    val error =
+                            if (!currentPassword.value.isNullOrEmpty()){    //Comprueba si la contrasena ingresada no es null ni vacia
+                                val credential = EmailAuthProvider
+                                    .getCredential(user.email!!, currentPassword.value)
+                                user.reauthenticate(credential)
+                                    .addOnSuccessListener {
+                                        val error =
                                             if (confirmNewPassword.value != newPassword.value) {
                                                 R.string.error_incorrectly_repeated_password
                                             }else if (newPassword.value.length < 6){
                                                 R.string.error_length_password
                                             }else null
 
-                                    if (error == null){
-                                        UpdateUserPassword(
-                                            newPassword = newPassword.value,
-                                            viewModel = viewModel,
-                                            activity = activity,
-                                            user = user
-                                        )
-                                        currentPassword.value = ""
-                                        newPassword.value = ""
-                                        confirmNewPassword.value = ""
-                                        focusManager.clearFocus()
-                                    }else{
+                                        if (error == null){
+                                            UpdateUserPassword(
+                                                newPassword = newPassword.value,
+                                                viewModel = viewModel,
+                                                activity = activity,
+                                                user = user
+                                            )
+                                            currentPassword.value = ""
+                                            newPassword.value = ""
+                                            confirmNewPassword.value = ""
+                                            focusManager.clearFocus()
+                                        }else{
+                                            progressBarState.value = false
+                                            Toast.makeText(activity, error, Toast.LENGTH_SHORT).show()
+                                        }
+                                    }.addOnFailureListener{
                                         progressBarState.value = false
-                                        Toast.makeText(activity, error, Toast.LENGTH_SHORT).show()
+                                        Toast.makeText(activity, R.string.error_current_password, Toast.LENGTH_SHORT).show()
                                     }
-                                }.addOnFailureListener{
-                                    progressBarState.value = false
-                                    Toast.makeText(activity, R.string.error_current_password, Toast.LENGTH_SHORT).show()
-                                }
+                            }else{
+                                progressBarState.value = false
+                                Toast.makeText(activity, R.string.error_current_password, Toast.LENGTH_SHORT).show()
+                            }
                         }
                         delay(1000)
                         progressBarState.value = false
@@ -543,7 +533,9 @@ fun CambiarImagen(
     val coroutineScope = rememberCoroutineScope()
 
     Row(
-        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly)
     {

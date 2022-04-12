@@ -50,7 +50,6 @@ fun RoundedButton(
                fontFamily = sansPro,
                fontWeight = FontWeight.Medium,
                letterSpacing = 0.15.sp
-
            )
         }
     } else {

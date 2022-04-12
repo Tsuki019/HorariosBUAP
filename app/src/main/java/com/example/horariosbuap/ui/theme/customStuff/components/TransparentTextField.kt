@@ -31,9 +31,9 @@ fun TransparentTextField(
     keyboardType: KeyboardType,
     keyboardActions: KeyboardActions,
     imeAction: ImeAction,
-    focusColor: Color = colorResource(id = R.color.azulClaroInstitucional),
-    unFocusedColor : Color = Color.DarkGray,
-    textColor : Color = Color.Black,
+    focusColor: Color = light_blue2,
+    unFocusedColor : Color = MaterialTheme.colors.primaryVariant,
+    textColor : Color = MaterialTheme.colors.primary,
     trailingIcon: @Composable() (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None  //Visualizacion de contrasenas
 ) {
@@ -55,12 +55,12 @@ fun TransparentTextField(
         visualTransformation = visualTransformation,
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.Transparent,
-            cursorColor = light_blue2,
-            focusedIndicatorColor = light_blue2,
-            focusedLabelColor = light_blue2,
-            unfocusedLabelColor = MaterialTheme.colors.primaryVariant,
-            unfocusedIndicatorColor = MaterialTheme.colors.primaryVariant,
-            textColor = MaterialTheme.colors.onBackground
+            cursorColor = focusColor,
+            focusedIndicatorColor = focusColor,
+            focusedLabelColor = focusColor,
+            unfocusedLabelColor = unFocusedColor,
+            unfocusedIndicatorColor = unFocusedColor,
+            textColor = textColor
         )
     )
 }
