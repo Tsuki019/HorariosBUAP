@@ -11,6 +11,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.*
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -38,18 +39,13 @@ import kotlinx.coroutines.launch
 import androidx.lifecycle.Observer
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.example.horariosbuap.core.AppDataBase
 import com.example.horariosbuap.core.ConnectionLiveData
-import com.example.horariosbuap.core.MateriaTabla
 import com.example.horariosbuap.core.Preferences
 import com.example.horariosbuap.ui.theme.*
 import com.example.horariosbuap.ui.theme.customStuff.components.AvisoInternet
 import com.example.horariosbuap.ui.theme.customStuff.components.SalirAlerta
 import com.example.horariosbuap.ui.theme.dataBase.getUserData
-import com.example.horariosbuap.viewmodel.DatosViewModel
-import com.example.horariosbuap.viewmodel.LoginViewModel
-import com.example.horariosbuap.viewmodel.RegisterViewModel
-import com.example.horariosbuap.viewmodel.UserDataViewModel
+import com.example.horariosbuap.viewmodel.*
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
@@ -104,8 +100,6 @@ class MainActivity : ComponentActivity() {
             prefs.getTheme()
         )
 
-
-
         setContent {
 
             AppTheme(
@@ -138,7 +132,6 @@ class MainActivity : ComponentActivity() {
                 BoxWithConstraints {
 
                     Scaffold(
-
                         scaffoldState = scaffoldState,
                         topBar = {
                             CustomToolBar(
@@ -248,7 +241,8 @@ class MainActivity : ComponentActivity() {
                             addSearchResultScreen(
                                 datosViewModel = datosViewModel,
                                 titulos = titulos,
-                                navController = navController)
+                                navController = navController
+                            )
                             addInfoSubject(
                                 navController = navController,
                                 datosViewModel = datosViewModel,
@@ -304,7 +298,7 @@ class MainActivity : ComponentActivity() {
             val fileSize = fileDescriptor!!.length
 
             if (fileSize <= 100000){
-                viewModel.tempImage.value = data?.data!!
+                viewModel.tempImage.value = data.data!!
             }else{
                 Toast.makeText(this, R.string.error_size_image, Toast.LENGTH_LONG).show()
                 viewModel.tempImage.value = Uri.EMPTY

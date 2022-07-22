@@ -15,11 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.model.loadNews
 import com.example.horariosbuap.ui.theme.customStuff.components.LoadingIndicator
 import com.example.horariosbuap.ui.theme.customStuff.screens.*
-import com.example.horariosbuap.ui.theme.customStuff.screens.ui.theme.VistaNoticia
-import com.example.horariosbuap.viewmodel.DatosViewModel
-import com.example.horariosbuap.viewmodel.LoginViewModel
-import com.example.horariosbuap.viewmodel.RegisterViewModel
-import com.example.horariosbuap.viewmodel.UserDataViewModel
+import com.example.horariosbuap.viewmodel.*
 import com.google.accompanist.navigation.animation.AnimatedComposeNavigator
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.pager.ExperimentalPagerApi

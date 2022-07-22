@@ -19,7 +19,8 @@ fun BackArrowButtonn(
 ) {
     IconButton(
         modifier = modifier,
-        onClick = { onBack() }) {
+        onClick = { onBack() }
+    ) {
         Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = "", tint = tint)
     }
 }

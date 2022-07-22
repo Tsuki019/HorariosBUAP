@@ -63,7 +63,6 @@ fun CustomBottomNavItem(item:BottomNavScreens, isSelected:Boolean, onClick:()->U
     val contentColor = if (isSelected) MaterialTheme.colors.secondaryVariant
     else MaterialTheme.colors.primaryVariant
 
-
     Surface(color = Color.Transparent) {
         Box(
             modifier = Modifier

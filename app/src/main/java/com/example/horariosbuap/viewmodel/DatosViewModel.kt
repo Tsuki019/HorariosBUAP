@@ -2,7 +2,10 @@ package com.example.horariosbuap.viewmodel
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.core.os.persistableBundleOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.horariosbuap.model.*
@@ -26,7 +29,8 @@ class DatosViewModel @Inject constructor() : ViewModel() {
     val salonesState = mutableStateOf(false)
     var resultSalones : ArrayList<Salones?> = ArrayList()
 
-    var materias : ArrayList<Materias?> = ArrayList()
+    var materias = mutableStateListOf<Materias?>()
+    var materiasBackUp : List<Materias?> = listOf() // Contiene los datos de todas las materias mientras este aplicado un filtro
     var materiasHorario : ArrayList<MateriasHorario?> = ArrayList()
     val materiasHorarioState = mutableStateOf(false) //Detecta si ya esta llenq la lista de materias por horario
     val materiasState = mutableStateOf(false) //Detecta si ya esta llena la lista de materias
@@ -50,9 +54,12 @@ class DatosViewModel @Inject constructor() : ViewModel() {
         edificiosState.value = !edificios.isEmpty()
     }
 
-    fun llenarMaterias(value: ArrayList<Materias?>){
+    fun llenarMaterias(value: SnapshotStateList<Materias?>){
         materias = value
         materiasState.value = !materias.isEmpty()
+        if (materiasState.value){
+            materiasBackUp = materias.toList()
+        }
     }
 
     fun llenarMateriasHorario(value: ArrayList<MateriasHorario?>){
@@ -157,7 +164,9 @@ class DatosViewModel @Inject constructor() : ViewModel() {
         salonesState.value = !salones.isEmpty()
     }
 
-    fun buscarHorarioMateria(nrc: String) : ArrayList<MateriasHorario>{
+    fun buscarHorarioMateria(
+        nrc: String,
+    ) : ArrayList<MateriasHorario>{
         println("ENTRA A BUSCAR")
         val materiasList : ArrayList<MateriasHorario> = ArrayList()
 
@@ -178,5 +187,27 @@ class DatosViewModel @Inject constructor() : ViewModel() {
     fun llenarNoticias(news : ArrayList<News?>){
         noticias = news
         isNewsFill.value = true
+    }
+
+    fun aplicarFiltro(
+        carrera: String,
+        periodo: String
+    ){
+
+        materias.clear()
+        if (carrera == "Todos" && periodo == "Todos"){
+            materiasBackUp.toCollection(materias)
+
+        }else if (carrera == "Todos"){ //Filtrar por periodo
+            materiasBackUp.filterTo(materias) { materias -> materias?.periodo?.lowercase()!!.contains(periodo.lowercase())}
+
+        }else if(periodo == "Todos"){   //Filtrar por carrera
+            materiasBackUp.filterTo(materias) { materias -> materias?.carrera == carrera }
+
+        }else{  //Filtrar por periodo y carrera
+            materiasBackUp.filterTo(materias) { materias -> materias?.periodo?.lowercase()!!.contains(periodo.lowercase())}
+            materias.removeAll { materias -> materias?.carrera != carrera  }
+
+        }
     }
 }

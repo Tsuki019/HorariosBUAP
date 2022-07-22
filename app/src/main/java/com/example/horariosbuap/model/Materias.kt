@@ -6,4 +6,6 @@ data class Materias(
     val clave : String = "",
     val secc : String = "",
     val profesor : String = "",
+    val periodo : String = "",
+    val carrera : String = "",
 ) {}

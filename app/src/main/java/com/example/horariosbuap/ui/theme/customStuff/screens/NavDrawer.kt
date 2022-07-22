@@ -112,7 +112,10 @@ fun NavDrawer(
 }
 
 @Composable
-fun DrawerHead(email: String, avatar: Painter) {
+fun DrawerHead(
+    email: String,
+    avatar: Painter
+) {
     Row (modifier = Modifier
         .fillMaxWidth()
         .background(Color.Transparent)

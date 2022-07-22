@@ -1,4 +1,4 @@
-package com.example.horariosbuap.ui.theme.customStuff.screens.ui.theme
+package com.example.horariosbuap.ui.theme.customStuff.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

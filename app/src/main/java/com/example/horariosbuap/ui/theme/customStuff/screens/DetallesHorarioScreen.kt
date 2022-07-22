@@ -35,6 +35,7 @@ import com.example.horariosbuap.model.MateriasHorario
 import com.example.horariosbuap.ui.theme.customStuff.components.LoadingIndicator
 import com.example.horariosbuap.ui.theme.customStuff.components.TabMenu
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
+import com.example.horariosbuap.ui.theme.dark_blue1
 import com.example.horariosbuap.ui.theme.dataBase.*
 import com.example.horariosbuap.ui.theme.primaryColorCustom
 import com.example.horariosbuap.ui.theme.secondaryColorCustom
@@ -148,7 +149,7 @@ fun DetallesHorarioScreen(
             if (cantidadMaterias.value  == 0){
                 Box(modifier = Modifier.align(alignment = Alignment.Center)){
                     Text(
-                        text = "Aún no haz agregado materias a este horario. Agregalas en el menú que está abajo a la izquirda.",
+                        text = "Aún no haz agregado materias a este horario. Agregalas en el menú que se encuentra en la parte inferior derecha.",
                         color = MaterialTheme.colors.primary.copy(alpha = 0.5f),
                         fontFamily = sansPro,
                         fontSize = 20.sp,
@@ -318,14 +319,18 @@ private fun CardMateriasInscritas(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    TableCell(text = "NRC", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 16.sp)
-                    TableCell(text = "Sección", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 16.sp)
-                    TableCell(text = "Clave", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 16.sp)
+                    TableCell(text = "NRC", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 15.sp)
+                    TableCell(text = "Sección", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 15.sp)
+                    TableCell(text = "Clave", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 15.sp)
+                    TableCell(text = "Carrera", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 15.sp)
+                    TableCell(text = "Periodo", weight = 0.2f, fontWeight = FontWeight.Bold, textSize = 15.sp)
                 }
                 Row(modifier = Modifier.fillMaxWidth()) {
                     TableCell(text = materia.nrc, weight = 0.2f, textColor = MaterialTheme.colors.secondary)
                     TableCell(text = materia.secc, weight = 0.2f, textColor = MaterialTheme.colors.secondary)
                     TableCell(text = materia.clave, weight = 0.2f, textColor = MaterialTheme.colors.secondary)
+                    TableCell(text = materia.carrera, weight = 0.2f, textColor = MaterialTheme.colors.secondary)
+                    TableCell(text = materia.periodo, weight = 0.2f, textColor = MaterialTheme.colors.secondary, maxLines = 2)
                 }
             }
             Divider(
@@ -341,8 +346,8 @@ private fun CardMateriasInscritas(
 
                 Column(modifier = Modifier.fillMaxWidth()) {
                     dias.forEach{currentDia ->
-                        val horario = materiasHorario.find { materiasHorario -> materiasHorario.dia == currentDia }
-                        if (horario != null){
+                        val horario = materiasHorario.filter { materiasHorario -> materiasHorario.dia == currentDia }.sortedBy { it.entrada }
+                        if (!horario.isEmpty()){
                             when (currentDia){
                                 "L" -> {dia = "Lunes"}
                                 "A" -> {dia = "Martes"}
@@ -360,15 +365,17 @@ private fun CardMateriasInscritas(
                                 TableCell(text = "Salón", weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp)
                                 TableCell(text = "Edificio", weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp)
                             }
-                            Row(modifier = Modifier.fillMaxWidth()) {
-                                TableCell(text = horario.entrada, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = MaterialTheme.colors.secondary)
-                                TableCell(text = horario.salida, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = MaterialTheme.colors.secondary)
-                                TableCell(text = horario.salon, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = MaterialTheme.colors.secondary)
-                                TableCell(text = horario.edificio, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = MaterialTheme.colors.secondary)
+                            horario.forEach{hora->
+                                Row(modifier = Modifier.fillMaxWidth()) {
+                                    TableCell(text = hora.entrada, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = MaterialTheme.colors.secondary)
+                                    TableCell(text = hora.salida, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = MaterialTheme.colors.secondary)
+                                    TableCell(text = hora.salon, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = MaterialTheme.colors.secondary)
+                                    TableCell(text = hora.edificio, weight = 0.25f, fontWeight = FontWeight.Bold, textSize = 14.sp, textColor = MaterialTheme.colors.secondary)
+                                }
                             }
                             Divider(
                                 modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
-                                color = primaryColorCustom,
+                                color = dark_blue1,
                                 thickness = 1.dp
                             )
                         }
@@ -505,7 +512,7 @@ private fun HorarioPorDia(
         for (horario in horarios){
             clase = materiasUnicas.find { materia -> materia.nrc == horario.nrc }
             Row(modifier = Modifier.fillMaxWidth()) {
-                TableCell(text = clase?.nombre ?: "No encontrada", weight = 0.4f)
+                TableCell(text = clase?.nombre ?: "No encontrada", weight = 0.4f, maxLines = 2)
                 TableCell(text = horario.entrada + " - " + horario.salida, weight = 0.3f)
                 TableCell(text = horario.salon +" - "+horario.edificio, weight = 0.3f)
             }
@@ -683,7 +690,8 @@ private fun RowScope.TableCell(
     textColor : Color = MaterialTheme.colors.primary,
     textSize : TextUnit = 13.sp,
     fontWeight: FontWeight = FontWeight.Normal,
-    borderColor : Color = Color.Transparent
+    borderColor : Color = Color.Transparent,
+    maxLines : Int = 1
 ) {
     Text(
         text = text,
@@ -697,6 +705,7 @@ private fun RowScope.TableCell(
             fontSize = textSize,
             fontFamily = sansPro,
             fontWeight = fontWeight
-        )
+        ),
+        maxLines = maxLines
     )
 }

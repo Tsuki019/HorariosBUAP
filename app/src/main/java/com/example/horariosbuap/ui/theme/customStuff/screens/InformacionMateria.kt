@@ -43,7 +43,7 @@ fun InformacionMateria(
     activity : Activity,
 ) {
 
-    val userId =  FirebaseAuth.getInstance().currentUser!!.uid
+    val userId = FirebaseAuth.getInstance().currentUser?.uid
     val materiaInfo = InfoMateria(datosViewModel = datosViewModel, nrc = nrc!!)
     val materiasHorario = datosViewModel.buscarHorarioMateria(nrc = nrc)
 
@@ -131,7 +131,7 @@ fun InformacionMateria(
         if (materiaElegida.value.nombre != ""){
             AlertaConformacion(
                 nombreHorario = nombreHorario,
-                userId = userId,
+                userId = userId!!,
                 userDataViewModel = userDataViewModel,
                 materiaElegida = materiaElegida,
                 activity = activity,
@@ -174,6 +174,16 @@ private fun TablaPrincipal(
         TableCell(text = materia.secc, weight = 0.33f, textColor = MaterialTheme.colors.secondary, textSize = 15.sp, fontWeight = FontWeight.Bold)
         TableCell(text = materia.clave, weight = 0.33f, textColor = MaterialTheme.colors.secondary, textSize = 15.sp, fontWeight = FontWeight.Bold)
 
+    }
+    Row(
+        modifier = Modifier.background(color = MaterialTheme.colors.secondary.copy(alpha = 0.7f))
+    ) {
+        TableCell(text = "Periodo", weight = 0.5f, textColor = Color.White, textSize = 14.sp, fontWeight = FontWeight.Bold)
+        TableCell(text = "Carrera", weight = 0.5f, textColor = Color.White, textSize = 14.sp, fontWeight = FontWeight.Bold)
+    }
+    Row() {
+        TableCell(text = materia.periodo, weight = 0.5f, textColor = MaterialTheme.colors.secondary, textSize = 15.sp, fontWeight = FontWeight.Bold)
+        TableCell(text = materia.carrera, weight = 0.5f, textColor = MaterialTheme.colors.secondary, textSize = 15.sp, fontWeight = FontWeight.Bold)
     }
 }
 
@@ -250,7 +260,7 @@ private fun RowScope.TableCell(
 
 private fun InfoMateria(
     datosViewModel: DatosViewModel,
-    nrc: String
+    nrc: String,
 ) : Materias {
 
     for (materia in datosViewModel.materias){

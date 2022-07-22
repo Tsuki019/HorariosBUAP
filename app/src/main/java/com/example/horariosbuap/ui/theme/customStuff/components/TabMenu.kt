@@ -8,11 +8,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.horariosbuap.ui.theme.primaryColorCustom
-import com.example.horariosbuap.ui.theme.secondaryColorCustom
+import com.example.horariosbuap.ui.theme.*
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
-import com.example.horariosbuap.ui.theme.dark_blue2
-import com.example.horariosbuap.ui.theme.dark_blue3
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.pagerTabIndicatorOffset
@@ -30,20 +27,20 @@ fun TabMenu(
     TabRow(
         selectedTabIndex = pagerState.currentPage,
         backgroundColor = Color.White,
-        divider = { TabRowDefaults.Divider(thickness = 1.dp, color = primaryColorCustom) },
+        divider = { TabRowDefaults.Divider(thickness = 1.dp, color = dark_blue1) },
         indicator = {tabPositions ->
             TabRowDefaults.Indicator(
                 modifier = Modifier.pagerTabIndicatorOffset(pagerState = pagerState, tabPositions = tabPositions),
                 height = 2.dp,
-                color = secondaryColorCustom
+                color = light_blue1
             )
         }
     ) {
         listElements.forEachIndexed { index, _ ->
             Tab(
-                modifier = Modifier.background(if (pagerState.currentPage == index) dark_blue2 else primaryColorCustom.copy(0.9f)),
-                selectedContentColor = secondaryColorCustom,
-                unselectedContentColor = secondaryColorCustom.copy(0.8f),
+                modifier = Modifier.background(if (pagerState.currentPage == index) dark_blue2 else dark_blue1.copy(0.9f)),
+                selectedContentColor = light_blue1,
+                unselectedContentColor = light_blue1.copy(0.8f),
                 text = {
                     Text(
                         text = listElements[index],

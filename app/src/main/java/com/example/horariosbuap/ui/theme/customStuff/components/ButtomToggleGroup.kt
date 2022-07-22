@@ -1,7 +1,9 @@
 package com.example.horariosbuap.ui.theme.customStuff.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,7 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.example.horariosbuap.R
 import com.example.horariosbuap.ui.theme.light_blue1
@@ -24,7 +28,8 @@ fun ButtonToggleGroup(
     options: List<String>,
     selectedOption: String,
     onOptionSelect: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    textSize: TextUnit = 12.sp
 ) {
 
     Row(modifier = modifier) {
@@ -78,9 +83,13 @@ fun ButtonToggleGroup(
                 border = border,
                 shape = shape,
                 colors = colors,
-                modifier = buttonModifier.weight(1f)
+                modifier = buttonModifier.weight(1f),
+                contentPadding = PaddingValues(0.dp)
             ) {
-                Text(option)
+                Text(
+                    text = option,
+                    fontSize = textSize
+                )
             }
         }
     }

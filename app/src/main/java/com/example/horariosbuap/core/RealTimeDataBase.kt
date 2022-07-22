@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalContext
 import com.example.horariosbuap.model.*
 import com.example.horariosbuap.viewmodel.DatosViewModel
@@ -84,7 +85,7 @@ fun getSalones(datosViewModel: DatosViewModel){
 
 fun getMaterias(datosViewModel: DatosViewModel){
     val realTimeRef = FirebaseDatabase.getInstance().reference.child("Materias").child("materias_unicas").orderByChild("nombre")
-    val materias = ArrayList<Materias?>()
+    val materias = SnapshotStateList<Materias?>()
 
 
     realTimeRef.addValueEventListener(object  : ValueEventListener {

@@ -34,7 +34,7 @@ fun TransparentTextField(
     focusColor: Color = light_blue2,
     unFocusedColor : Color = MaterialTheme.colors.primaryVariant,
     textColor : Color = MaterialTheme.colors.primary,
-    trailingIcon: @Composable() (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
     visualTransformation: VisualTransformation = VisualTransformation.None  //Visualizacion de contrasenas
 ) {
 

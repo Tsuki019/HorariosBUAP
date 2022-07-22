@@ -153,8 +153,8 @@ fun FotoPerfil(
             text = "Cambiar imagen",
             width = 200.dp,
             height = 40.dp,
-            progressIndicatorColor = secondaryColorCustom,
-            color = ButtonDefaults.buttonColors(backgroundColor = secondaryColorCustom),
+            progressIndicatorColor = light_blue1,
+            color = ButtonDefaults.buttonColors(backgroundColor = light_blue1),
             fontSize = 15.sp,
             onClick = {
                 cambiarImagenState.value = true
@@ -215,8 +215,8 @@ fun NombrePublico(
                     width = 90.dp,
                     height = 40.dp,
                     fontSize = 13.sp,
-                    color = ButtonDefaults.buttonColors(backgroundColor = secondaryColorCustom),
-                    progressIndicatorColor = secondaryColorCustom,
+                    color = ButtonDefaults.buttonColors(backgroundColor = light_blue1),
+                    progressIndicatorColor = light_blue1,
                     displayProgressBar = progressBarState.value,
                     onClick = {
 
@@ -408,7 +408,7 @@ fun Contrasena(
                 fontSize = 15.sp,
                 displayProgressBar = progressBarState.value,
                 progressIndicatorColor = MaterialTheme.colors.secondary,
-                color = ButtonDefaults.buttonColors(backgroundColor = secondaryColorCustom),
+                color = ButtonDefaults.buttonColors(backgroundColor = light_blue1),
                 onClick = {
                     corutineScope.launch {
                         progressBarState.value = true
@@ -578,7 +578,7 @@ fun CambiarImagen(
                 RoundedButton(
                     text = "Elegir Imagen",
                     fontSize = 10.sp,
-                    color = ButtonDefaults.buttonColors(backgroundColor = secondaryColorCustom),
+                    color = ButtonDefaults.buttonColors(backgroundColor = light_blue1),
                     width = 120.dp,
                     height = 30.dp,
                     onClick = {
@@ -596,7 +596,7 @@ fun CambiarImagen(
             height = 40.dp,
             displayProgressBar = progressBarState.value,
             progressIndicatorColor = MaterialTheme.colors.secondary,
-            color = ButtonDefaults.buttonColors(backgroundColor = secondaryColorCustom),
+            color = ButtonDefaults.buttonColors(backgroundColor = light_blue1),
             fontSize = 15.sp,
             onClick = {
                 coroutineScope.launch {
