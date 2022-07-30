@@ -11,6 +11,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.*
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -52,6 +53,7 @@ import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestoreSettings
 import kotlinx.coroutines.delay
 
+@ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
 @ExperimentalAnimationApi
@@ -59,7 +61,6 @@ import kotlinx.coroutines.delay
 class MainActivity : ComponentActivity() {
 
     lateinit var connectionLiveData: ConnectionLiveData
-
     override fun onCreate(savedInstanceState: Bundle?) {
         connectionLiveData = ConnectionLiveData(this)   //Variable para revisar conexion a internet
         super.onCreate(savedInstanceState)

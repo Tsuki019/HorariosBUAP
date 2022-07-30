@@ -736,7 +736,6 @@ private fun VistaMaterias(
         LaunchedEffect(key1 = 1, block = { getMaterias(datosViewModel = datosViewModel) })
     }
 
-    val isMenuVisible = remember { mutableStateOf(true) }
 
     Box(
         modifier = Modifier
@@ -749,18 +748,11 @@ private fun VistaMaterias(
                 .fillMaxSize()
         ) {
 
-            isMenuVisible.value = scrollState.firstVisibleItemIndex == 0
-            AnimatedVisibility(
-                visible= isMenuVisible.value,
-                exit = slideOutVertically(),
-                enter = slideInVertically()
-            ) {
-                EncabezadoMaterias(
-                    busquedaPor = busquedaPor,
-                    textBusq = textBusq,
-                    datosViewModel = datosViewModel
-                )
-            }
+            EncabezadoMaterias(
+                busquedaPor = busquedaPor,
+                textBusq = textBusq,
+                datosViewModel = datosViewModel
+            )
 
             CuerpoVistaMaterias(
                 listState = scrollState,

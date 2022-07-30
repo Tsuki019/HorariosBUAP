@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -29,7 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.horariosbuap.R
 import com.example.horariosbuap.model.Materias
 import com.example.horariosbuap.model.MateriasHorario
 import com.example.horariosbuap.ui.theme.customStuff.components.LoadingIndicator
@@ -37,8 +35,6 @@ import com.example.horariosbuap.ui.theme.customStuff.components.TabMenu
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.example.horariosbuap.ui.theme.dark_blue1
 import com.example.horariosbuap.ui.theme.dataBase.*
-import com.example.horariosbuap.ui.theme.primaryColorCustom
-import com.example.horariosbuap.ui.theme.secondaryColorCustom
 import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.accompanist.insets.LocalWindowInsets
@@ -58,7 +54,7 @@ fun DetallesHorarioScreen(
     nombreHorario :String?,
     userDataViewModel: UserDataViewModel,
     onNavToAddSubject: (String) -> Unit,
-    datosViewModel : DatosViewModel,
+    datosViewModel : DatosViewModel
 ) {
     var materiasUnicas : ArrayList<Materias> =  remember { arrayListOf() }
     var materiasHorario : ArrayList<MateriasHorario> = remember { arrayListOf() }
@@ -141,7 +137,7 @@ fun DetallesHorarioScreen(
                     )
                 ){
                     item {
-                        TabsContent(pagerState = pagerState, userDataViewModel = userDataViewModel, materiasHorario = materiasHorario, materiasUnicas = materiasUnicas)
+                        BottomSheetContent(pagerState = pagerState, userDataViewModel = userDataViewModel, materiasHorario = materiasHorario, materiasUnicas = materiasUnicas)
                         Divider(modifier = Modifier.padding(vertical = 15.dp), color = Color.Transparent)
                     }
                 }
@@ -188,7 +184,7 @@ fun DetallesHorarioScreen(
 @ExperimentalAnimationApi
 @ExperimentalPagerApi
 @Composable
-private fun TabsContent(
+private fun BottomSheetContent(
     pagerState: PagerState,
     userDataViewModel: UserDataViewModel,
     materiasHorario: ArrayList<MateriasHorario>,

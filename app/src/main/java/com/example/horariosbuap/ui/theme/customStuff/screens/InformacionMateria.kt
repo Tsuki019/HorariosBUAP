@@ -25,7 +25,6 @@ import com.example.horariosbuap.ui.theme.customStuff.components.OutlinedMediaBut
 import com.example.horariosbuap.viewmodel.DatosViewModel
 import com.example.horariosbuap.model.Materias
 import com.example.horariosbuap.model.MateriasHorario
-import com.example.horariosbuap.ui.theme.dataBase.getMateriasHorario
 import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.example.horariosbuap.ui.theme.customStuff.components.AlertaConformacion

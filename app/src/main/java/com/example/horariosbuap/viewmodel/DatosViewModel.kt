@@ -29,6 +29,8 @@ class DatosViewModel @Inject constructor() : ViewModel() {
     val salonesState = mutableStateOf(false)
     var resultSalones : ArrayList<Salones?> = ArrayList()
 
+    var periodoActual = mutableStateOf("")
+    val periodoState = mutableStateOf(false)
     var materias = mutableStateListOf<Materias?>()
     var materiasBackUp : List<Materias?> = listOf() // Contiene los datos de todas las materias mientras este aplicado un filtro
     var materiasHorario : ArrayList<MateriasHorario?> = ArrayList()
@@ -43,6 +45,11 @@ class DatosViewModel @Inject constructor() : ViewModel() {
     val isNewsFill = mutableStateOf(false)
 
     val salirAplicacion = mutableStateOf(false)     //Activador de la alerta "salir de la aplicacion"
+
+    fun setPeriodoActual(periodo: String){
+        periodoActual.value = periodo
+        periodoState.value = periodoActual.value.isNotEmpty()
+    }
 
     fun llenarProfesores(value : ArrayList<Profesores?>){
         profesores = value
@@ -64,7 +71,7 @@ class DatosViewModel @Inject constructor() : ViewModel() {
 
     fun llenarMateriasHorario(value: ArrayList<MateriasHorario?>){
         materiasHorario = value
-        materiasHorarioState.value = !materiasHorario.isEmpty()
+        materiasHorarioState.value = materiasHorario.isNotEmpty()
     }
 
     fun buscarNombreProfesor(key : MutableState<String>){

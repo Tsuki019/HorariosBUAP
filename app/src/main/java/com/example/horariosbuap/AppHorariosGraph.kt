@@ -5,6 +5,7 @@ import android.nfc.Tag
 import android.util.Log
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.colorResource
@@ -350,6 +351,9 @@ fun NavGraphBuilder.addInfoSubject(
     }
 }
 
+@ExperimentalFoundationApi
+@ExperimentalMaterialApi
+@ExperimentalPagerApi
 @ExperimentalAnimationApi
 fun NavGraphBuilder.addClassRooms(
     navController: NavHostController,
@@ -362,6 +366,7 @@ fun NavGraphBuilder.addClassRooms(
         SalonesPorEdificio(
             edificio = backStackEntry.arguments?.getString(NavArguments.EDIFICIO_ID),
             salones = datosViewModel.salones,
+            datosViewModel = datosViewModel,
             onBack = {navController.popBackStack()}
         )
     }

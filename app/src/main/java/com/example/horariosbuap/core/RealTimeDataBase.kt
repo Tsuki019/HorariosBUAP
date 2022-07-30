@@ -83,6 +83,30 @@ fun getSalones(datosViewModel: DatosViewModel){
     })
 }
 
+fun getPeriodoActual(datosViewModel: DatosViewModel){
+
+    val realTimeRef = FirebaseDatabase.getInstance().reference.child("Edificios").child("periodoActual")
+    var periodo = ""
+
+
+    realTimeRef.addValueEventListener(object  : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            // Get Post object and use the values to update the UI
+            periodo = dataSnapshot.value.toString()
+            if (periodo.isNotEmpty()){
+                datosViewModel.periodoActual.value = periodo
+            }
+
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Getting Post failed, log a message
+            // Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+        }
+
+    })
+}
+
 fun getMaterias(datosViewModel: DatosViewModel){
     val realTimeRef = FirebaseDatabase.getInstance().reference.child("Materias").child("materias_unicas").orderByChild("nombre")
     val materias = SnapshotStateList<Materias?>()
