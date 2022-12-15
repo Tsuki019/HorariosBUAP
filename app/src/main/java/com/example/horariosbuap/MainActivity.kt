@@ -12,19 +12,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.animation.*
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberImagePainter
 import com.example.horariosbuap.ui.theme.customStuff.CustomBottomNav
@@ -37,7 +32,6 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import androidx.lifecycle.Observer
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.example.horariosbuap.core.ConnectionLiveData
@@ -51,7 +45,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ktx.firestoreSettings
-import kotlinx.coroutines.delay
 
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -64,6 +57,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         connectionLiveData = ConnectionLiveData(this)   //Variable para revisar conexion a internet
         super.onCreate(savedInstanceState)
+
 
         val viewModel : LoginViewModel by viewModels()
         val userDataViewModel : UserDataViewModel by viewModels()
@@ -87,7 +81,7 @@ class MainActivity : ComponentActivity() {
 
         if(currentUser != null && currentUser.isEmailVerified){
 
-            viewModel.LlenarDatosUsuario(currentUser, viewModel.state)
+            viewModel.llenarDatosUsuario(currentUser, userDataViewModel)
 
             if (!userDataViewModel.isUserDataLoaded.value){     //Llena los datos del usuario logueado
                 getUserData(userDataViewModel = userDataViewModel, currentUser.uid)
@@ -129,21 +123,23 @@ class MainActivity : ComponentActivity() {
                 val avisoVisible = remember { mutableStateOf(true)}
                 val tieneInternet = connectionLiveData.observeAsState(false).value  //Variable para revisar conexion a internet
 
-
                 BoxWithConstraints {
 
                     Scaffold(
                         scaffoldState = scaffoldState,
                         topBar = {
-                            CustomToolBar(
-                                title = titulos.value,
-                                scaffoldState = scaffoldState,
-                                icon = {
-                                    IconButton(onClick = { coroutineScope.launch { openDrawer() } }) {
-                                        Icon(imageVector = Icons.Rounded.Menu, contentDescription = "")
+                            if( navController.currentDestination?.route != MainDestinations.SPLASH_SCREEN_ROUTE) {
+                                CustomToolBar(
+                                    title = titulos.value,
+                                    scaffoldState = scaffoldState,
+                                    icon = {
+                                        IconButton(onClick = { coroutineScope.launch { openDrawer() } }) {
+                                            Icon(imageVector = Icons.Rounded.Menu, contentDescription = "")
+                                        }
                                     }
-                                }
-                            )
+                                )
+                            }
+
                         },
                         drawerContent = {
                             NavDrawer(
@@ -224,14 +220,18 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 viewModel = viewModel,
                                 registerViewModel = registerViewModel,
+                                userDataViewModel = userDataViewModel,
                                 activity = this@MainActivity,
                                 titulos = titulos
                             )
-                            addRegister(navController = navController,
-                                        activity = this@MainActivity,
-                                        viewModelLogin= viewModel,
-                                        viewModel = registerViewModel,
-                                     titulos = titulos)
+                            addRegister(
+                                navController = navController,
+                                activity = this@MainActivity,
+                                viewModelLogin= viewModel,
+                                viewModel = registerViewModel,
+                                titulos = titulos,
+                                userDataViewModel = userDataViewModel
+                            )
                             addAddSubject(
                                 navController = navController,
                                 datosViewModel = datosViewModel,
@@ -266,7 +266,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         //Muestra una advertencia cuando no se tienen acceso a internet
-                        if (!tieneInternet && avisoVisible.value){
+                        if (!tieneInternet && avisoVisible.value && (navController.currentDestination?.route != MainDestinations.SPLASH_SCREEN_ROUTE)){
                             AvisoInternet(avisoVisible = avisoVisible)
                         }else if (tieneInternet && !avisoVisible.value){
                             avisoVisible.value = true

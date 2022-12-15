@@ -3,6 +3,7 @@ package com.example.horariosbuap
 import android.app.Activity
 import android.nfc.Tag
 import android.util.Log
+import android.window.SplashScreen
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -46,6 +47,7 @@ object MainDestinations{
     const val RESET_PASSWORD_ROUTE = "reiniciar_contrasena"
     const val CLASSROOMS_ROUTE = "salones_edificio"
     const val SCHEDULE_DETAILS_ROUTE = "detalles_horario"
+    const val SPLASH_SCREEN_ROUTE = "splash_screen"
 }
 
 object NavArguments{
@@ -236,6 +238,7 @@ fun NavGraphBuilder.addLogin(
     navController: NavHostController,
     viewModel : LoginViewModel,
     registerViewModel: RegisterViewModel,
+    userDataViewModel: UserDataViewModel,
     activity: Activity,
     titulos: MutableState<String>
 ){
@@ -251,6 +254,7 @@ fun NavGraphBuilder.addLogin(
         }else{
             LoginScreen(state = viewModel.state.value,
                         registerViewModel = registerViewModel,
+                        userDataViewModel = userDataViewModel,
                         onLogin = viewModel::login,
                         onLoginWithGoogle = viewModel::loginWithGoogle,
                         activity = activity,
@@ -285,6 +289,7 @@ fun NavGraphBuilder.addRegister(
     viewModel : RegisterViewModel,
     navController: NavHostController,
     titulos: MutableState<String>,
+    userDataViewModel: UserDataViewModel
 ){
     composable(route = MainDestinations.REGISTRATION_ROUTE)
     {
@@ -296,7 +301,8 @@ fun NavGraphBuilder.addRegister(
                 onBack = {navController.popBackStack()},
                 activity = activity,
                 onDismissDialog = viewModel::hideErrorDialog,
-                loginViewModel = viewModelLogin
+                loginViewModel = viewModelLogin,
+                userDataViewModel = userDataViewModel
             )
             titulos.value = "Horarios Buap"
         }else{

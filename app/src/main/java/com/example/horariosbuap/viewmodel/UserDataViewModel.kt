@@ -3,13 +3,10 @@ package com.example.horariosbuap.viewmodel
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.horariosbuap.model.HorarioUsuario
 import com.example.horariosbuap.model.Materias
 import com.example.horariosbuap.model.MateriasHorario
 import com.example.horariosbuap.model.UserDB
-import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.launch
 
 class UserDataViewModel : ViewModel()
 {
@@ -181,5 +178,9 @@ class UserDataViewModel : ViewModel()
 
     fun setTheme(isDarkTheme : Boolean){
         this.isDarkTheme.value = isDarkTheme
+    }
+
+    fun actualizarFechaCambioNombre(now: Long) {
+        this.userData.value.fechaCambioNombre.time = now
     }
 }

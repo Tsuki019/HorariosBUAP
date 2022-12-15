@@ -24,7 +24,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.material.Icon
 import androidx.compose.ui.layout.ContentScale
@@ -47,10 +46,12 @@ import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.*
 
 @Composable
 fun MiCuentaOption(
@@ -59,10 +60,15 @@ fun MiCuentaOption(
     onSignOut: () -> Unit,
     userDataViewModel: UserDataViewModel
 ) {
-
+    val user = Firebase.auth
     val cambiarImagenState = remember { mutableStateOf(false)}
     val progressBarState = remember {mutableStateOf(false)}
     val tiempos = TimeDifferences
+
+    if(userDataViewModel.userData.value.fechaCambioNombre == Date(1654059600000) && user.currentUser != null){
+        getUserData(userDataViewModel,user.currentUser!!.uid)
+    }
+
 
     Box(modifier = Modifier
         .fillMaxSize()
@@ -223,8 +229,9 @@ fun NombrePublico(
                         if (nameValue.value != viewModel.state.value.name){
                             if (nameValue.value.length in 4..15){
 
-                                val cambiadoEn = userDataViewModel.userData.value.fechaCambioNombre!!.time.div(1000L).let {
+                                val cambiadoEn = userDataViewModel.userData.value.fechaCambioNombre.time.div(1000L).let {
                                     tiempos.getTimeLimitDays(it.toInt()) }
+
 
                                 if (cambiadoEn == -1000){
                                     Toast.makeText(activity, "Error al comprobar las fechas, compruebe su conexión a internet", Toast.LENGTH_SHORT).show()
@@ -235,6 +242,9 @@ fun NombrePublico(
                                             newName = nameValue.value,
                                             viewModel = viewModel,
                                             activity = activity
+                                        )
+                                        userDataViewModel.actualizarFechaCambioNombre(
+                                            obternerFechaActual().seconds * 1000L
                                         )
                                         delay(1000)
                                         progressBarState.value = false
@@ -252,7 +262,9 @@ fun NombrePublico(
                 )
             }
             Text(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 5.dp),
                 text = "Solo puedes cambiar tu nombre cada 30 días y debe de tener entre 4 y 15 caracteres",
                 style = TextStyle(
                     color = MaterialTheme.colors.secondary,
@@ -607,4 +619,8 @@ fun CambiarImagen(
         )
     }
 
+}
+
+private fun obternerFechaActual(): com.google.firebase.Timestamp{
+    return com.google.firebase.Timestamp.now()
 }

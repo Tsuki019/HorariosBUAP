@@ -36,8 +36,8 @@ object TimeDifferences {
     //regresa un -1000 si la fecha dada es incorrecta o incoherente
     fun getTimeLimitDays(time: Int) : Int{
         val now = obternerFechaActual().seconds
-
         val diff = now - time
+
         if (diff > now || diff <= 0){
             return -1000
         }

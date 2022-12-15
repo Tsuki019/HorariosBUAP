@@ -40,13 +40,15 @@ import com.example.horariosbuap.model.LoginState
 import com.example.horariosbuap.ui.theme.*
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.example.horariosbuap.viewmodel.RegisterViewModel
+import com.example.horariosbuap.viewmodel.UserDataViewModel
 
 
 @Composable
 fun LoginScreen(
     state: LoginState,
     registerViewModel: RegisterViewModel,
-    onLogin: (String, String, Activity) -> Unit,
+    userDataViewModel: UserDataViewModel,
+    onLogin: (String, String, Activity, UserDataViewModel) -> Unit,
     onLoginWithGoogle: (Activity) -> Unit,
     activity: Activity,
     onNavigateToRegister: () -> Unit,
@@ -133,7 +135,7 @@ fun LoginScreen(
                                     onNext = {
                                         focusManager.clearFocus()
 
-                                        onLogin(emailValue.value, passwordValue.value, activity)
+                                        onLogin(emailValue.value, passwordValue.value, activity, userDataViewModel)
                                     }
                                 ),
                                 imeAction = ImeAction.Done,
@@ -180,7 +182,7 @@ fun LoginScreen(
                                 text = "Ingresar",
                                 displayProgressBar = state.displayProgressBar,
                                 onClick = {
-                                    onLogin(emailValue.value, passwordValue.value, activity)
+                                    onLogin(emailValue.value, passwordValue.value, activity, userDataViewModel)
                                 })
                         }
 

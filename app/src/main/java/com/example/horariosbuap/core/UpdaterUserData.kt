@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import java.util.*
 
 private val DATABASE = FirebaseFirestore.getInstance().collection("Users")
 
@@ -126,7 +127,7 @@ fun LogOutUser(viewModel: LoginViewModel, userDataViewModel: UserDataViewModel){
     if (auth.currentUser != null){
         auth.signOut()
 
-        userDataViewModel.userData.value = userDataViewModel.userData.value.copy(numHorarios = 0, correo = "", provider = "")
+        userDataViewModel.userData.value = userDataViewModel.userData.value.copy(numHorarios = 0, correo = "", provider = "", fechaCambioNombre = Date(1654059600000))
         userDataViewModel.horarios.clear()
         userDataViewModel.isUserDataLoaded.value = false
         userDataViewModel.isMateriasHorarioFill.value = false

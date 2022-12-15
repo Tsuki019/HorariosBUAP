@@ -19,11 +19,19 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import java.util.*
 
 class RegisterViewModel : ViewModel () {
     val state: MutableState<RegisterState> = mutableStateOf(RegisterState())
 
-    fun register(name: String, email: String, password: String, confirmPassword: String, activity:Activity, loginViewModel: LoginViewModel){
+    fun register(name: String,
+                 email: String,
+                 password: String,
+                 confirmPassword: String,
+                 activity:Activity,
+                 loginViewModel: LoginViewModel,
+                 userDataViewModel: UserDataViewModel
+    ){
 
         val errorMessage = if (name.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()){
             R.string.error_input_empty
@@ -67,6 +75,7 @@ class RegisterViewModel : ViewModel () {
                                     setNuevoUsuario(user.uid, user.email!!, "EMAIL")
                                     state.value = state.value.copy(successRegister = true)
                                     state.value = state.value.copy(displayProcessbar = false)
+                                    userDataViewModel.userData.value.fechaCambioNombre.time = 1654059600000
 
                                 }else{
                                     state.value = state.value.copy(errorMessage = R.string.error_register_process)

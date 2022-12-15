@@ -13,6 +13,8 @@ import com.example.horariosbuap.viewmodel.UserDataViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.*
+import kotlin.collections.ArrayList
 
 private val DATABASE = FirebaseFirestore.getInstance().collection("Users")
 
@@ -25,10 +27,9 @@ fun setNuevoUsuario(
     val user  = UserDB(
         numHorarios = 0,
         correo = correo,
-        provider = provider,
-        fechaCambioNombre = null
+        provider = provider
     )
-    var tempData : UserDB? = UserDB()
+    var tempData: UserDB?
 
     if (provider == "GOOGLE"){
         DATABASE.document(userId).get().addOnCompleteListener {task->

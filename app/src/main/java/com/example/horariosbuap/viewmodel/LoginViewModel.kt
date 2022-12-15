@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.horariosbuap.R
 import com.example.horariosbuap.model.LoginState
+import com.example.horariosbuap.ui.theme.dataBase.getUserData
 import com.example.horariosbuap.ui.theme.dataBase.setNuevoUsuario
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -27,7 +28,7 @@ class LoginViewModel : ViewModel() {
     val state: MutableState<LoginState> = mutableStateOf(LoginState())
     val tempImage : MutableState<Uri> = mutableStateOf(Uri.EMPTY)
 
-    fun login(email: String, password: String, activity: Activity){
+    fun login(email: String, password: String, activity: Activity, userDataViewModel: UserDataViewModel){
         val errorMessage = if (email.isBlank() || password.isBlank()){
             R.string.error_input_empty
         }else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
@@ -46,7 +47,9 @@ class LoginViewModel : ViewModel() {
             loginWithEmail(
                 email = email,
                 password = password,
-                activity = activity)
+                activity = activity,
+                userDataViewModel = userDataViewModel
+            )
 
 //            state.value = state.value.copy(email = email, password = password)
             state.value = state.value.copy(displayProgressBar = false)
@@ -54,7 +57,7 @@ class LoginViewModel : ViewModel() {
         }
     }
 
-    fun loginWithEmail(email: String, password: String, activity: Activity){
+    fun loginWithEmail(email: String, password: String, activity: Activity, userDataViewModel: UserDataViewModel){
         val auth = Firebase.auth
 
         auth.signInWithEmailAndPassword(email, password)
@@ -68,9 +71,7 @@ class LoginViewModel : ViewModel() {
                         state.value = state.value.copy(errorMessage = R.string.error_email_verify)
                         Firebase.auth.signOut()
                     }else{
-                        LlenarDatosUsuario(
-                            user = user,
-                            state = state)
+                        llenarDatosUsuario(user = user, userDataViewModel)
                     }
 //                    updateUI(user)
                 } else {
@@ -120,7 +121,7 @@ class LoginViewModel : ViewModel() {
 
             state.value = state.value.copy(displayProgressBar = true)
 
-            println("======${account}======")
+//            println("======${account}======")
             account?.idToken?.let { token ->
                 val auth = FirebaseAuth.getInstance()
                 val credential =  GoogleAuthProvider.getCredential(token, null)
@@ -153,10 +154,14 @@ class LoginViewModel : ViewModel() {
 
     }
 
-    fun  LlenarDatosUsuario(user : FirebaseUser, state: MutableState<LoginState>){
+    fun  llenarDatosUsuario(
+        user : FirebaseUser,
+        userDataViewModel: UserDataViewModel
+    ){
         state.value = state.value.copy(name = user.displayName!!,
                                        email = user.email!!,
                                        image = user.photoUrl.toString(),
                                        successLogin = true)
+        getUserData(userDataViewModel, user.uid)
     }
 }

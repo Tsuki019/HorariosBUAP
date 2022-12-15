@@ -40,13 +40,15 @@ import com.example.horariosbuap.viewmodel.LoginViewModel
 import com.example.horariosbuap.model.RegisterState
 import com.example.horariosbuap.ui.theme.customStuff.sansPro
 import com.example.horariosbuap.ui.theme.dark_blue1
+import com.example.horariosbuap.viewmodel.UserDataViewModel
 
 
 @Composable
 fun RegistrationScreen(
     state: RegisterState,
     loginViewModel: LoginViewModel,
-    onRegister: (String, String, String, String, Activity, LoginViewModel) -> Unit,
+    userDataViewModel: UserDataViewModel,
+    onRegister: (String, String, String, String, Activity, LoginViewModel, UserDataViewModel) -> Unit,
     onBack: () -> Unit,
     activity: Activity,
     onDismissDialog: () -> Unit
@@ -168,12 +170,14 @@ fun RegistrationScreen(
                             keyboardActions = KeyboardActions(
                                 onDone = {
                                     focusManager.clearFocus()
-                                    onRegister(nameValue.value,
-                                               emailValue.value,
-                                               passwordValue.value,
-                                               confirmPasswordValue.value,
-                                               activity,
-                                               loginViewModel
+                                    onRegister(
+                                        nameValue.value,
+                                        emailValue.value,
+                                        passwordValue.value,
+                                        confirmPasswordValue.value,
+                                        activity,
+                                        loginViewModel,
+                                        userDataViewModel
                                     )
                                 }
                             ),
@@ -197,12 +201,14 @@ fun RegistrationScreen(
                         RoundedButton(text = "Registrarse",
                                       displayProgressBar = state.displayProcessbar,
                                       onClick = {
-                                          onRegister(nameValue.value,
-                                                     emailValue.value,
-                                                     passwordValue.value,
-                                                     confirmPasswordValue.value,
-                                                     activity,
-                                                     loginViewModel
+                                          onRegister(
+                                              nameValue.value,
+                                              emailValue.value,
+                                              passwordValue.value,
+                                              confirmPasswordValue.value,
+                                              activity,
+                                              loginViewModel,
+                                              userDataViewModel
                                           )
                                       })
 
