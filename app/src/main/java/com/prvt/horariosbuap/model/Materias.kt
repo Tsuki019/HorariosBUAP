@@ -1,0 +1,11 @@
+package com.prvt.horariosbuap.model
+
+data class Materias(
+    val nombre : String = "",
+    val nrc : String = "",
+    val clave : String = "",
+    val secc : String = "",
+    val profesor : String = "",
+    val periodo : String = "",
+    val carrera : String = "",
+) {}

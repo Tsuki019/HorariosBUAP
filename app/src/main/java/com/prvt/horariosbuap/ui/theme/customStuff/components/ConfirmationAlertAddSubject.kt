@@ -1,0 +1,175 @@
+package com.prvt.horariosbuap.ui.theme.customStuff.components
+
+import android.app.Activity
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.prvt.horariosbuap.R
+import com.prvt.horariosbuap.model.Materias
+import com.prvt.horariosbuap.ui.theme.customStuff.sansPro
+import com.prvt.horariosbuap.ui.theme.dataBase.setMateriaHorarios
+import com.prvt.horariosbuap.ui.theme.dataBase.setMateriaUnica
+import com.prvt.horariosbuap.viewmodel.DatosViewModel
+import com.prvt.horariosbuap.viewmodel.UserDataViewModel
+
+@Composable
+fun AlertaConformacion(
+    nombreHorario: String,
+    userId  : String,
+    userDataViewModel: UserDataViewModel,
+    materiaElegida : MutableState<Materias>,
+    activity: Activity,
+    datosViewModel : DatosViewModel
+) {
+    val errorVisibility = remember{ mutableStateOf(false) }
+
+    if (errorVisibility.value){
+        ErrorAgregarMateria(errorVisibility = errorVisibility, materiaElegida = materiaElegida)
+    }else{
+        AlertDialog(
+            modifier = Modifier.clip(RoundedCornerShape(8)),
+            backgroundColor = MaterialTheme.colors.background,
+            onDismissRequest = {},
+            title = {
+                Text(
+                    text = "Confirmar materia",
+                    style = TextStyle(
+                        color = MaterialTheme.colors.primary,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = sansPro,
+                        textAlign = TextAlign.Center
+                    )
+                )
+            },
+            text = {
+                Text(
+                    text = "¿Agregar '${materiaElegida.value.nombre}' con NRC: '${materiaElegida.value.nrc}' a tu horario?",
+                    style = TextStyle(
+                        color = MaterialTheme.colors.primary,
+                        fontSize = 16.sp,
+                        fontFamily = sansPro,
+                    )
+                )
+            },
+            buttons = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    TextButton(onClick = {
+                        val horarios = datosViewModel.buscarHorarioMateria(materiaElegida.value.nrc)
+                        if (userDataViewModel.revisarDisponibilidadHorarios(nrc = materiaElegida.value.nrc, nombreHorario = nombreHorario, datosViewModel = datosViewModel)){
+                            setMateriaHorarios(
+                                horarios = horarios,
+                                nombreHorario = nombreHorario,
+                                userId = userId,
+                                userDataViewModel = userDataViewModel
+                            )
+                            setMateriaUnica(
+                                materia = materiaElegida.value,
+                                nombreHorario = nombreHorario,
+                                userId = userId,
+                                userDataViewModel = userDataViewModel,
+                                activity = activity,
+                            )
+                            materiaElegida.value = Materias()
+                        }else{
+                            errorVisibility.value = true
+                        }
+                    })
+                    {
+                        Text(
+                            text = "Agregar",
+                            style = TextStyle(
+                                color = MaterialTheme.colors.primary,
+                                fontSize = 20.sp,
+                                fontFamily = sansPro,
+                            )
+                        )
+                    }
+                    TextButton(onClick = { materiaElegida.value = Materias() }) {
+                        Text(
+                            text = "Cancelar",
+                            style = TextStyle(
+                                color = MaterialTheme.colors.error,
+                                fontSize = 20.sp,
+                                fontFamily = sansPro,
+                            )
+                        )
+                    }
+                }
+            }
+        )
+    }
+
+}
+
+@Composable
+private fun ErrorAgregarMateria(
+    errorVisibility : MutableState<Boolean>,
+    materiaElegida: MutableState<Materias>
+) {
+    AlertDialog(
+        modifier = Modifier.clip(RoundedCornerShape(8)),
+        onDismissRequest = {
+            errorVisibility.value = false
+            materiaElegida.value = Materias() },
+        title = {
+            Text(
+                text = "Error al agregar",
+                style = TextStyle(
+                    color = MaterialTheme.colors.error,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily(Font(R.font.source_sans_pro)),
+                    textAlign = TextAlign.Center
+                )
+            )
+        },
+        text = {
+            Text(
+                text = stringResource(id = R.string.error_match_schedule_subjects),
+                style = TextStyle(
+                    color = MaterialTheme.colors.primary,
+                    fontSize = 16.sp,
+                    fontFamily = sansPro,
+                )
+            )
+        },
+        buttons = {
+            Box(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp),
+                contentAlignment = Alignment.CenterEnd)
+            {
+                TextButton(onClick = {
+                    errorVisibility.value = false
+                    materiaElegida.value = Materias() }
+                ){
+                    Text(
+                        text = "Aceptar",
+                        style = TextStyle(
+                            color = MaterialTheme.colors.primary,
+                            fontSize = 20.sp,
+                            fontFamily = sansPro,
+                        )
+                    )
+                }
+            }
+        }
+    )
+}

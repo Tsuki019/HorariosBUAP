@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#Deja la clase x
+-keep class com.prvt.horariosbuap.model.**{*;}
+-keep class com.prvt.horariosbuap.R$drawable{*;}
